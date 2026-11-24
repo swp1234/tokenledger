@@ -55,6 +55,10 @@ function runUnitTests() {
   const rag = ENGINE.calcRagBudget('text-embedding-3-small', 'gemini-2.5-flash', { docCount: 25000, tokensPerDoc: 1500, chunkSize: 512, overlapPct: 15, monthlyChurnPct: 10, dailyQueries: 3000, topK: 6, outputTokens: 500 });
   assert(rag.totalChunks > 50000 && rag.monthlyTotal > rag.oneTimeIngestCost);
 
+  // Self-Hosted GPU vs Cloud API break-even
+  const sh = ENGINE.calcSelfHostVsApi('claude-sonnet-4', { gpuHourly: 2.85, hoursPerDay: 24, devopsMonthly: 450, tokPerSec: 340, avgUtilPct: 35, inputTokens: 2500, outputTokens: 600, dailyRequests: 8000, cacheHitRate: 50 });
+  assert(sh.selfHostMonthly > 2000 && sh.breakEvenDailyReqs > 500 && ['self-host-wins', 'hybrid-borderline', 'cloud-api-wins', 'needs-more-gpus'].includes(sh.verdict));
+
   // OG PNG check
   const ogBuf = fs.readFileSync(path.join(ROOT, 'og-image.png'));
   assert(ogBuf.length > 10000 && ogBuf.slice(0, 8).toString('hex') === '89504e470d0a1a0a', 'og-image.png must be a valid PNG');
@@ -81,7 +85,7 @@ function startServer() {
 async function runBrowserTests() {
   const sm = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
   const paths = [...sm.matchAll(/<loc>https:\/\/tokenledger-8x7\.pages\.dev([^<]+)<\/loc>/g)].map(m => m[1]);
-  assert(paths.length === 19, `Expected 19 sitemap URLs, got ${paths.length}`);
+  assert(paths.length === 28, `Expected 28 sitemap URLs, got ${paths.length}`);
 
   const { srv, origin } = await startServer();
   const browser = await chromium.launch({ headless: true });
@@ -128,13 +132,18 @@ async function runBrowserTests() {
     const saveVisible = await page.locator('#minifySavings').isVisible();
     assert(tokAfter < tokBefore && saveVisible, `JSON minifier failed: before=${tokBefore}, after=${tokAfter}, visible=${saveVisible}`);
 
-    // Interactive E2E on Agent Burn, SaaS Margin, RAG TCO
+    // Interactive E2E on Agent Burn, SaaS Margin, RAG TCO, Self-Host GPU vs API & KO Hub
     await page.goto(`${origin}/tools/agent-budget.html`, { waitUntil: 'domcontentloaded' });
     assert.strictEqual(await page.locator('#turnChart .tl-chart-row').count(), 14);
     await page.goto(`${origin}/tools/saas-margin.html`, { waitUntil: 'domcontentloaded' });
     assert((await page.locator('#saasCompareBody tr').count()) === 7);
     await page.goto(`${origin}/tools/rag-calculator.html`, { waitUntil: 'domcontentloaded' });
     assert((await page.textContent('#kpiRagTotal')).includes('$'));
+    await page.goto(`${origin}/tools/self-host-vs-api.html`, { waitUntil: 'domcontentloaded' });
+    assert((await page.textContent('#kpiBreakEven')).includes('/day'));
+    await page.goto(`${origin}/ko/`, { waitUntil: 'domcontentloaded' });
+    assert.strictEqual(await page.evaluate(() => document.documentElement.lang), 'ko');
+    assert((await page.locator('#modelTableBody tr').count()) === 24);
 
     assert.strictEqual(errors.length, 0, `Uncaught page errors: ${errors.join(' | ')}`);
     console.log('[PASS] Interactive E2E tests passed across all 5 workspaces (presets, provider filter, theme, JSON minifier savings, agent chart, SaaS matrix, RAG TCO)');

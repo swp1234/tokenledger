@@ -7,7 +7,11 @@
 - [AI Agent Loop Burn Calculator](https://tokenledger-8x7.pages.dev/tools/agent-budget.html): Quadratic O(N²) turn-by-turn token snowballing vs. caching and sliding-window summarization.
 - [AI SaaS Gross Margin Simulator](https://tokenledger-8x7.pages.dev/tools/saas-margin.html): Per-seat LLM COGS, payment fees, gross margin %, and power-user break-even caps.
 - [RAG & Vector DB TCO Planner](https://tokenledger-8x7.pages.dev/tools/rag-calculator.html): Embedding ingestion, HNSW RAM footprint, re-index churn, and Top-K synthesis spend.
+- [Self-Hosted GPU vs Cloud API Break-Even Calculator](https://tokenledger-8x7.pages.dev/tools/self-host-vs-api.html): H100/A100/L40S/4090 vLLM hourly + DevOps break-even vs cloud LLM APIs.
 - [Context Window & JSON Minifier Inspector](https://tokenledger-8x7.pages.dev/tools/token-inspector.html): OpenAI/Claude/Gemini token estimates and one-click JSON tool schema minification.
+
+## International Hubs
+- [Korean (한국어)](https://tokenledger-8x7.pages.dev/ko/) · [Japanese (日本語)](https://tokenledger-8x7.pages.dev/ja/) · [German (Deutsch)](https://tokenledger-8x7.pages.dev/de/) · [French (Français)](https://tokenledger-8x7.pages.dev/fr/)
 
 ## Public Pricing Data API
 - [Machine-Readable JSON Pricing Feed](https://tokenledger-8x7.pages.dev/api/pricing.json): 24 LLM models + 6 embedding models (2026-11-24).
@@ -21,6 +25,10 @@
 - [OpenAI o3 vs DeepSeek-R1 Reasoning Model API Cost Breakdown](https://tokenledger-8x7.pages.dev/compare/o3-vs-deepseek-r1.html): Estimate reasoning-token workloads for OpenAI o3 versus DeepSeek-R1 including prompt caching and async batch discounts.
 - [Llama 4 Maverick (Hosted) vs GPT-4.1 API Cost & 1M Context Analysis](https://tokenledger-8x7.pages.dev/compare/llama-4-vs-gpt-4-1.html): Evaluate hosted open-weight Llama 4 Maverick economics against proprietary OpenAI GPT-4.1 across 1M-context workloads.
 - [LLM Prompt Caching vs Batch API (50% Off): Which Saves More Money?](https://tokenledger-8x7.pages.dev/compare/prompt-caching-vs-batch-api.html): Quantitative FinOps comparison of 75–90% prompt caching discounts versus 50% async batch API discounts for agents and bulk jobs.
+- [GPT-5 vs GPT-4.1 API Pricing & Workload Migration Guide (2026)](https://tokenledger-8x7.pages.dev/compare/gpt-5-vs-gpt-4-1.html): Compare input, cached input, output, and 1M-context costs between OpenAI GPT-5 ($1.25/$10) and GPT-4.1 ($2/$8).
+- [GPT-5 mini vs Gemini 2.5 Flash API Cost & High-Volume Routing Comparison](https://tokenledger-8x7.pages.dev/compare/gpt-5-mini-vs-gemini-2-5-flash.html): Compare the two top value workhorse models for production classification, RAG synthesis, and cascade routing.
+- [Claude Sonnet 4 vs DeepSeek-V3 API Cost & Cascade Economics (2026)](https://tokenledger-8x7.pages.dev/compare/claude-sonnet-vs-deepseek-v3.html): Calculate monthly API savings comparing Anthropic Claude Sonnet 4 ($3/$15) against DeepSeek-V3 ($0.27/$1.10).
+- [Self-Hosted H100 vLLM vs Cloud LLM API: Break-Even Cost Analysis (2026)](https://tokenledger-8x7.pages.dev/compare/self-hosted-h100-vs-cloud-api.html): When does renting an NVIDIA H100 GPU beat paying per token for Claude Sonnet 4 or hosted Llama 4? See the exact daily request threshold.
 - [LLM Cost Optimization Playbook: Cut API Spend 60–85% Without Losing Quality](https://tokenledger-8x7.pages.dev/guides/llm-cost-optimization-playbook.html): Field-tested AI FinOps playbook covering prompt caching, frontier-to-mini cascade routing, JSON schema minification, and async batch APIs.
 - [Fixing the AI Agent Token Snowball: Why a 15-Turn Agent Costs 12x More Than Expected](https://tokenledger-8x7.pages.dev/guides/ai-agent-token-snowball-fix.html): Mathematical breakdown of quadratic context accumulation in multi-turn tool-calling agents and how prefix caching + sliding windows cap burn.
 - [AI SaaS Gross Margin Benchmarks: Pricing Seats Without Getting Crushed by Power Users](https://tokenledger-8x7.pages.dev/guides/saas-ai-gross-margin-benchmarks.html): How to model AI COGS, Stripe fees, gross margin targets (>=75%), and break-even usage caps for flat-rate AI subscriptions.

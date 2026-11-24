@@ -277,6 +277,24 @@
 
     document.getElementById('btnPrint').addEventListener('click', function () { window.print(); });
 
+    var mdBtn = document.getElementById('btnMarkdown');
+    if (mdBtn) {
+      mdBtn.addEventListener('click', function () {
+        var rows = getComputedRows().slice(0, 10);
+        var lines = [
+          '### LLM API Budget Comparison (' + E.formatInt(state.inputTokens) + ' in / ' + E.formatInt(state.outputTokens) + ' out · ' + E.formatInt(state.dailyRequests) + ' req/day · ' + state.cacheHitRate + '% cache' + (state.useBatch ? ' · Batch 50% off' : '') + ')',
+          '',
+          '| Model | Provider | In / Out ($/1M) | Per Request | Monthly (30d) | Annual (365d) |',
+          '|---|---|---:|---:|---:|---:|'
+        ];
+        rows.forEach(function (r) {
+          lines.push('| ' + r.model.name + ' | ' + r.model.provider + ' | $' + r.model.input.toFixed(2) + ' / $' + r.model.output.toFixed(2) + ' | ' + E.formatUsd(r.perReq) + ' | **' + E.formatUsd(r.monthly) + '** | ' + E.formatUsd(r.annual) + ' |');
+        });
+        lines.push('', '_Generated locally via [TokenLedger](https://tokenledger-8x7.pages.dev/)_');
+        UI.copyText(lines.join('\n'), 'Copied GitHub / Notion Markdown table!');
+      });
+    }
+
     render();
   }
 

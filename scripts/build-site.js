@@ -41,6 +41,7 @@ function renderShell(opts) {
     { href: '/tools/agent-budget.html', label: 'Agent Burn', key: 'agent' },
     { href: '/tools/saas-margin.html', label: 'SaaS Margin', key: 'saas' },
     { href: '/tools/rag-calculator.html', label: 'RAG TCO', key: 'rag' },
+    { href: '/tools/self-host-vs-api.html', label: 'GPU vs API', key: 'selfhost' },
     { href: '/tools/token-inspector.html', label: 'Token Inspector', key: 'inspector' },
     { href: '/guides/llm-cost-optimization-playbook.html', label: 'Playbook', key: 'guide' }
   ];
@@ -53,7 +54,7 @@ function renderShell(opts) {
   }, null, 2);
 
   return `<!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="${opts.lang || 'en'}" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,6 +63,7 @@ function renderShell(opts) {
   <meta name="description" content="${esc(opts.description)}">
   <meta name="dateModified" content="${TODAY}">
   <link rel="canonical" href="${canonical}">
+${opts.hreflangs || ''}
 
   <meta property="og:type" content="${opts.ogType || 'website'}">
   <meta property="og:title" content="${esc(opts.title)} | TokenLedger">
@@ -125,7 +127,11 @@ const COMPARISONS = [
   { slug: 'gemini-2-5-flash-vs-claude-haiku', a: 'gemini-2.5-flash', b: 'claude-3.5-haiku', title: 'Gemini 2.5 Flash vs Claude 3.5 Haiku API Cost & Latency Economics', summary: 'Compare low-latency router and classification costs between Google Gemini 2.5 Flash and Anthropic Claude 3.5 Haiku.' },
   { slug: 'o3-vs-deepseek-r1', a: 'o3', b: 'deepseek-r1', title: 'OpenAI o3 vs DeepSeek-R1 Reasoning Model API Cost Breakdown', summary: 'Estimate reasoning-token workloads for OpenAI o3 versus DeepSeek-R1 including prompt caching and async batch discounts.' },
   { slug: 'llama-4-vs-gpt-4-1', a: 'llama-4-maverick', b: 'gpt-4.1', title: 'Llama 4 Maverick (Hosted) vs GPT-4.1 API Cost & 1M Context Analysis', summary: 'Evaluate hosted open-weight Llama 4 Maverick economics against proprietary OpenAI GPT-4.1 across 1M-context workloads.' },
-  { slug: 'prompt-caching-vs-batch-api', a: 'claude-sonnet-4', b: 'gpt-5', title: 'LLM Prompt Caching vs Batch API (50% Off): Which Saves More Money?', summary: 'Quantitative FinOps comparison of 75–90% prompt caching discounts versus 50% async batch API discounts for agents and bulk jobs.' }
+  { slug: 'prompt-caching-vs-batch-api', a: 'claude-sonnet-4', b: 'gpt-5', title: 'LLM Prompt Caching vs Batch API (50% Off): Which Saves More Money?', summary: 'Quantitative FinOps comparison of 75–90% prompt caching discounts versus 50% async batch API discounts for agents and bulk jobs.' },
+  { slug: 'gpt-5-vs-gpt-4-1', a: 'gpt-5', b: 'gpt-4.1', title: 'GPT-5 vs GPT-4.1 API Pricing & Workload Migration Guide (2026)', summary: 'Compare input, cached input, output, and 1M-context costs between OpenAI GPT-5 ($1.25/$10) and GPT-4.1 ($2/$8).' },
+  { slug: 'gpt-5-mini-vs-gemini-2-5-flash', a: 'gpt-5-mini', b: 'gemini-2.5-flash', title: 'GPT-5 mini vs Gemini 2.5 Flash API Cost & High-Volume Routing Comparison', summary: 'Compare the two top value workhorse models for production classification, RAG synthesis, and cascade routing.' },
+  { slug: 'claude-sonnet-vs-deepseek-v3', a: 'claude-sonnet-4', b: 'deepseek-v3', title: 'Claude Sonnet 4 vs DeepSeek-V3 API Cost & Cascade Economics (2026)', summary: 'Calculate monthly API savings comparing Anthropic Claude Sonnet 4 ($3/$15) against DeepSeek-V3 ($0.27/$1.10).' },
+  { slug: 'self-hosted-h100-vs-cloud-api', a: 'claude-sonnet-4', b: 'llama-4-maverick', title: 'Self-Hosted H100 vLLM vs Cloud LLM API: Break-Even Cost Analysis (2026)', summary: 'When does renting an NVIDIA H100 GPU beat paying per token for Claude Sonnet 4 or hosted Llama 4? See the exact daily request threshold.' }
 ];
 
 const GUIDES = [
@@ -201,9 +207,19 @@ const homeGuideCards = GUIDES.map(g => `      <a class="tl-link-card" href="/gui
         <em>Read Playbook →</em>
       </a>`).join('\n');
 
+const HOME_HREFLANGS = [
+  `  <link rel="alternate" hreflang="en" href="${ORIGIN}/">`,
+  `  <link rel="alternate" hreflang="ko" href="${ORIGIN}/ko/">`,
+  `  <link rel="alternate" hreflang="ja" href="${ORIGIN}/ja/">`,
+  `  <link rel="alternate" hreflang="de" href="${ORIGIN}/de/">`,
+  `  <link rel="alternate" hreflang="fr" href="${ORIGIN}/fr/">`,
+  `  <link rel="alternate" hreflang="x-default" href="${ORIGIN}/">`
+].join('\n');
+
 registerPage('/', 'index.html', renderShell({
   path: '/',
   active: 'home',
+  hreflangs: HOME_HREFLANGS,
   title: 'AI & LLM API Cost Calculator (24 Models) — Prompt Caching, Batch & FinOps Studio',
   description: 'Free, 100% browser-private AI & LLM API cost calculator comparing 24 models (GPT-5, Claude 4, Gemini 2.5, DeepSeek, Llama 4, Grok 3) with prompt caching, cascade routing, and CSV/PDF export.',
   scripts: ['/js/studio-home.js'],
@@ -257,6 +273,7 @@ registerPage('/', 'index.html', renderShell({
       <label class="tl-check-row"><input id="batchToggle" type="checkbox"><span>Apply 50% Async Batch API Discount (where provider supports Batch)</span></label>
       <div class="tl-btn-bar">
         <button type="button" id="btnShare" class="tl-btn tl-btn-primary">Copy Share URL</button>
+        <button type="button" id="btnMarkdown" class="tl-btn">Copy Markdown (PR/Notion)</button>
         <button type="button" id="btnCsv" class="tl-btn">Export CSV</button>
         <button type="button" id="btnJson" class="tl-btn">Export JSON</button>
         <button type="button" id="btnPrint" class="tl-btn">Print / PDF</button>
@@ -313,7 +330,14 @@ registerPage('/', 'index.html', renderShell({
       <a class="tl-link-card" href="/tools/agent-budget.html"><strong>AI Agent Loop Burn Calculator</strong><span>Visualize O(N²) multi-turn context snowballing vs. prompt caching &amp; sliding windows.</span><em>Open Calculator →</em></a>
       <a class="tl-link-card" href="/tools/saas-margin.html"><strong>AI SaaS Gross Margin Simulator</strong><span>Calculate per-seat AI COGS, Stripe fees, net profit, and power-user break-even caps.</span><em>Open Simulator →</em></a>
       <a class="tl-link-card" href="/tools/rag-calculator.html"><strong>RAG &amp; Vector DB TCO Planner</strong><span>Estimate embedding ingestion, HNSW RAM footprint, re-index churn, and synthesis cost.</span><em>Open Planner →</em></a>
+      <a class="tl-link-card" href="/tools/self-host-vs-api.html"><strong>Self-Hosted GPU vs Cloud API</strong><span>Calculate exact daily request break-even for H100/A100/L40S/4090 vLLM vs cloud APIs.</span><em>Compare GPU vs API →</em></a>
       <a class="tl-link-card" href="/tools/token-inspector.html"><strong>Context &amp; JSON Minifier Inspector</strong><span>Inspect OpenAI/Claude/Gemini tokens and minify tool JSON schemas for instant savings.</span><em>Open Inspector →</em></a>
+    </div>
+    <div class="tl-pills" style="margin-top:14px">
+      <a class="tl-pill" href="/ko/" style="text-decoration:none;color:var(--accent)">한국어 (KO)</a>
+      <a class="tl-pill" href="/ja/" style="text-decoration:none;color:var(--accent)">日本語 (JA)</a>
+      <a class="tl-pill" href="/de/" style="text-decoration:none;color:var(--accent)">Deutsch (DE)</a>
+      <a class="tl-pill" href="/fr/" style="text-decoration:none;color:var(--accent)">Français (FR)</a>
     </div>
   </section>
 
@@ -580,6 +604,68 @@ registerPage('/tools/token-inspector.html', 'tools/token-inspector.html', render
   </section>`
 }), '0.9');
 
+// --- PAGE 6: SELF-HOSTED GPU (vLLM) VS CLOUD API BREAK-EVEN CALCULATOR ---
+registerPage('/tools/self-host-vs-api.html', 'tools/self-host-vs-api.html', renderShell({
+  path: '/tools/self-host-vs-api.html',
+  active: 'selfhost',
+  title: 'Self-Hosted GPU (H100/A100/L40S/4090) vs Cloud LLM API Break-Even Calculator',
+  description: 'Calculate the exact daily request volume where self-hosting open-weight LLMs (Llama 4, DeepSeek, Qwen via vLLM) beats paying per token on OpenAI, Anthropic, or Gemini.',
+  scripts: ['/js/self-host-vs-api.js'],
+  schemaGraph: [
+    { '@type': 'SoftwareApplication', name: 'TokenLedger Self-Hosted GPU vs Cloud API Calculator', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}/tools/self-host-vs-api.html`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+    { '@type': 'FAQPage', mainEntity: [
+      { '@type': 'Question', name: 'When is self-hosting an H100 GPU cheaper than using a Cloud LLM API?', acceptedAnswer: { '@type': 'Answer', text: 'Self-hosting typically breaks even once steady daily request volume exceeds several thousand requests per day (often 3,000–15,000+ depending on output length and prompt caching) and GPU utilization stays above 25–35%.' } }
+    ] }
+  ],
+  body: `  <section class="tl-hero">
+    <div class="tl-kicker">INFRASTRUCTURE FINOPS &bull; VLLM / GPU VS CLOUD API</div>
+    <h1>Self-Hosted GPU vs. Cloud LLM API Break-Even Calculator</h1>
+    <p>Compare dedicated GPU hosting (RTX 4090, L40S, A100, H100 nodes + DevOps overhead) against pay-per-token cloud APIs — and find your exact daily break-even request threshold.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">Self-Hosted Total</div><div class="kpi-val" id="kpiSelfHost">$0/mo</div><div class="kpi-sub" id="kpiSelfHostSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Cloud API Total</div><div class="kpi-val" id="kpiCloudApi">$0/mo</div><div class="kpi-sub" id="kpiCloudApiSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Break-Even Volume</div><div class="kpi-val warn" id="kpiBreakEven">0/day</div><div class="kpi-sub" id="kpiBreakEvenSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">FinOps Verdict</div><div class="kpi-val accent" id="kpiVerdict">-</div><div class="kpi-sub" id="kpiVerdictSub">-</div></div>
+  </section>
+
+  <section class="tl-grid-2">
+    <div class="tl-panel">
+      <h2>GPU Cluster &amp; Ops Overhead</h2>
+      <div class="tl-field"><label for="shGpuPreset">GPU Preset</label><select id="shGpuPreset" class="tl-select"></select></div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="shHourly">GPU Rental Rate ($/hr)</label><input id="shHourly" class="tl-input num" type="number" min="0.05" step="0.05" value="2.85"></div>
+        <div class="tl-field"><label for="shHours">Active Hours / Day</label><input id="shHours" class="tl-input num" type="number" min="1" max="24" step="1" value="24"></div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="shDevops">Monthly DevOps / Monitoring ($)</label><input id="shDevops" class="tl-input num" type="number" min="0" step="50" value="450"></div>
+        <div class="tl-field"><label for="shTps">Sustained Output Throughput (tok/s)</label><input id="shTps" class="tl-input num" type="number" min="5" step="10" value="340"></div>
+      </div>
+      <div class="tl-field"><label for="shUtil">Realistic Avg GPU Utilization <strong id="shUtilVal">35%</strong></label><input id="shUtil" class="tl-range" type="range" min="5" max="90" step="5" value="35"></div>
+    </div>
+
+    <div class="tl-panel">
+      <h2>Cloud API Benchmark Workload</h2>
+      <div class="tl-field"><label for="shModel">Compare Against Cloud Model</label><select id="shModel" class="tl-select"></select></div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="shIn">Input Tokens / Request</label><input id="shIn" class="tl-input num" type="number" min="50" step="100" value="2500"></div>
+        <div class="tl-field"><label for="shOut">Output Tokens / Request</label><input id="shOut" class="tl-input num" type="number" min="20" step="50" value="600"></div>
+      </div>
+      <div class="tl-field"><label for="shReqs">Daily Requests</label><input id="shReqs" class="tl-input num" type="number" min="1" step="500" value="8000"></div>
+      <div class="tl-field"><label for="shCache">Cloud Prompt Cache Hit Rate <strong id="shCacheVal">50%</strong></label><input id="shCache" class="tl-range" type="range" min="0" max="95" step="5" value="50"></div>
+      <div class="tl-btn-bar"><button type="button" id="btnShExport" class="tl-btn tl-btn-primary">Export GPU vs API Analysis JSON</button></div>
+    </div>
+  </section>
+
+  <section class="tl-prose">
+    <h2>Frequently Asked Questions</h2>
+    <div class="tl-faq-grid">
+      <div class="tl-faq-item"><h3>When is self-hosting an H100 GPU cheaper than using a Cloud LLM API?</h3><p>Self-hosting typically breaks even once steady daily request volume exceeds several thousand requests per day (often 3,000–15,000+ depending on output length and prompt caching) and GPU utilization stays above 25–35%.</p></div>
+    </div>
+  </section>`
+}), '0.9');
+
 // --- PAGES 6–13: 8 PROGRAMMATIC MODEL COMPARISON PAGES ---
 for (const c of COMPARISONS) {
   const mA = ENGINE.getModel(c.a);
@@ -720,6 +806,148 @@ registerPage('/privacy.html', 'privacy.html', renderShell({
   </article>`
 }), '0.3');
 
+// --- INTERNATIONAL LOCALIZED LANDING HUBS (/ko/, /ja/, /de/, /fr/) ---
+const LOCALE_HUBS = [
+  {
+    lang: 'ko',
+    kicker: '24개 AI 모델 · 100% 브라우저 로컬 · 서버 전송 없음',
+    title: 'AI · LLM API 비용 계산기 (GPT-5, Claude 4, Gemini 2.5, DeepSeek) — 프롬프트 캐싱·배치·FinOps',
+    desc: 'GPT-5, Claude 4, Gemini 2.5, DeepSeek, Llama 4 등 24개 LLM API 요금을 프롬프트 캐싱, 50% 배치 할인, 모델 라우팅 절감액과 함께 브라우저에서 무료로 계산하세요.',
+    h1: 'AI · LLM API 비용 계산기 & FinOps 스튜디오',
+    lead: 'OpenAI GPT-5, Anthropic Claude 4, Google Gemini 2.5, DeepSeek, Llama 4 등 24개 모델의 요청당·월간·연간 비용을 프롬프트 캐싱과 70/30 모델 라우팅 절감까지 포함해 즉시 비교하세요.',
+    s1: '1. 워크로드 설정', s2: '2. 실시간 토큰 계산기 & 모델 캐스케이드', s3: '3. 24개 모델 실시간 비용 비교표'
+  },
+  {
+    lang: 'ja',
+    kicker: '24モデル対応 · 100% ブラウザ完結 · データ送信ゼロ',
+    title: 'AI・LLM API料金計算ツール (GPT-5, Claude 4, Gemini 2.5, DeepSeek) — キャッシュ＆バッチ対応',
+    desc: 'GPT-5・Claude 4・Gemini 2.5・DeepSeek・Llama 4など24モデルのAPI料金をプロンプトキャッシュや50%バッチ割引込みでブラウザ完結シミュレーション。',
+    h1: 'AI・LLM API 料金シミュレーター & FinOps スタジオ',
+    lead: '主要24モデルの1リクエスト・月額・年額コストをリアルタイム比較。プロンプトキャッシュ、50%バッチ割引、モデルルーティング削減効果やCSV/Markdown出力に対応。',
+    s1: '1. ワークロード設定', s2: '2. ライブトークン計測 & モデルカスケード', s3: '3. 24モデル月額・年額比較マトリクス'
+  },
+  {
+    lang: 'de',
+    kicker: '24 KI-MODELLE · 100% LOKAL IM BROWSER · KEIN UPLOAD',
+    title: 'KI & LLM API Kostenrechner (GPT-5, Claude 4, Gemini 2.5, DeepSeek) — Caching & Batch',
+    desc: 'Kostenloser, 100% privater LLM API Kostenrechner für 24 Modelle inkl. Prompt Caching, 50% Batch-Rabatt, Model-Cascade-Routing sowie CSV- und PDF-Export.',
+    h1: 'KI & LLM API Kostenrechner & FinOps Studio',
+    lead: 'Vergleiche reale Produktionskosten für GPT-5, Claude 4, Gemini 2.5, DeepSeek, Llama 4 und Mistral – inklusive Prompt Caching, Batch-API, Agenten-Burn und SaaS-Marge.',
+    s1: '1. Workload-Parameter', s2: '2. Live-Token-Schätzer & Model-Cascade', s3: '3. 24-Modelle Kostenmatrix im Vergleich'
+  },
+  {
+    lang: 'fr',
+    kicker: '24 MODÈLES IA · 100% LOCAL NAVIGATEUR · ZÉRO ENVOI',
+    title: 'Calculateur Coût API LLM & IA (GPT-5, Claude 4, Gemini 2.5, DeepSeek) — Cache & Batch',
+    desc: 'Simulateur gratuit et 100% privé des coûts API de 24 LLM (GPT-5, Claude 4, Gemini 2.5, DeepSeek, Mistral) avec Prompt Caching, remise Batch 50% et export CSV/PDF.',
+    h1: 'Calculateur de Coût API LLM & Studio FinOps',
+    lead: 'Estimez vos coûts mensuels et annuels sur 24 modèles IA (OpenAI, Anthropic, Google, DeepSeek, Meta, Mistral) avec mise en cache de prompts, routage cascade et export CSV/Markdown.',
+    s1: '1. Paramètres de charge', s2: '2. Compteur de tokens & Routage Cascade', s3: '3. Comparatif des 24 modèles LLM'
+  }
+];
+
+for (const lh of LOCALE_HUBS) {
+  const urlPath = `/${lh.lang}/`;
+  registerPage(urlPath, `${lh.lang}/index.html`, renderShell({
+    lang: lh.lang,
+    path: urlPath,
+    active: 'home',
+    hreflangs: HOME_HREFLANGS,
+    title: lh.title,
+    description: lh.desc,
+    scripts: ['/js/studio-home.js'],
+    schemaGraph: [
+      { '@type': 'SoftwareApplication', name: `TokenLedger (${lh.lang.toUpperCase()})`, inLanguage: lh.lang, applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}${urlPath}`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } }
+    ],
+    body: `  <section class="tl-hero">
+    <div class="tl-kicker">${esc(lh.kicker)}</div>
+    <h1>${esc(lh.h1)}</h1>
+    <p>${esc(lh.lead)}</p>
+    <div class="tl-pills">
+      <a class="tl-pill" href="/" style="text-decoration:none">English</a>
+      <a class="tl-pill" href="/ko/" style="text-decoration:none">한국어</a>
+      <a class="tl-pill" href="/ja/" style="text-decoration:none">日本語</a>
+      <a class="tl-pill" href="/de/" style="text-decoration:none">Deutsch</a>
+      <a class="tl-pill" href="/fr/" style="text-decoration:none">Français</a>
+    </div>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">Lowest Monthly</div><div class="kpi-val accent" id="kpiCheapest">$0.00/mo</div><div class="kpi-sub" id="kpiCheapestSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">OpenAI GPT-5</div><div class="kpi-val" id="kpiGpt5">$0.00/mo</div><div class="kpi-sub" id="kpiGpt5Sub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Claude Sonnet 4</div><div class="kpi-val" id="kpiSonnet">$0.00/mo</div><div class="kpi-sub" id="kpiSonnetSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Cascade Savings</div><div class="kpi-val accent" id="kpiCascadeSave">$0.00/mo</div><div class="kpi-sub" id="kpiCascadeSub">-</div></div>
+  </section>
+
+  <section class="tl-grid-2">
+    <div class="tl-panel">
+      <h2>${esc(lh.s1)}</h2>
+      <div class="tl-chips">
+        <button type="button" class="tl-chip" data-preset="support">Support Bot (5K/d)</button>
+        <button type="button" class="tl-chip" data-preset="coding">Coding Agent (18K in)</button>
+        <button type="button" class="tl-chip" data-preset="rag">RAG Search (2K/d)</button>
+        <button type="button" class="tl-chip" data-preset="batch">Batch ETL (15K/d)</button>
+      </div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="inTokens">Input Tokens / Req</label><input id="inTokens" class="tl-input num" type="number" min="0" step="100" value="2500"></div>
+        <div class="tl-field"><label for="outTokens">Output Tokens / Req</label><input id="outTokens" class="tl-input num" type="number" min="0" step="50" value="600"></div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="dailyReqs">Requests / Day</label><input id="dailyReqs" class="tl-input num" type="number" min="1" step="100" value="1000"></div>
+        <div class="tl-field"><label for="sortSelect">Sort</label><select id="sortSelect" class="tl-select"><option value="monthly">Monthly Cost</option><option value="input">Input $/1M</option><option value="context">Context Window</option></select></div>
+      </div>
+      <div class="tl-field"><label for="cacheSlider">Prompt Cache Hit Rate <strong id="cacheVal">50%</strong></label><input id="cacheSlider" class="tl-range" type="range" min="0" max="95" step="5" value="50"></div>
+      <label class="tl-check-row"><input id="batchToggle" type="checkbox"><span>50% Batch API Discount</span></label>
+      <div class="tl-btn-bar">
+        <button type="button" id="btnShare" class="tl-btn tl-btn-primary">Copy Share URL</button>
+        <button type="button" id="btnMarkdown" class="tl-btn">Copy Markdown</button>
+        <button type="button" id="btnCsv" class="tl-btn">CSV</button>
+        <button type="button" id="btnJson" class="tl-btn">JSON</button>
+        <button type="button" id="btnPrint" class="tl-btn">PDF</button>
+      </div>
+    </div>
+    <div class="tl-panel">
+      <h2>${esc(lh.s2)}</h2>
+      <div class="tl-field">
+        <label for="livePrompt">Prompt / JSON (100% Local)</label>
+        <textarea id="livePrompt" class="tl-textarea" placeholder="Paste prompt or JSON here..."></textarea>
+        <div id="promptStats" class="kpi-sub num" style="margin-top:6px">0 OpenAI tok · 0 Claude tok · 0 Gemini tok</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="cascadeFrontier">Frontier Model</label><select id="cascadeFrontier" class="tl-select"></select></div>
+        <div class="tl-field"><label for="cascadeMini">Fast / Mini Model</label><select id="cascadeMini" class="tl-select"></select></div>
+      </div>
+      <div class="tl-field"><label for="offloadSlider">Mini Traffic % <strong id="offloadVal">70%</strong></label><input id="offloadSlider" class="tl-range" type="range" min="0" max="95" step="5" value="70"></div>
+      <div id="cascadeOut" class="kpi-sub num" style="padding:10px 12px;border-radius:10px;background:var(--accent-soft);color:var(--text);font-weight:600"></div>
+    </div>
+  </section>
+
+  <section class="tl-panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+      <h2 style="margin:0">${esc(lh.s3)}</h2>
+      <div id="spreadSummary" class="kpi-sub num" style="margin:0"></div>
+    </div>
+    <div class="tl-chips">
+      <button type="button" class="tl-chip active" data-provider="all">All (24)</button>
+      <button type="button" class="tl-chip" data-provider="OpenAI">OpenAI</button>
+      <button type="button" class="tl-chip" data-provider="Anthropic">Anthropic</button>
+      <button type="button" class="tl-chip" data-provider="Google">Google</button>
+      <button type="button" class="tl-chip" data-provider="DeepSeek">DeepSeek</button>
+    </div>
+    <div class="tl-table-wrap">
+      <table class="tl-table">
+        <thead><tr><th>Model &amp; Context</th><th>Tier</th><th>In / Out (1M)</th><th>Per Req</th><th>Monthly</th><th>Annual</th><th>Relative</th></tr></thead>
+        <tbody id="modelTableBody"></tbody>
+      </table>
+    </div>
+  </section>`
+  }), '0.9');
+}
+
+// --- INDEXNOW KEY FILE ---
+const INDEXNOW_KEY = '7a3f9c12e84b4d6fa01c58e2b94d3f10';
+writeFile(`${INDEXNOW_KEY}.txt`, INDEXNOW_KEY);
+
 // --- SITEMAP.XML, ROBOTS.TXT, LLMS.TXT, LLMS-FULL.TXT, CLOUDFLARE _HEADERS ---
 const smXml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
   ALL_URLS.map(u => `  <url><loc>${u.url}</loc><lastmod>${TODAY}</lastmod><changefreq>weekly</changefreq><priority>${u.priority}</priority></url>`).join('\n') +
@@ -748,7 +976,11 @@ const llmsTxt = `# TokenLedger — AI & LLM API FinOps Studio
 - [AI Agent Loop Burn Calculator](${ORIGIN}/tools/agent-budget.html): Quadratic O(N²) turn-by-turn token snowballing vs. caching and sliding-window summarization.
 - [AI SaaS Gross Margin Simulator](${ORIGIN}/tools/saas-margin.html): Per-seat LLM COGS, payment fees, gross margin %, and power-user break-even caps.
 - [RAG & Vector DB TCO Planner](${ORIGIN}/tools/rag-calculator.html): Embedding ingestion, HNSW RAM footprint, re-index churn, and Top-K synthesis spend.
+- [Self-Hosted GPU vs Cloud API Break-Even Calculator](${ORIGIN}/tools/self-host-vs-api.html): H100/A100/L40S/4090 vLLM hourly + DevOps break-even vs cloud LLM APIs.
 - [Context Window & JSON Minifier Inspector](${ORIGIN}/tools/token-inspector.html): OpenAI/Claude/Gemini token estimates and one-click JSON tool schema minification.
+
+## International Hubs
+- [Korean (한국어)](${ORIGIN}/ko/) · [Japanese (日本語)](${ORIGIN}/ja/) · [German (Deutsch)](${ORIGIN}/de/) · [French (Français)](${ORIGIN}/fr/)
 
 ## Public Pricing Data API
 - [Machine-Readable JSON Pricing Feed](${ORIGIN}/api/pricing.json): 24 LLM models + 6 embedding models (${TODAY}).

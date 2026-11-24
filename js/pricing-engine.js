@@ -326,6 +326,68 @@
     };
   }
 
+  // Self-Hosted GPU (vLLM/TGI) vs Cloud API Break-Even Calculator
+  var GPU_PRESETS = [
+    { id: 'rtx-4090-1x', name: '1x RTX 4090 (24GB)', hourlyUsd: 0.45, tokPerSec: 85, vramGb: 24 },
+    { id: 'l40s-1x', name: '1x NVIDIA L40S (48GB)', hourlyUsd: 1.15, tokPerSec: 130, vramGb: 48 },
+    { id: 'a100-80gb-1x', name: '1x NVIDIA A100 (80GB)', hourlyUsd: 1.65, tokPerSec: 175, vramGb: 80 },
+    { id: 'h100-80gb-1x', name: '1x NVIDIA H100 (80GB)', hourlyUsd: 2.85, tokPerSec: 340, vramGb: 80 },
+    { id: 'h100-80gb-4x', name: '4x NVIDIA H100 Node (320GB)', hourlyUsd: 11.20, tokPerSec: 1100, vramGb: 320 },
+    { id: 'h100-80gb-8x', name: '8x NVIDIA H100 Cluster (640GB)', hourlyUsd: 21.90, tokPerSec: 2100, vramGb: 640 }
+  ];
+
+  function calcSelfHostVsApi(modelId, opts) {
+    var m = getModel(modelId);
+    var gpuHourly = clamp(opts.gpuHourly, 0.05, 500);
+    var hoursPerDay = clamp(opts.hoursPerDay || 24, 1, 24);
+    var devopsMonthly = clamp(opts.devopsMonthly || 400, 0, 50000);
+    var tokPerSec = clamp(opts.tokPerSec || 175, 5, 50000);
+    var avgUtilPct = clamp(opts.avgUtilPct || 35, 1, 100) / 100;
+    var inputTokens = clamp(opts.inputTokens || 2000, 50, 200000);
+    var outputTokens = clamp(opts.outputTokens || 500, 20, 50000);
+    var dailyRequests = clamp(opts.dailyRequests || 5000, 1, 10000000);
+    var cacheHitRate = clamp(opts.cacheHitRate || 50, 0, 95);
+
+    var gpuMonthly = gpuHourly * hoursPerDay * 30;
+    var selfHostMonthly = gpuMonthly + devopsMonthly;
+
+    var apiWork = calcModelWorkload(m, {
+      inputTokens: inputTokens,
+      outputTokens: outputTokens,
+      dailyRequests: dailyRequests,
+      cacheHitRate: cacheHitRate,
+      useBatch: false
+    });
+
+    var monthlyOutputCapacity = tokPerSec * avgUtilPct * hoursPerDay * 3600 * 30;
+    var monthlyOutputDemand = dailyRequests * outputTokens * 30;
+    var monthlyTotalTokensDemand = dailyRequests * (inputTokens + outputTokens) * 30;
+    var effectivePer1M = monthlyTotalTokensDemand > 0 ? (selfHostMonthly / (monthlyTotalTokensDemand / 1e6)) : 0;
+    var capacityHeadroomPct = monthlyOutputCapacity > 0 ? (monthlyOutputDemand / monthlyOutputCapacity) * 100 : 100;
+    var breakEvenDailyReqs = apiWork.perReq > 0 ? Math.ceil(selfHostMonthly / (apiWork.perReq * 30)) : 9999999;
+
+    var verdict = capacityHeadroomPct > 90
+      ? 'needs-more-gpus'
+      : selfHostMonthly < apiWork.monthly * 0.85
+        ? 'self-host-wins'
+        : selfHostMonthly <= apiWork.monthly * 1.15
+          ? 'hybrid-borderline'
+          : 'cloud-api-wins';
+
+    return {
+      model: m,
+      gpuMonthly: gpuMonthly,
+      devopsMonthly: devopsMonthly,
+      selfHostMonthly: selfHostMonthly,
+      apiMonthly: apiWork.monthly,
+      monthlyDiff: apiWork.monthly - selfHostMonthly,
+      effectivePer1M: effectivePer1M,
+      capacityHeadroomPct: capacityHeadroomPct,
+      breakEvenDailyReqs: breakEvenDailyReqs,
+      verdict: verdict
+    };
+  }
+
   function formatUsd(n) {
     var x = Number(n);
     if (!isFinite(x)) return '$0.00';
@@ -345,6 +407,7 @@
   return {
     MODELS: MODELS,
     EMBEDDINGS: EMBEDDINGS,
+    GPU_PRESETS: GPU_PRESETS,
     getModel: getModel,
     getEmbedding: getEmbedding,
     estimateTokens: estimateTokens,
@@ -353,6 +416,7 @@
     calcAgentBurn: calcAgentBurn,
     calcSaasMargin: calcSaasMargin,
     calcRagBudget: calcRagBudget,
+    calcSelfHostVsApi: calcSelfHostVsApi,
     formatUsd: formatUsd,
     formatInt: formatInt
   };
