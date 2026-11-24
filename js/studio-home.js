@@ -295,6 +295,31 @@
       });
     }
 
+    var pngBtn = document.getElementById('btnPngCard');
+    if (pngBtn) {
+      pngBtn.addEventListener('click', function () {
+        if (!window.TokenLedgerCard) return;
+        var rows = getComputedRows().slice(0, 5);
+        var casc = E.calcCascadeSavings(state.frontierId, state.miniId, state, state.offloadPct);
+        window.TokenLedgerCard.downloadBudgetCardPng({
+          subtitle: E.formatInt(state.inputTokens) + ' in / ' + E.formatInt(state.outputTokens) + ' out · ' + E.formatInt(state.dailyRequests) + ' req/day · ' + state.cacheHitRate + '% cache' + (state.useBatch ? ' · Batch 50% off' : ''),
+          rows: rows.map(function (r) { return { name: r.model.name, provider: r.model.provider, monthly: r.monthly, monthlyLabel: E.formatUsd(r.monthly) }; }),
+          highlight: 'Cascade (' + (100 - state.offloadPct) + '/' + state.offloadPct + ') saves ' + E.formatUsd(casc.savedAnnual) + '/yr'
+        });
+        UI.showToast('Downloaded 1200x630 Budget Card PNG!');
+      });
+    }
+
+    var embBtn = document.getElementById('btnEmbed');
+    if (embBtn) {
+      embBtn.addEventListener('click', function () {
+        var u = buildShareUrl();
+        var sep = u.indexOf('?') === -1 ? '?' : '&';
+        var snippet = '<iframe src="' + u + sep + 'embed=1" width="100%" height="780" style="border:1px solid #1e293b;border-radius:14px" loading="lazy" title="TokenLedger LLM Cost Estimator"></iframe>\n<p style="font-size:12px">Powered by <a href="https://tokenledger-8x7.pages.dev/" target="_blank" rel="noopener">TokenLedger</a></p>';
+        UI.copyText(snippet, 'Copied embeddable <iframe> widget HTML!');
+      });
+    }
+
     render();
   }
 

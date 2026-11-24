@@ -76,6 +76,14 @@
     return lines.join('\n');
   }
 
+  function initEmbedMode() {
+    try {
+      if (new URLSearchParams(window.location.search).get('embed') === '1') {
+        document.documentElement.classList.add('tl-embed-mode');
+      }
+    } catch (_) {}
+  }
+
   window.TokenLedgerUI = {
     showToast: showToast,
     downloadFile: downloadFile,
@@ -83,6 +91,7 @@
     rowsToCsv: rowsToCsv
   };
 
+  initEmbedMode();
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initTheme, { once: true });
   } else {

@@ -15,6 +15,10 @@
   <link rel="alternate" hreflang="fr" href="https://tokenledger-8x7.pages.dev/fr/">
   <link rel="alternate" hreflang="es" href="https://tokenledger-8x7.pages.dev/es/">
   <link rel="alternate" hreflang="pt" href="https://tokenledger-8x7.pages.dev/pt/">
+  <link rel="alternate" hreflang="zh" href="https://tokenledger-8x7.pages.dev/zh/">
+  <link rel="alternate" hreflang="hi" href="https://tokenledger-8x7.pages.dev/hi/">
+  <link rel="alternate" hreflang="id" href="https://tokenledger-8x7.pages.dev/id/">
+  <link rel="alternate" hreflang="tr" href="https://tokenledger-8x7.pages.dev/tr/">
   <link rel="alternate" hreflang="x-default" href="https://tokenledger-8x7.pages.dev/">
 
   <meta property="og:type" content="website">
@@ -137,7 +141,9 @@
       <label class="tl-check-row"><input id="batchToggle" type="checkbox"><span>Apply 50% Async Batch API Discount (where provider supports Batch)</span></label>
       <div class="tl-btn-bar">
         <button type="button" id="btnShare" class="tl-btn tl-btn-primary">Copy Share URL</button>
+        <button type="button" id="btnPngCard" class="tl-btn">Download PNG Card</button>
         <button type="button" id="btnMarkdown" class="tl-btn">Copy Markdown (PR/Notion)</button>
+        <button type="button" id="btnEmbed" class="tl-btn">Copy Embed Widget</button>
         <button type="button" id="btnCsv" class="tl-btn">Export CSV</button>
         <button type="button" id="btnJson" class="tl-btn">Export JSON</button>
         <button type="button" id="btnPrint" class="tl-btn">Print / PDF</button>
@@ -197,15 +203,21 @@
       <a class="tl-link-card" href="/tools/rag-calculator.html"><strong>RAG &amp; Vector DB TCO Planner</strong><span>Estimate embedding ingestion, HNSW RAM footprint, re-index churn, and synthesis cost.</span><em>Open Planner →</em></a>
       <a class="tl-link-card" href="/tools/self-host-vs-api.html"><strong>Self-Hosted GPU vs Cloud API</strong><span>Calculate exact daily request break-even for H100/A100/L40S/4090 vLLM vs cloud APIs.</span><em>Compare GPU vs API →</em></a>
       <a class="tl-link-card" href="/tools/multimodal-budget.html"><strong>Voice, Vision &amp; Image Cost Studio</strong><span>Estimate PDF/image vision tokens, OpenAI Realtime vs Gemini Live voice, and Imagen/Flux.</span><em>Open Studio →</em></a>
+      <a class="tl-link-card" href="/tools/ai-runway.html"><strong>AI Startup Burn &amp; Runway Planner</strong><span>Model LLM spend scaling with MRR, cloud infra, payroll, and exact Default-Alive month.</span><em>Model Runway →</em></a>
+      <a class="tl-link-card" href="/tools/prompt-diff.html"><strong>Prompt A/B Compression Cost Diff</strong><span>Compare before vs. after system prompts and copy PR-ready annual USD savings tables.</span><em>Run Prompt Diff →</em></a>
       <a class="tl-link-card" href="/tools/token-inspector.html"><strong>Context &amp; JSON Minifier Inspector</strong><span>Inspect OpenAI/Claude/Gemini tokens and minify tool JSON schemas for instant savings.</span><em>Open Inspector →</em></a>
     </div>
     <div class="tl-pills" style="margin-top:14px">
-      <a class="tl-pill" href="/ko/" style="text-decoration:none;color:var(--accent)">한국어 (KO)</a>
-      <a class="tl-pill" href="/ja/" style="text-decoration:none;color:var(--accent)">日本語 (JA)</a>
-      <a class="tl-pill" href="/de/" style="text-decoration:none;color:var(--accent)">Deutsch (DE)</a>
-      <a class="tl-pill" href="/fr/" style="text-decoration:none;color:var(--accent)">Français (FR)</a>
-      <a class="tl-pill" href="/es/" style="text-decoration:none;color:var(--accent)">Español (ES)</a>
-      <a class="tl-pill" href="/pt/" style="text-decoration:none;color:var(--accent)">Português (PT)</a>
+      <a class="tl-pill" href="/ko/" style="text-decoration:none;color:var(--accent)">한국어</a>
+      <a class="tl-pill" href="/ja/" style="text-decoration:none;color:var(--accent)">日本語</a>
+      <a class="tl-pill" href="/de/" style="text-decoration:none;color:var(--accent)">Deutsch</a>
+      <a class="tl-pill" href="/fr/" style="text-decoration:none;color:var(--accent)">Français</a>
+      <a class="tl-pill" href="/es/" style="text-decoration:none;color:var(--accent)">Español</a>
+      <a class="tl-pill" href="/pt/" style="text-decoration:none;color:var(--accent)">Português</a>
+      <a class="tl-pill" href="/zh/" style="text-decoration:none;color:var(--accent)">中文</a>
+      <a class="tl-pill" href="/hi/" style="text-decoration:none;color:var(--accent)">हिन्दी</a>
+      <a class="tl-pill" href="/id/" style="text-decoration:none;color:var(--accent)">Indonesia</a>
+      <a class="tl-pill" href="/tr/" style="text-decoration:none;color:var(--accent)">Türkçe</a>
     </div>
   </section>
 
@@ -302,6 +314,26 @@
         <span>Compare per-minute voice agent economics ($0.24/min vs $0.042/min) and cascaded STT+LLM+TTS alternatives.</span>
         <em>Open Comparison →</em>
       </a>
+      <a class="tl-link-card" href="/compare/qwen-2-5-vs-deepseek-v3.html">
+        <strong>Qwen 2.5 72B vs DeepSeek-V3 Hosted Open-Weight API Cost Comparison</strong>
+        <span>Compare multilingual Qwen 2.5 72B ($0.35/$0.40) against DeepSeek-V3 ($0.27/$1.10) on output-heavy workloads.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/gpt-5-nano-vs-gemini-2-5-flash-lite.html">
+        <strong>GPT-5 nano vs Gemini 2.5 Flash-Lite Ultra-Budget API Comparison</strong>
+        <span>Benchmark the two cheapest production API models ($0.05/$0.40 vs $0.10/$0.40) at 100K+ daily requests.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/o4-mini-vs-grok-3-mini.html">
+        <strong>OpenAI o4-mini vs xAI Grok 3 Mini Fast Reasoning Cost Comparison</strong>
+        <span>Compare fast reasoning API economics between OpenAI o4-mini ($1.10/$4.40) and xAI Grok 3 Mini ($0.30/$0.50).</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/claude-haiku-vs-gpt-4-1-mini.html">
+        <strong>Claude 3.5 Haiku vs GPT-4.1 mini Low-Latency API Cost Breakdown</strong>
+        <span>Side-by-side FinOps analysis comparing Anthropic Claude 3.5 Haiku ($0.80/$4) and OpenAI GPT-4.1 mini ($0.40/$1.60).</span>
+        <em>Open Comparison →</em>
+      </a>
     </div>
   </section>
 
@@ -394,6 +426,7 @@
   </footer>
   <script src="/js/pricing-engine.js"></script>
   <script src="/js/ui-shell.js"></script>
+  <script src="/js/budget-card.js" defer></script>
   <script src="/js/studio-home.js" defer></script>
 </body>
 </html>

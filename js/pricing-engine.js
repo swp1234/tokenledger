@@ -499,6 +499,97 @@
     };
   }
 
+  // AI Startup Monthly Burn & Runway Planner
+  function calcAiRunway(opts) {
+    var cashOnHand = clamp(opts.cashOnHand || 250000, 1000, 1000000000);
+    var mrr = clamp(opts.mrr || 8000, 0, 100000000);
+    var mrrGrowthPct = clamp(opts.mrrGrowthPct || 12, -50, 200) / 100;
+    var monthlyAiSpend = clamp(opts.monthlyAiSpend || 4500, 0, 50000000);
+    var monthlyCloudInfra = clamp(opts.monthlyCloudInfra || 1800, 0, 50000000);
+    var monthlyPayrollOps = clamp(opts.monthlyPayrollOps || 18000, 0, 100000000);
+    var aiSpendScalesWithMrr = opts.aiScalesWithMrr !== false;
+
+    var cash = cashOnHand;
+    var curMrr = mrr;
+    var curAi = monthlyAiSpend;
+    var timeline = [];
+    var runwayMonths = 60;
+    var profitableMonth = null;
+
+    for (var month = 1; month <= 60; month++) {
+      var totalBurn = curAi + monthlyCloudInfra + monthlyPayrollOps;
+      var netBurn = totalBurn - curMrr;
+      if (netBurn <= 0 && profitableMonth === null) profitableMonth = month;
+      cash = cash - netBurn;
+      if (month <= 24) {
+        timeline.push({
+          month: month,
+          mrr: Math.round(curMrr),
+          aiSpend: Math.round(curAi),
+          totalBurn: Math.round(totalBurn),
+          netBurn: Math.round(netBurn),
+          endingCash: Math.max(0, Math.round(cash))
+        });
+      }
+      if (cash <= 0 && runwayMonths === 60) {
+        runwayMonths = month;
+      }
+      var nextMrr = curMrr * (1 + mrrGrowthPct);
+      if (aiSpendScalesWithMrr && curMrr > 0) {
+        curAi = curAi * (1 + mrrGrowthPct * 0.75);
+      }
+      curMrr = nextMrr;
+    }
+
+    var month1Burn = monthlyAiSpend + monthlyCloudInfra + monthlyPayrollOps;
+    var month1NetBurn = month1Burn - mrr;
+    var aiShareOfBurnPct = month1Burn > 0 ? (monthlyAiSpend / month1Burn) * 100 : 0;
+
+    return {
+      month1Burn: month1Burn,
+      month1NetBurn: month1NetBurn,
+      aiShareOfBurnPct: aiShareOfBurnPct,
+      runwayMonths: runwayMonths,
+      defaultAlive: profitableMonth !== null && profitableMonth <= runwayMonths,
+      profitableMonth: profitableMonth,
+      timeline: timeline
+    };
+  }
+
+  // Prompt A vs Prompt B Compression & Annual Savings Diff
+  function calcPromptDiff(promptA, promptB, dailyRequests, cacheHitRate) {
+    var estA = estimateTokens(promptA);
+    var estB = estimateTokens(promptB);
+    var savedOpenAI = estA.tokensOpenAI - estB.tokensOpenAI;
+    var savedClaude = estA.tokensClaude - estB.tokensClaude;
+    var savedGemini = estA.tokensGemini - estB.tokensGemini;
+    var pct = estA.tokensOpenAI > 0 ? (savedOpenAI / estA.tokensOpenAI) * 100 : 0;
+    var reqs = clamp(dailyRequests || 2000, 1, 100000000);
+    var cache = clamp(cacheHitRate || 50, 0, 95);
+
+    var benchmarks = ['claude-opus-4', 'claude-sonnet-4', 'gpt-5', 'gpt-4.1', 'gemini-2.5-pro', 'gemini-2.5-flash'].map(function (id) {
+      var m = getModel(id);
+      var a = calcModelWorkload(m, { inputTokens: estA.tokensOpenAI, outputTokens: 0, dailyRequests: reqs, cacheHitRate: cache, useBatch: false });
+      var b = calcModelWorkload(m, { inputTokens: estB.tokensOpenAI, outputTokens: 0, dailyRequests: reqs, cacheHitRate: cache, useBatch: false });
+      return {
+        model: m.name,
+        provider: m.provider,
+        monthlyDelta: a.monthly - b.monthly,
+        annualDelta: a.annual - b.annual
+      };
+    });
+
+    return {
+      estA: estA,
+      estB: estB,
+      savedOpenAI: savedOpenAI,
+      savedClaude: savedClaude,
+      savedGemini: savedGemini,
+      compressionPct: pct,
+      benchmarks: benchmarks
+    };
+  }
+
   function formatUsd(n) {
     var x = Number(n);
     if (!isFinite(x)) return '$0.00';
@@ -532,6 +623,8 @@
     calcMcpSchemaTax: calcMcpSchemaTax,
     auditToolJson: auditToolJson,
     calcMultimodalBudget: calcMultimodalBudget,
+    calcAiRunway: calcAiRunway,
+    calcPromptDiff: calcPromptDiff,
     formatUsd: formatUsd,
     formatInt: formatInt
   };

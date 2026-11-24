@@ -69,6 +69,12 @@ function runUnitTests() {
   const mm = ENGINE.calcMultimodalBudget({ visionModel: 'gemini-2.5-flash-vision', voiceModel: 'gemini-live-flash', imageModel: 'imagen-3', dailyImages: 1500, visionOutTok: 250, dailyVoiceMins: 600, dailyGenImages: 200 });
   assert(mm.totalMonthly > 500 && mm.voiceMonthly > mm.visionMonthly);
 
+  // AI Runway & Prompt A/B Diff
+  const rw = ENGINE.calcAiRunway({ cashOnHand: 250000, mrr: 8000, mrrGrowthPct: 12, monthlyAiSpend: 4500, monthlyCloudInfra: 1800, monthlyPayrollOps: 18000, aiScalesWithMrr: true });
+  assert(rw.timeline.length === 24 && rw.runwayMonths > 0);
+  const pd = ENGINE.calcPromptDiff('You are a very polite verbose helpful assistant that always writes long sentences.', 'Role: concise assistant.', 2000, 50);
+  assert(pd.savedOpenAI > 0 && pd.compressionPct > 40);
+
   // OG PNG check
   const ogBuf = fs.readFileSync(path.join(ROOT, 'og-image.png'));
   assert(ogBuf.length > 10000 && ogBuf.slice(0, 8).toString('hex') === '89504e470d0a1a0a', 'og-image.png must be a valid PNG');
@@ -95,7 +101,7 @@ function startServer() {
 async function runBrowserTests() {
   const sm = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
   const paths = [...sm.matchAll(/<loc>https:\/\/tokenledger-8x7\.pages\.dev([^<]+)<\/loc>/g)].map(m => m[1]);
-  assert(paths.length === 42, `Expected 42 sitemap URLs, got ${paths.length}`);
+  assert(paths.length === 52, `Expected 52 sitemap URLs, got ${paths.length}`);
 
   const { srv, origin } = await startServer();
   const browser = await chromium.launch({ headless: true });
@@ -161,6 +167,13 @@ async function runBrowserTests() {
     assert((await page.locator('#modelTableBody tr').count()) === 24);
     await page.goto(`${origin}/es/`, { waitUntil: 'domcontentloaded' });
     assert.strictEqual(await page.evaluate(() => document.documentElement.lang), 'es');
+    await page.goto(`${origin}/tools/ai-runway.html`, { waitUntil: 'domcontentloaded' });
+    assert((await page.locator('#runwayTableBody tr').count()) >= 8);
+    await page.goto(`${origin}/tools/prompt-diff.html`, { waitUntil: 'domcontentloaded' });
+    await page.click('#btnDiffSample');
+    assert((await page.textContent('#kpiDiffDelta')).startsWith('-'));
+    await page.goto(`${origin}/?embed=1`, { waitUntil: 'domcontentloaded' });
+    assert(await page.evaluate(() => document.documentElement.classList.contains('tl-embed-mode')));
 
     assert.strictEqual(errors.length, 0, `Uncaught page errors: ${errors.join(' | ')}`);
     console.log('[PASS] Interactive E2E tests passed across all 5 workspaces (presets, provider filter, theme, JSON minifier savings, agent chart, SaaS matrix, RAG TCO)');

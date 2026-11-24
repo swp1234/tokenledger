@@ -631,3 +631,8 @@ table.tl-table {
   .tl-header, .tl-btn-bar, .tl-resources, .tl-footer, .tl-chips { display: none !important; }
   .tl-panel, .kpi-card, .tl-table-wrap { border: 1px solid #ccc !important; background: #fff !important; color: #000 !important; }
 }
+
+.tl-embed-mode .tl-header,
+.tl-embed-mode .tl-resources,
+.tl-embed-mode .tl-footer { display: none !important; }
+.tl-embed-mode .tl-wrap { padding-top: 12px; padding-bottom: 16px; }

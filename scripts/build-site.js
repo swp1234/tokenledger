@@ -138,7 +138,11 @@ const COMPARISONS = [
   { slug: 'deepseek-r1-vs-claude-sonnet', a: 'deepseek-r1', b: 'claude-sonnet-4', title: 'DeepSeek-R1 vs Claude Sonnet 4 Reasoning & Coding Cost Analysis', summary: 'Benchmark DeepSeek-R1 ($0.55/$2.19) against Claude Sonnet 4 ($3/$15) for multi-step coding and reasoning pipelines.' },
   { slug: 'grok-3-vs-gpt-5', a: 'grok-3', b: 'gpt-5', title: 'xAI Grok 3 vs OpenAI GPT-5 API Pricing Breakdown (2026)', summary: 'Head-to-head monthly cost analysis comparing xAI Grok 3 ($3/$15) and OpenAI GPT-5 ($1.25/$10) with prompt caching.' },
   { slug: 'mistral-large-vs-claude-sonnet', a: 'mistral-large-2', b: 'claude-sonnet-4', title: 'Mistral Large 2 vs Claude Sonnet 4 EU Enterprise API Cost Comparison', summary: 'Compare EU-sovereign Mistral Large 2 ($2/$6) against Anthropic Claude Sonnet 4 ($3/$15) across high-volume workloads.' },
-  { slug: 'openai-realtime-vs-gemini-live', a: 'gpt-5-mini', b: 'gemini-2.5-flash', title: 'OpenAI Realtime Voice vs Gemini Live Audio API Cost Comparison', summary: 'Compare per-minute voice agent economics ($0.24/min vs $0.042/min) and cascaded STT+LLM+TTS alternatives.' }
+  { slug: 'openai-realtime-vs-gemini-live', a: 'gpt-5-mini', b: 'gemini-2.5-flash', title: 'OpenAI Realtime Voice vs Gemini Live Audio API Cost Comparison', summary: 'Compare per-minute voice agent economics ($0.24/min vs $0.042/min) and cascaded STT+LLM+TTS alternatives.' },
+  { slug: 'qwen-2-5-vs-deepseek-v3', a: 'qwen-2.5-72b', b: 'deepseek-v3', title: 'Qwen 2.5 72B vs DeepSeek-V3 Hosted Open-Weight API Cost Comparison', summary: 'Compare multilingual Qwen 2.5 72B ($0.35/$0.40) against DeepSeek-V3 ($0.27/$1.10) on output-heavy workloads.' },
+  { slug: 'gpt-5-nano-vs-gemini-2-5-flash-lite', a: 'gpt-5-nano', b: 'gemini-2.5-flash-lite', title: 'GPT-5 nano vs Gemini 2.5 Flash-Lite Ultra-Budget API Comparison', summary: 'Benchmark the two cheapest production API models ($0.05/$0.40 vs $0.10/$0.40) at 100K+ daily requests.' },
+  { slug: 'o4-mini-vs-grok-3-mini', a: 'o4-mini', b: 'grok-3-mini', title: 'OpenAI o4-mini vs xAI Grok 3 Mini Fast Reasoning Cost Comparison', summary: 'Compare fast reasoning API economics between OpenAI o4-mini ($1.10/$4.40) and xAI Grok 3 Mini ($0.30/$0.50).' },
+  { slug: 'claude-haiku-vs-gpt-4-1-mini', a: 'claude-3.5-haiku', b: 'gpt-4.1-mini', title: 'Claude 3.5 Haiku vs GPT-4.1 mini Low-Latency API Cost Breakdown', summary: 'Side-by-side FinOps analysis comparing Anthropic Claude 3.5 Haiku ($0.80/$4) and OpenAI GPT-4.1 mini ($0.40/$1.60).' }
 ];
 
 const GUIDES = [
@@ -263,6 +267,10 @@ const HOME_HREFLANGS = [
   `  <link rel="alternate" hreflang="fr" href="${ORIGIN}/fr/">`,
   `  <link rel="alternate" hreflang="es" href="${ORIGIN}/es/">`,
   `  <link rel="alternate" hreflang="pt" href="${ORIGIN}/pt/">`,
+  `  <link rel="alternate" hreflang="zh" href="${ORIGIN}/zh/">`,
+  `  <link rel="alternate" hreflang="hi" href="${ORIGIN}/hi/">`,
+  `  <link rel="alternate" hreflang="id" href="${ORIGIN}/id/">`,
+  `  <link rel="alternate" hreflang="tr" href="${ORIGIN}/tr/">`,
   `  <link rel="alternate" hreflang="x-default" href="${ORIGIN}/">`
 ].join('\n');
 
@@ -272,7 +280,7 @@ registerPage('/', 'index.html', renderShell({
   hreflangs: HOME_HREFLANGS,
   title: 'AI & LLM API Cost Calculator (24 Models) — Prompt Caching, Batch & FinOps Studio',
   description: 'Free, 100% browser-private AI & LLM API cost calculator comparing 24 models (GPT-5, Claude 4, Gemini 2.5, DeepSeek, Llama 4, Grok 3) with prompt caching, cascade routing, and CSV/PDF export.',
-  scripts: ['/js/studio-home.js'],
+  scripts: ['/js/budget-card.js', '/js/studio-home.js'],
   schemaGraph: [
     { '@type': 'SoftwareApplication', name: 'TokenLedger AI & LLM Cost Studio', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}/`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, description: 'Browser-private LLM API cost estimator, agent burn simulator, SaaS gross margin calculator, and RAG TCO planner.' },
     { '@type': 'FAQPage', mainEntity: [
@@ -323,7 +331,9 @@ registerPage('/', 'index.html', renderShell({
       <label class="tl-check-row"><input id="batchToggle" type="checkbox"><span>Apply 50% Async Batch API Discount (where provider supports Batch)</span></label>
       <div class="tl-btn-bar">
         <button type="button" id="btnShare" class="tl-btn tl-btn-primary">Copy Share URL</button>
+        <button type="button" id="btnPngCard" class="tl-btn">Download PNG Card</button>
         <button type="button" id="btnMarkdown" class="tl-btn">Copy Markdown (PR/Notion)</button>
+        <button type="button" id="btnEmbed" class="tl-btn">Copy Embed Widget</button>
         <button type="button" id="btnCsv" class="tl-btn">Export CSV</button>
         <button type="button" id="btnJson" class="tl-btn">Export JSON</button>
         <button type="button" id="btnPrint" class="tl-btn">Print / PDF</button>
@@ -383,15 +393,21 @@ registerPage('/', 'index.html', renderShell({
       <a class="tl-link-card" href="/tools/rag-calculator.html"><strong>RAG &amp; Vector DB TCO Planner</strong><span>Estimate embedding ingestion, HNSW RAM footprint, re-index churn, and synthesis cost.</span><em>Open Planner →</em></a>
       <a class="tl-link-card" href="/tools/self-host-vs-api.html"><strong>Self-Hosted GPU vs Cloud API</strong><span>Calculate exact daily request break-even for H100/A100/L40S/4090 vLLM vs cloud APIs.</span><em>Compare GPU vs API →</em></a>
       <a class="tl-link-card" href="/tools/multimodal-budget.html"><strong>Voice, Vision &amp; Image Cost Studio</strong><span>Estimate PDF/image vision tokens, OpenAI Realtime vs Gemini Live voice, and Imagen/Flux.</span><em>Open Studio →</em></a>
+      <a class="tl-link-card" href="/tools/ai-runway.html"><strong>AI Startup Burn &amp; Runway Planner</strong><span>Model LLM spend scaling with MRR, cloud infra, payroll, and exact Default-Alive month.</span><em>Model Runway →</em></a>
+      <a class="tl-link-card" href="/tools/prompt-diff.html"><strong>Prompt A/B Compression Cost Diff</strong><span>Compare before vs. after system prompts and copy PR-ready annual USD savings tables.</span><em>Run Prompt Diff →</em></a>
       <a class="tl-link-card" href="/tools/token-inspector.html"><strong>Context &amp; JSON Minifier Inspector</strong><span>Inspect OpenAI/Claude/Gemini tokens and minify tool JSON schemas for instant savings.</span><em>Open Inspector →</em></a>
     </div>
     <div class="tl-pills" style="margin-top:14px">
-      <a class="tl-pill" href="/ko/" style="text-decoration:none;color:var(--accent)">한국어 (KO)</a>
-      <a class="tl-pill" href="/ja/" style="text-decoration:none;color:var(--accent)">日本語 (JA)</a>
-      <a class="tl-pill" href="/de/" style="text-decoration:none;color:var(--accent)">Deutsch (DE)</a>
-      <a class="tl-pill" href="/fr/" style="text-decoration:none;color:var(--accent)">Français (FR)</a>
-      <a class="tl-pill" href="/es/" style="text-decoration:none;color:var(--accent)">Español (ES)</a>
-      <a class="tl-pill" href="/pt/" style="text-decoration:none;color:var(--accent)">Português (PT)</a>
+      <a class="tl-pill" href="/ko/" style="text-decoration:none;color:var(--accent)">한국어</a>
+      <a class="tl-pill" href="/ja/" style="text-decoration:none;color:var(--accent)">日本語</a>
+      <a class="tl-pill" href="/de/" style="text-decoration:none;color:var(--accent)">Deutsch</a>
+      <a class="tl-pill" href="/fr/" style="text-decoration:none;color:var(--accent)">Français</a>
+      <a class="tl-pill" href="/es/" style="text-decoration:none;color:var(--accent)">Español</a>
+      <a class="tl-pill" href="/pt/" style="text-decoration:none;color:var(--accent)">Português</a>
+      <a class="tl-pill" href="/zh/" style="text-decoration:none;color:var(--accent)">中文</a>
+      <a class="tl-pill" href="/hi/" style="text-decoration:none;color:var(--accent)">हिन्दी</a>
+      <a class="tl-pill" href="/id/" style="text-decoration:none;color:var(--accent)">Indonesia</a>
+      <a class="tl-pill" href="/tr/" style="text-decoration:none;color:var(--accent)">Türkçe</a>
     </div>
   </section>
 
@@ -850,6 +866,112 @@ registerPage('/tools/multimodal-budget.html', 'tools/multimodal-budget.html', re
   </section>`
 }), '0.9');
 
+// --- PAGE 9: AI STARTUP MONTHLY BURN & RUNWAY PLANNER ---
+registerPage('/tools/ai-runway.html', 'tools/ai-runway.html', renderShell({
+  path: '/tools/ai-runway.html',
+  active: 'saas',
+  title: 'AI Startup Burn Rate, LLM Spend Scaling & Runway Calculator (Default Alive)',
+  description: 'Model startup cash runway with scaling LLM API spend, cloud infra, payroll, and MRR growth rate. See exact Default-Alive month and 24-month cash table.',
+  scripts: ['/js/ai-runway.js'],
+  schemaGraph: [
+    { '@type': 'SoftwareApplication', name: 'TokenLedger AI Startup Burn & Runway Planner', applicationCategory: 'BusinessApplication', operatingSystem: 'Any', url: `${ORIGIN}/tools/ai-runway.html`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } }
+  ],
+  body: `  <section class="tl-hero">
+    <div class="tl-kicker">FOUNDER FINANCE &bull; AI BURN &amp; DEFAULT-ALIVE SIMULATOR</div>
+    <h1>AI Startup Burn Rate &amp; Runway Planner</h1>
+    <p>Unlike traditional SaaS, AI startup COGS grow alongside revenue. Model cash on hand, MRR growth, scaling LLM API spend, cloud infra, and payroll to see your exact runway and break-even month.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">Runway Status</div><div class="kpi-val accent" id="kpiRunway">-</div><div class="kpi-sub" id="kpiRunwaySub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Month-1 Net Burn</div><div class="kpi-val warn" id="kpiNetBurn">$0/mo</div><div class="kpi-sub" id="kpiNetBurnSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">AI Share of Burn</div><div class="kpi-val" id="kpiAiShare">0%</div><div class="kpi-sub" id="kpiAiShareSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Break-Even Month</div><div class="kpi-val accent" id="kpiBreakEvenMo">-</div><div class="kpi-sub" id="kpiBreakEvenMoSub">-</div></div>
+  </section>
+
+  <section class="tl-grid-2">
+    <div class="tl-panel">
+      <h2>Cash, MRR &amp; Operating Cost Inputs</h2>
+      <div class="tl-row">
+        <div class="tl-field"><label for="rwCash">Cash in Bank ($ USD)</label><input id="rwCash" class="tl-input num" type="number" min="1000" step="10000" value="250000"></div>
+        <div class="tl-field"><label for="rwMrr">Current MRR ($ USD)</label><input id="rwMrr" class="tl-input num" type="number" min="0" step="1000" value="8000"></div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="rwGrowth">Monthly MRR Growth (%)</label><input id="rwGrowth" class="tl-input num" type="number" min="-50" max="200" step="1" value="12"></div>
+        <div class="tl-field"><label for="rwAi">Current Monthly LLM Spend ($)</label><input id="rwAi" class="tl-input num" type="number" min="0" step="250" value="4500"></div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="rwCloud">Cloud / Vector DB / Hosting ($)</label><input id="rwCloud" class="tl-input num" type="number" min="0" step="200" value="1800"></div>
+        <div class="tl-field"><label for="rwOps">Payroll &amp; Fixed Ops ($)</label><input id="rwOps" class="tl-input num" type="number" min="0" step="1000" value="18000"></div>
+      </div>
+      <label class="tl-check-row"><input id="rwScaleAi" type="checkbox" checked><span>Scale monthly LLM spend at 0.75x of MRR growth rate</span></label>
+      <div class="tl-btn-bar"><button type="button" id="btnRwExport" class="tl-btn tl-btn-primary">Export 24-Month Projection JSON</button></div>
+    </div>
+
+    <div class="tl-panel">
+      <h2>24-Month Runway &amp; Cash Trajectory</h2>
+      <div class="tl-table-wrap">
+        <table class="tl-table" style="min-width:480px">
+          <thead><tr><th>Timeline</th><th>MRR</th><th>AI Spend</th><th>Gross Burn</th><th>Net Burn</th><th>Ending Cash</th></tr></thead>
+          <tbody id="runwayTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>`
+}), '0.9');
+
+// --- PAGE 10: PROMPT A/B COMPRESSION COST DIFF ---
+registerPage('/tools/prompt-diff.html', 'tools/prompt-diff.html', renderShell({
+  path: '/tools/prompt-diff.html',
+  active: 'inspector',
+  title: 'Prompt Compression A/B Token & Annual USD Savings Diff Tool',
+  description: 'Paste Prompt A (before) vs Prompt B (after) locally to calculate exact token savings, compression %, and annual USD saved across GPT-5, Claude 4, and Gemini 2.5.',
+  scripts: ['/js/prompt-diff.js'],
+  schemaGraph: [
+    { '@type': 'SoftwareApplication', name: 'TokenLedger Prompt A/B Cost Diff', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}/tools/prompt-diff.html`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } }
+  ],
+  body: `  <section class="tl-hero">
+    <div class="tl-kicker">PROMPT OPTIMIZATION &bull; PR COST-DIFF BENCHMARK</div>
+    <h1>System Prompt A/B Compression Cost Diff</h1>
+    <p>Compare your verbose original system prompt against a compressed rewrite locally — quantify exact token reduction, annual USD savings across 6 flagship models, and copy a Markdown diff for your GitHub PR.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">Prompt A (Before)</div><div class="kpi-val" id="kpiDiffA">0 tok</div><div class="kpi-sub" id="kpiDiffASub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Prompt B (After)</div><div class="kpi-val" id="kpiDiffB">0 tok</div><div class="kpi-sub" id="kpiDiffBSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Token Delta</div><div class="kpi-val accent" id="kpiDiffDelta">0 tok</div><div class="kpi-sub" id="kpiDiffDeltaSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Annual Savings (Sonnet 4)</div><div class="kpi-val accent" id="kpiDiffAnnual">$0/yr</div><div class="kpi-sub" id="kpiDiffAnnualSub">-</div></div>
+  </section>
+
+  <section class="tl-grid-2">
+    <div class="tl-panel">
+      <h2>Prompt A — Original (Verbose)</h2>
+      <textarea id="diffA" class="tl-textarea" style="min-height:170px" placeholder="Paste original system prompt or schema..."></textarea>
+    </div>
+    <div class="tl-panel">
+      <h2>Prompt B — Optimized (Compressed)</h2>
+      <textarea id="diffB" class="tl-textarea" style="min-height:170px" placeholder="Paste tightened prompt or minified schema..."></textarea>
+    </div>
+  </section>
+
+  <section class="tl-panel">
+    <div class="tl-row" style="margin-bottom:12px">
+      <div class="tl-field"><label for="diffReqs">Daily Requests</label><input id="diffReqs" class="tl-input num" type="number" min="1" step="500" value="2000"></div>
+      <div class="tl-field"><label for="diffCache">Prompt Cache Hit Rate <strong id="diffCacheVal">50%</strong></label><input id="diffCache" class="tl-range" type="range" min="0" max="95" step="5" value="50"></div>
+    </div>
+    <div class="tl-btn-bar" style="margin-bottom:16px">
+      <button type="button" id="btnDiffSample" class="tl-btn">Load Sample A/B Prompts</button>
+      <button type="button" id="btnDiffMd" class="tl-btn tl-btn-primary">Copy PR Diff Markdown Table</button>
+    </div>
+    <div class="tl-table-wrap">
+      <table class="tl-table" style="min-width:440px">
+        <thead><tr><th>Model</th><th>Provider</th><th>Monthly Delta</th><th>Annual Savings</th></tr></thead>
+        <tbody id="diffTableBody"></tbody>
+      </table>
+    </div>
+  </section>`
+}), '0.9');
+
 // --- PAGES 6–13: 8 PROGRAMMATIC MODEL COMPARISON PAGES ---
 for (const c of COMPARISONS) {
   const mA = ENGINE.getModel(c.a);
@@ -1051,6 +1173,46 @@ const LOCALE_HUBS = [
     lead: 'Compare custos mensais e anuais em 24 modelos de IA (GPT-5, Claude 4, Gemini 2.5, DeepSeek, Llama 4 e Mistral) com cache de prompts, agentes e margem SaaS.',
     s1: '1. Parâmetros de carga', s2: '2. Contador de tokens e Cascata', s3: '3. Matriz de custos dos 24 modelos',
     lIn: 'Tokens entrada / requisição', lOut: 'Tokens saída / requisição', lReq: 'Requisições / dia', lCache: 'Taxa de Prompt Cache', lBatch: 'Aplicar 50% desconto Batch API', bShare: 'Copiar link', bMd: 'Copiar Markdown'
+  },
+  {
+    lang: 'zh',
+    kicker: '24款大模型 · 100% 浏览器本地运行 · 零数据上传',
+    title: 'AI 大模型 API 费用计算器 (GPT-5, Claude 4, Gemini 2.5, DeepSeek) — 缓存与批处理',
+    desc: '免费、100%本地运行的24款大模型 API 成本计算器，支持提示词缓存、50% Batch 批处理折扣、70/30 模型路由省钱测算与 CSV/Markdown 导出。',
+    h1: 'AI 与大模型 API 成本计算器 & FinOps 工作台',
+    lead: '即时对比 OpenAI GPT-5、Claude 4、Gemini 2.5、DeepSeek、Llama 4 与通义千问等24款模型的单次、月度与年度 API 成本。',
+    s1: '1. 业务负载参数', s2: '2. 实时 Token 估算与模型路由', s3: '3. 24款模型实时成本对比表',
+    lIn: '每次请求输入 Token', lOut: '每次请求输出 Token', lReq: '每日请求次数', lCache: '提示词缓存命中率', lBatch: '启用 50% 异步 Batch API 折扣', bShare: '复制分享链接', bMd: '复制 Markdown 表格'
+  },
+  {
+    lang: 'hi',
+    kicker: '24 AI मॉडल · 100% ब्राउज़र प्राइवेट · कोई अपलोड नहीं',
+    title: 'AI और LLM API कॉस्ट कैलकुलेटर (GPT-5, Claude 4, Gemini 2.5, DeepSeek)',
+    desc: '24 प्रमुख LLM मॉडल के मासिक और वार्षिक API खर्च की गणना करें — प्रॉम्प्ट कैशिंग, 50% बैच छूट और मॉडल राउटिंग बचत के साथ।',
+    h1: 'AI और LLM API लागत कैलकुलेटर व FinOps स्टूडियो',
+    lead: 'GPT-5, Claude 4, Gemini 2.5, DeepSeek और Llama 4 सहित 24 मॉडलों की प्रति-रिक्वेस्ट, मासिक और वार्षिक लागत 100% ब्राउज़र में तुरंत तुलना करें।',
+    s1: '1. वर्कलोड सेटिंग्स', s2: '2. लाइव टोकन काउंटर व मॉडल कैस्केड', s3: '3. 24 मॉडल लागत तुलना तालिका',
+    lIn: 'इनपुट टोकन / रिक्वेस्ट', lOut: 'आउटपुट टोकन / रिक्वेस्ट', lReq: 'दैनिक रिक्वेस्ट', lCache: 'प्रॉम्प्ट कैश हिट रेट', lBatch: '50% बैच API छूट लागू करें', bShare: 'लिंक कॉपी करें', bMd: 'Markdown कॉपी करें'
+  },
+  {
+    lang: 'id',
+    kicker: '24 MODEL AI · 100% PRIVAT DI BROWSER · TANPA UPLOAD',
+    title: 'Kalkulator Biaya API LLM & AI (GPT-5, Claude 4, Gemini 2.5, DeepSeek)',
+    desc: 'Hitung biaya bulanan & tahunan 24 API LLM secara lokal dengan Prompt Caching, diskon Batch 50%, simulasi model router, dan ekspor CSV/Markdown.',
+    h1: 'Kalkulator Biaya API LLM & Studio FinOps',
+    lead: 'Bandingkan biaya real-time untuk GPT-5, Claude 4, Gemini 2.5, DeepSeek, Llama 4, dan Mistral lengkap dengan caching, agen multi-turn, dan margin SaaS.',
+    s1: '1. Parameter Beban Kerja', s2: '2. Penghitung Token & Router Kaskade', s3: '3. Matriks Biaya 24 Model LLM',
+    lIn: 'Token Input / Permintaan', lOut: 'Token Output / Permintaan', lReq: 'Permintaan / Hari', lCache: 'Rasio Prompt Cache', lBatch: 'Terapkan Diskon Batch API 50%', bShare: 'Salin Tautan', bMd: 'Salin Markdown'
+  },
+  {
+    lang: 'tr',
+    kicker: '24 YAPAY ZEKA MODELİ · %100 TARAYICIDA YEREL',
+    title: 'Yapay Zeka & LLM API Maliyet Hesaplayıcı (GPT-5, Claude 4, Gemini 2.5, DeepSeek)',
+    desc: 'Prompt Caching, %50 Batch API indirimi ve model yönlendirme tasarrufuyla 24 LLM modelinin aylık/yıllık API maliyetini tarayıcıda ücretsiz hesaplayın.',
+    h1: 'AI & LLM API Maliyet Hesaplayıcı ve FinOps Stüdyosu',
+    lead: 'GPT-5, Claude 4, Gemini 2.5, DeepSeek, Llama 4 ve Mistral dahil 24 modelin anlık maliyetlerini ve ajan/SaaS bütçelerini karşılaştırın.',
+    s1: '1. İş Yükü Parametreleri', s2: '2. Canlı Token Ölçer ve Model Kaskadı', s3: '3. 24 Model Maliyet Karşılaştırma Tablosu',
+    lIn: 'Girdi Token / İstek', lOut: 'Çıktı Token / İstek', lReq: 'Günlük İstek Sayısı', lCache: 'Prompt Cache İsabet Oranı', lBatch: '%50 Batch API İndirimi Uygula', bShare: 'Bağlantıyı Kopyala', bMd: 'Markdown Kopyala'
   }
 ];
 
@@ -1063,7 +1225,7 @@ for (const lh of LOCALE_HUBS) {
     hreflangs: HOME_HREFLANGS,
     title: lh.title,
     description: lh.desc,
-    scripts: ['/js/studio-home.js'],
+    scripts: ['/js/budget-card.js', '/js/studio-home.js'],
     schemaGraph: [
       { '@type': 'SoftwareApplication', name: `TokenLedger (${lh.lang.toUpperCase()})`, inLanguage: lh.lang, applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}${urlPath}`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } }
     ],
