@@ -80,7 +80,7 @@ function startServer() {
 
 async function runBrowserTests() {
   const sm = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
-  const paths = [...sm.matchAll(/<loc>https:\/\/tokenledger\.pages\.dev([^<]+)<\/loc>/g)].map(m => m[1]);
+  const paths = [...sm.matchAll(/<loc>https:\/\/tokenledger-8x7\.pages\.dev([^<]+)<\/loc>/g)].map(m => m[1]);
   assert(paths.length === 19, `Expected 19 sitemap URLs, got ${paths.length}`);
 
   const { srv, origin } = await startServer();
@@ -102,7 +102,7 @@ async function runBrowserTests() {
         canonical: document.querySelector('link[rel="canonical"]')?.getAttribute('href') || '',
       }));
       assert(rep.overflow <= 1, `Mobile 390px overflow ${rep.overflow}px on ${p}`);
-      assert(rep.h1.length > 5 && rep.canonical.startsWith('https://tokenledger.pages.dev'), `Metadata issue on ${p}`);
+      assert(rep.h1.length > 5 && rep.canonical.startsWith('https://tokenledger-8x7.pages.dev'), `Metadata issue on ${p}`);
     }
     console.log(`[PASS] All ${paths.length} pages verified on 390x844 mobile (0px overflow, 200 OK, metadata intact)`);
 

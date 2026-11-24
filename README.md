@@ -2,8 +2,8 @@
 
 > **100% browser-private** AI & LLM API cost calculator, multi-turn agent burn simulator, AI SaaS gross margin calculator, RAG TCO planner, and open JSON pricing feed across **24 flagship models**.
 
-Live app: **[https://tokenledger.pages.dev](https://tokenledger.pages.dev)**  
-Public pricing JSON API: **[https://tokenledger.pages.dev/api/pricing.json](https://tokenledger.pages.dev/api/pricing.json)**
+Live app: **[https://tokenledger-8x7.pages.dev](https://tokenledger-8x7.pages.dev)**  
+Public pricing JSON API: **[https://tokenledger-8x7.pages.dev/api/pricing.json](https://tokenledger-8x7.pages.dev/api/pricing.json)**
 
 ## Why TokenLedger?
 
@@ -27,7 +27,7 @@ node scripts/verify-tokenledger.js
 
 ## Public Machine-Readable Pricing Feed
 
-Fetch `https://tokenledger.pages.dev/api/pricing.json` directly from CI, FinOps scripts, or AI agents (`Access-Control-Allow-Origin: *`).
+Fetch `https://tokenledger-8x7.pages.dev/api/pricing.json` directly from CI, FinOps scripts, or AI agents (`Access-Control-Allow-Origin: *`).
 
 ## License
 

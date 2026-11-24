@@ -5,7 +5,7 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 const ENGINE = require(path.join(ROOT, 'js', 'pricing-engine.js'));
-const ORIGIN = 'https://tokenledger.pages.dev';
+const ORIGIN = 'https://tokenledger-8x7.pages.dev';
 const REPO_URL = 'https://github.com/swp1234/tokenledger';
 const TODAY = '2026-11-24';
 
