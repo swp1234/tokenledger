@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <title>AI SaaS Unit Economics, Gross Margin &amp; Power-User Cap Simulator | TokenLedger</title>
+  <meta name="description" content="Calculate AI SaaS gross margin %, per-seat LLM COGS, Stripe payment fees, 1,000-seat net profit, and exact break-even request caps per subscriber.">
+  <meta name="dateModified" content="2026-11-24">
+  <link rel="canonical" href="https://tokenledger.pages.dev/tools/saas-margin.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="AI SaaS Unit Economics, Gross Margin &amp; Power-User Cap Simulator | TokenLedger">
+  <meta property="og:description" content="Calculate AI SaaS gross margin %, per-seat LLM COGS, Stripe payment fees, 1,000-seat net profit, and exact break-even request caps per subscriber.">
+  <meta property="og:url" content="https://tokenledger.pages.dev/tools/saas-margin.html">
+  <meta property="og:image" content="https://tokenledger.pages.dev/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AI SaaS Unit Economics, Gross Margin &amp; Power-User Cap Simulator | TokenLedger">
+  <meta name="twitter:description" content="Calculate AI SaaS gross margin %, per-seat LLM COGS, Stripe payment fees, 1,000-seat net profit, and exact break-even request caps per subscriber.">
+  <meta name="twitter:image" content="https://tokenledger.pages.dev/og-image.png">
+
+  <link rel="stylesheet" href="/css/tokenledger.css">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "TokenLedger AI SaaS Margin Simulator",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Any",
+      "url": "https://tokenledger.pages.dev/tools/saas-margin.html",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is a healthy gross margin target for an AI SaaS product?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Most software investors and founders target 70% to 80%+ gross margin after LLM token COGS, payment processing fees, and cloud infrastructure."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <header class="tl-header">
+    <div class="tl-nav-inner">
+      <a href="/" class="tl-brand"><span class="tl-logo" aria-hidden="true">TL</span><span>TokenLedger</span></a>
+      <nav class="tl-nav-links" aria-label="Primary">
+        <a href="/">Cost Estimator</a>
+        <a href="/tools/agent-budget.html">Agent Burn</a>
+        <a href="/tools/saas-margin.html" class="active">SaaS Margin</a>
+        <a href="/tools/rag-calculator.html">RAG TCO</a>
+        <a href="/tools/token-inspector.html">Token Inspector</a>
+        <a href="/guides/llm-cost-optimization-playbook.html">Playbook</a>
+      </nav>
+      <div class="tl-nav-actions">
+        <a href="/api/pricing.json" class="tl-icon-btn" title="Public JSON Pricing Feed">JSON API</a>
+        <button type="button" id="tlThemeToggle" class="tl-icon-btn" aria-label="Toggle Light or Dark Theme">Light</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="tl-wrap">
+  <section class="tl-hero">
+    <div class="tl-kicker">FOUNDER UNIT ECONOMICS &bull; PRICING &amp; MARGIN GUARDRAILS</div>
+    <h1>AI SaaS Gross Margin &amp; Break-Even Simulator</h1>
+    <p>Stress-test your subscription price against real per-seat LLM COGS, payment processing fees, and heavy power users — plus find the exact request cap where a flat-rate seat turns negative.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">Gross Margin</div><div class="kpi-val accent" id="kpiMargin">0%</div><div class="kpi-sub" id="kpiMarginSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">AI COGS / Seat</div><div class="kpi-val" id="kpiCogs">$0</div><div class="kpi-sub" id="kpiCogsSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Monthly Gross Profit</div><div class="kpi-val accent" id="kpiProfit">$0/mo</div><div class="kpi-sub" id="kpiProfitSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Break-Even Cap / Seat</div><div class="kpi-val warn" id="kpiCap">0 reqs</div><div class="kpi-sub" id="kpiCapSub">-</div></div>
+  </section>
+
+  <section class="tl-grid-2">
+    <div class="tl-panel">
+      <h2>Subscription &amp; Usage Model</h2>
+      <div class="tl-field"><label for="saasModel">Primary LLM Model</label><select id="saasModel" class="tl-select"></select></div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="saasPrice">Monthly Plan Price ($ USD)</label><input id="saasPrice" class="tl-input num" type="number" min="1" step="1" value="29"></div>
+        <div class="tl-field"><label for="saasSeats">Active Paying Seats</label><input id="saasSeats" class="tl-input num" type="number" min="1" step="50" value="500"></div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="saasReqs">Avg Requests / Seat / Month</label><input id="saasReqs" class="tl-input num" type="number" min="1" step="25" value="250"></div>
+        <div class="tl-field"><label for="saasInfra">Fixed Hosting / Seat ($)</label><input id="saasInfra" class="tl-input num" type="number" min="0" step="0.05" value="0.45"></div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="saasIn">Avg Input Tokens / Req</label><input id="saasIn" class="tl-input num" type="number" min="50" step="100" value="2800"></div>
+        <div class="tl-field"><label for="saasOut">Avg Output Tokens / Req</label><input id="saasOut" class="tl-input num" type="number" min="20" step="50" value="650"></div>
+      </div>
+      <div class="tl-field"><label for="saasCache">Prompt Cache Hit Rate <strong id="saasCacheVal">60%</strong></label><input id="saasCache" class="tl-range" type="range" min="0" max="95" step="5" value="60"></div>
+      <div class="tl-btn-bar">
+        <button type="button" id="btnSaasJson" class="tl-btn tl-btn-primary">Export Unit Economics JSON</button>
+        <button type="button" id="btnSaasPrint" class="tl-btn">Print CFO Summary PDF</button>
+      </div>
+    </div>
+
+    <div class="tl-panel">
+      <h2>Gross Margin Sensitivity Across Flagship Models</h2>
+      <div class="tl-table-wrap">
+        <table class="tl-table" style="min-width:480px">
+          <thead><tr><th>Model</th><th>AI COGS/Seat</th><th>Gross Margin</th><th>Break-Even Cap</th><th>Net Profit</th></tr></thead>
+          <tbody id="saasCompareBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="tl-prose">
+    <h2>Frequently Asked Questions</h2>
+    <div class="tl-faq-grid">
+      <div class="tl-faq-item"><h3>What is a healthy gross margin target for an AI SaaS product?</h3><p>Most software investors and founders target 70% to 80%+ gross margin after LLM token COGS, payment processing fees, and cloud infrastructure.</p></div>
+    </div>
+  </section>
+  <section class="tl-resources" aria-label="Recommended AI Engineering and FinOps Books">
+    <h2>Recommended AI Engineering &amp; Cloud FinOps Books</h2>
+    <div class="tl-res-grid">
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098166302?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>AI Engineering</strong>
+        <span>Chip Huyen (O’Reilly) • Production architecture for foundation models, evaluation, RAG, and latency/cost budgets.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098150724?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>Cloud FinOps (2nd Ed.)</strong>
+        <span>J.R. Storment &amp; Mike Fuller (O’Reilly) • Collaborative cloud &amp; AI unit-economics governance for engineering teams.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098161769?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>Building LLMs for Production</strong>
+        <span>Louis-François Bouchard &amp; Louie Peters • Practical prompting, caching, RAG, and cost-aware inference routing.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+    </div>
+    <p class="tl-disclosure">Editorial note: Curated technical books for AI engineers and FinOps teams. Amazon links include affiliate tag dopabrain-20 (no extra cost to you) and help keep TokenLedger 100% free and ad-free. Interested in sponsoring TokenLedger? <a href="https://github.com/swp1234/tokenledger" target="_blank" rel="noopener" style="color:var(--accent)">Open a Sponsor / Partnership thread on GitHub ↗</a>.</p>
+  </section>
+  </main>
+
+  <footer class="tl-footer">
+    <div class="tl-footer-inner">
+      <div><strong>TokenLedger</strong> &bull; 100% Browser-Private AI &amp; LLM FinOps Studio &bull; Pricing snapshot: 2026-11-24</div>
+      <div>
+        <a href="/about.html">Methodology</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/api/pricing.json">Pricing JSON</a>
+        <a href="https://github.com/swp1234/tokenledger" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+  </footer>
+  <script src="/js/pricing-engine.js"></script>
+  <script src="/js/ui-shell.js"></script>
+  <script src="/js/saas-margin.js" defer></script>
+</body>
+</html>

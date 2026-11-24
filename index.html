@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <title>AI &amp; LLM API Cost Calculator (24 Models) — Prompt Caching, Batch &amp; FinOps Studio | TokenLedger</title>
+  <meta name="description" content="Free, 100% browser-private AI &amp; LLM API cost calculator comparing 24 models (GPT-5, Claude 4, Gemini 2.5, DeepSeek, Llama 4, Grok 3) with prompt caching, cascade routing, and CSV/PDF export.">
+  <meta name="dateModified" content="2026-11-24">
+  <link rel="canonical" href="https://tokenledger.pages.dev/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="AI &amp; LLM API Cost Calculator (24 Models) — Prompt Caching, Batch &amp; FinOps Studio | TokenLedger">
+  <meta property="og:description" content="Free, 100% browser-private AI &amp; LLM API cost calculator comparing 24 models (GPT-5, Claude 4, Gemini 2.5, DeepSeek, Llama 4, Grok 3) with prompt caching, cascade routing, and CSV/PDF export.">
+  <meta property="og:url" content="https://tokenledger.pages.dev/">
+  <meta property="og:image" content="https://tokenledger.pages.dev/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AI &amp; LLM API Cost Calculator (24 Models) — Prompt Caching, Batch &amp; FinOps Studio | TokenLedger">
+  <meta name="twitter:description" content="Free, 100% browser-private AI &amp; LLM API cost calculator comparing 24 models (GPT-5, Claude 4, Gemini 2.5, DeepSeek, Llama 4, Grok 3) with prompt caching, cascade routing, and CSV/PDF export.">
+  <meta name="twitter:image" content="https://tokenledger.pages.dev/og-image.png">
+
+  <link rel="stylesheet" href="/css/tokenledger.css">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "TokenLedger AI & LLM Cost Studio",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "url": "https://tokenledger.pages.dev/",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "Browser-private LLM API cost estimator, agent burn simulator, SaaS gross margin calculator, and RAG TCO planner."
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does TokenLedger send my pasted prompts to any server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Never. All token estimation, pricing calculations, CSV/JSON exports, and minification run 100% locally inside your browser with zero network transmission of prompt text."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does LLM prompt caching affect monthly API cost?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Major providers discount repeated prompt prefixes by 75% to 90%. For high-volume apps with stable system prompts or tool schemas, prompt caching often cuts total input spend by more than half."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <header class="tl-header">
+    <div class="tl-nav-inner">
+      <a href="/" class="tl-brand"><span class="tl-logo" aria-hidden="true">TL</span><span>TokenLedger</span></a>
+      <nav class="tl-nav-links" aria-label="Primary">
+        <a href="/" class="active">Cost Estimator</a>
+        <a href="/tools/agent-budget.html">Agent Burn</a>
+        <a href="/tools/saas-margin.html">SaaS Margin</a>
+        <a href="/tools/rag-calculator.html">RAG TCO</a>
+        <a href="/tools/token-inspector.html">Token Inspector</a>
+        <a href="/guides/llm-cost-optimization-playbook.html">Playbook</a>
+      </nav>
+      <div class="tl-nav-actions">
+        <a href="/api/pricing.json" class="tl-icon-btn" title="Public JSON Pricing Feed">JSON API</a>
+        <button type="button" id="tlThemeToggle" class="tl-icon-btn" aria-label="Toggle Light or Dark Theme">Light</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="tl-wrap">
+  <section class="tl-hero">
+    <div class="tl-kicker">24 MODELS &bull; 100% BROWSER-PRIVATE &bull; ZERO DATA UPLOAD</div>
+    <h1>AI &amp; LLM API Cost Calculator &amp; FinOps Studio</h1>
+    <p>Model real production spend across OpenAI GPT-5, Anthropic Claude 4, Google Gemini 2.5, DeepSeek, Llama 4, Grok 3, and Mistral — including Prompt Caching, 50% Batch discounts, Model Cascade routing, and executive CSV/PDF exports.</p>
+    <div class="tl-pills">
+      <span class="tl-pill">Live Token Counter</span>
+      <span class="tl-pill">Prompt Caching &amp; Batch API</span>
+      <span class="tl-pill">Cascade Router Savings</span>
+      <span class="tl-pill">CSV / JSON / Print PDF</span>
+    </div>
+  </section>
+
+  <section class="tl-grid-4" aria-label="Headline Cost Metrics">
+    <div class="kpi-card"><div class="kpi-label">Lowest Monthly Cost</div><div class="kpi-val accent" id="kpiCheapest">$0.00/mo</div><div class="kpi-sub" id="kpiCheapestSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">OpenAI GPT-5</div><div class="kpi-val" id="kpiGpt5">$0.00/mo</div><div class="kpi-sub" id="kpiGpt5Sub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Claude Sonnet 4</div><div class="kpi-val" id="kpiSonnet">$0.00/mo</div><div class="kpi-sub" id="kpiSonnetSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Cascade Router Savings</div><div class="kpi-val accent" id="kpiCascadeSave">$0.00/mo</div><div class="kpi-sub" id="kpiCascadeSub">-</div></div>
+  </section>
+
+  <section class="tl-grid-2">
+    <div class="tl-panel">
+      <h2>1. Workload Parameters</h2>
+      <div class="tl-chips" aria-label="Quick Workload Presets">
+        <button type="button" class="tl-chip" data-preset="support">Support Bot (5K/d)</button>
+        <button type="button" class="tl-chip" data-preset="coding">Coding Agent (18K in)</button>
+        <button type="button" class="tl-chip" data-preset="rag">RAG Search (2K/d)</button>
+        <button type="button" class="tl-chip" data-preset="batch">Batch ETL (15K/d)</button>
+      </div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="inTokens">Input Tokens / Request</label><input id="inTokens" class="tl-input num" type="number" min="0" step="100" value="2500"></div>
+        <div class="tl-field"><label for="outTokens">Output Tokens / Request</label><input id="outTokens" class="tl-input num" type="number" min="0" step="50" value="600"></div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="dailyReqs">Requests / Day</label><input id="dailyReqs" class="tl-input num" type="number" min="1" step="100" value="1000"></div>
+        <div class="tl-field"><label for="sortSelect">Sort Table By</label><select id="sortSelect" class="tl-select"><option value="monthly">Monthly Cost (Low → High)</option><option value="input">Input Rate ($/1M)</option><option value="context">Context Window (Largest)</option></select></div>
+      </div>
+      <div class="tl-field">
+        <label for="cacheSlider">Prompt Cache Hit Rate <strong id="cacheVal">50%</strong></label>
+        <input id="cacheSlider" class="tl-range" type="range" min="0" max="95" step="5" value="50">
+      </div>
+      <label class="tl-check-row"><input id="batchToggle" type="checkbox"><span>Apply 50% Async Batch API Discount (where provider supports Batch)</span></label>
+      <div class="tl-btn-bar">
+        <button type="button" id="btnShare" class="tl-btn tl-btn-primary">Copy Share URL</button>
+        <button type="button" id="btnCsv" class="tl-btn">Export CSV</button>
+        <button type="button" id="btnJson" class="tl-btn">Export JSON</button>
+        <button type="button" id="btnPrint" class="tl-btn">Print / PDF</button>
+      </div>
+    </div>
+
+    <div class="tl-panel">
+      <h2>2. Live Prompt Token Estimator &amp; Model Cascade</h2>
+      <div class="tl-field">
+        <label for="livePrompt">Optional: Paste prompt to auto-fill input tokens (stays 100% local)</label>
+        <textarea id="livePrompt" class="tl-textarea" placeholder="Paste system prompt, JSON tool schema, or user query here..."></textarea>
+        <div id="promptStats" class="kpi-sub num" style="margin-top:6px">0 OpenAI tok · 0 Claude tok · 0 Gemini tok</div>
+      </div>
+      <hr style="border:0;border-top:1px solid var(--line);margin:14px 0">
+      <h3>Model Cascade / Router Savings Simulator</h3>
+      <div class="tl-row">
+        <div class="tl-field"><label for="cascadeFrontier">Primary / Frontier Model</label><select id="cascadeFrontier" class="tl-select"></select></div>
+        <div class="tl-field"><label for="cascadeMini">Routed Fast / Mini Model</label><select id="cascadeMini" class="tl-select"></select></div>
+      </div>
+      <div class="tl-field">
+        <label for="offloadSlider">Traffic Routed to Fast/Mini Tier <strong id="offloadVal">70%</strong></label>
+        <input id="offloadSlider" class="tl-range" type="range" min="0" max="95" step="5" value="70">
+      </div>
+      <div id="cascadeOut" class="kpi-sub num" style="padding:10px 12px;border-radius:10px;background:var(--accent-soft);color:var(--text);font-weight:600"></div>
+    </div>
+  </section>
+
+  <section class="tl-panel" style="margin-bottom:24px">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+      <h2 style="margin:0">3. 24-Model Side-by-Side Cost Matrix</h2>
+      <div id="spreadSummary" class="kpi-sub num" style="margin:0"></div>
+    </div>
+    <div class="tl-chips" aria-label="Filter by Provider">
+      <button type="button" class="tl-chip active" data-provider="all">All Providers (24)</button>
+      <button type="button" class="tl-chip" data-provider="OpenAI">OpenAI</button>
+      <button type="button" class="tl-chip" data-provider="Anthropic">Anthropic</button>
+      <button type="button" class="tl-chip" data-provider="Google">Google</button>
+      <button type="button" class="tl-chip" data-provider="DeepSeek">DeepSeek</button>
+      <button type="button" class="tl-chip" data-provider="xAI">xAI</button>
+      <button type="button" class="tl-chip" data-provider="Meta">Meta</button>
+      <button type="button" class="tl-chip" data-provider="Mistral">Mistral</button>
+    </div>
+    <div class="tl-table-wrap">
+      <table class="tl-table">
+        <thead><tr><th>Model &amp; Context</th><th>Tier</th><th>In / Out (1M)</th><th>Per Request</th><th>Monthly (30d)</th><th>Annual (365d)</th><th>Relative Cost</th></tr></thead>
+        <tbody id="modelTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section style="margin-bottom:28px">
+    <h2 style="margin:0 0 12px">Specialized AI FinOps Workspaces</h2>
+    <div class="tl-card-grid">
+      <a class="tl-link-card" href="/tools/agent-budget.html"><strong>AI Agent Loop Burn Calculator</strong><span>Visualize O(N²) multi-turn context snowballing vs. prompt caching &amp; sliding windows.</span><em>Open Calculator →</em></a>
+      <a class="tl-link-card" href="/tools/saas-margin.html"><strong>AI SaaS Gross Margin Simulator</strong><span>Calculate per-seat AI COGS, Stripe fees, net profit, and power-user break-even caps.</span><em>Open Simulator →</em></a>
+      <a class="tl-link-card" href="/tools/rag-calculator.html"><strong>RAG &amp; Vector DB TCO Planner</strong><span>Estimate embedding ingestion, HNSW RAM footprint, re-index churn, and synthesis cost.</span><em>Open Planner →</em></a>
+      <a class="tl-link-card" href="/tools/token-inspector.html"><strong>Context &amp; JSON Minifier Inspector</strong><span>Inspect OpenAI/Claude/Gemini tokens and minify tool JSON schemas for instant savings.</span><em>Open Inspector →</em></a>
+    </div>
+  </section>
+
+  <section style="margin-bottom:28px">
+    <h2 style="margin:0 0 12px">Popular Model Pricing Comparisons</h2>
+    <div class="tl-card-grid">
+      <a class="tl-link-card" href="/compare/claude-sonnet-vs-gpt-4-1.html">
+        <strong>Claude Sonnet 4 vs GPT-4.1 API Cost &amp; Context Comparison</strong>
+        <span>Compare per-request, monthly, prompt-cached, and batch API pricing between Anthropic Claude Sonnet 4 and OpenAI GPT-4.1 across real production workloads.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/claude-opus-vs-gpt-5.html">
+        <strong>Claude Opus 4 vs GPT-5 API Cost &amp; Frontier Budget Comparison</strong>
+        <span>Calculate the exact monthly API spread between Claude Opus 4 ($15/$75) and GPT-5 ($1.25/$10) with prompt caching and cascade routing strategies.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/gemini-2-5-pro-vs-claude-sonnet.html">
+        <strong>Gemini 2.5 Pro vs Claude Sonnet 4 API Pricing &amp; 1M Context Economics</strong>
+        <span>Side-by-side LLM FinOps breakdown comparing Google Gemini 2.5 Pro 1M context window pricing against Anthropic Claude Sonnet 4.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/deepseek-v3-vs-gpt-4-1-mini.html">
+        <strong>DeepSeek-V3 vs GPT-4.1 mini API Cost Comparison for High-Volume Apps</strong>
+        <span>Benchmark high-throughput unit economics between DeepSeek-V3 ($0.27/$1.10) and OpenAI GPT-4.1 mini ($0.40/$1.60).</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/gemini-2-5-flash-vs-claude-haiku.html">
+        <strong>Gemini 2.5 Flash vs Claude 3.5 Haiku API Cost &amp; Latency Economics</strong>
+        <span>Compare low-latency router and classification costs between Google Gemini 2.5 Flash and Anthropic Claude 3.5 Haiku.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/o3-vs-deepseek-r1.html">
+        <strong>OpenAI o3 vs DeepSeek-R1 Reasoning Model API Cost Breakdown</strong>
+        <span>Estimate reasoning-token workloads for OpenAI o3 versus DeepSeek-R1 including prompt caching and async batch discounts.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/llama-4-vs-gpt-4-1.html">
+        <strong>Llama 4 Maverick (Hosted) vs GPT-4.1 API Cost &amp; 1M Context Analysis</strong>
+        <span>Evaluate hosted open-weight Llama 4 Maverick economics against proprietary OpenAI GPT-4.1 across 1M-context workloads.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/prompt-caching-vs-batch-api.html">
+        <strong>LLM Prompt Caching vs Batch API (50% Off): Which Saves More Money?</strong>
+        <span>Quantitative FinOps comparison of 75–90% prompt caching discounts versus 50% async batch API discounts for agents and bulk jobs.</span>
+        <em>Open Comparison →</em>
+      </a>
+    </div>
+  </section>
+
+  <section style="margin-bottom:28px">
+    <h2 style="margin:0 0 12px">AI FinOps Engineering Playbooks</h2>
+    <div class="tl-card-grid">
+      <a class="tl-link-card" href="/guides/llm-cost-optimization-playbook.html">
+        <strong>LLM Cost Optimization Playbook: Cut API Spend 60–85% Without Losing Quality</strong>
+        <span>Field-tested AI FinOps playbook covering prompt caching, frontier-to-mini cascade routing, JSON schema minification, and async batch APIs.</span>
+        <em>Read Playbook →</em>
+      </a>
+      <a class="tl-link-card" href="/guides/ai-agent-token-snowball-fix.html">
+        <strong>Fixing the AI Agent Token Snowball: Why a 15-Turn Agent Costs 12x More Than Expected</strong>
+        <span>Mathematical breakdown of quadratic context accumulation in multi-turn tool-calling agents and how prefix caching + sliding windows cap burn.</span>
+        <em>Read Playbook →</em>
+      </a>
+      <a class="tl-link-card" href="/guides/saas-ai-gross-margin-benchmarks.html">
+        <strong>AI SaaS Gross Margin Benchmarks: Pricing Seats Without Getting Crushed by Power Users</strong>
+        <span>How to model AI COGS, Stripe fees, gross margin targets (&gt;=75%), and break-even usage caps for flat-rate AI subscriptions.</span>
+        <em>Read Playbook →</em>
+      </a>
+      <a class="tl-link-card" href="/guides/rag-chunking-cost-architecture.html">
+        <strong>RAG &amp; Vector Embedding Cost Architecture: Sizing Chunks, Re-Index Churn &amp; Synthesis Spend</strong>
+        <span>Why embedding ingestion is rarely the real RAG bill—and how Top-K synthesis tokens and HNSW vector RAM dominate monthly TCO.</span>
+        <em>Read Playbook →</em>
+      </a>
+    </div>
+  </section>
+
+  <section class="tl-prose">
+    <h2>Frequently Asked Questions</h2>
+    <div class="tl-faq-grid">
+      <div class="tl-faq-item"><h3>Does TokenLedger send my pasted prompts to any server?</h3><p>Never. All token estimation, pricing calculations, CSV/JSON exports, and JSON minification run 100% locally inside your browser with zero network transmission of prompt text.</p></div>
+      <div class="tl-faq-item"><h3>How does LLM prompt caching affect monthly API cost?</h3><p>Major providers discount repeated prompt prefixes by 75% to 90%. For high-volume apps with stable system prompts or tool schemas, prompt caching often cuts total input spend by more than half.</p></div>
+    </div>
+  </section>
+  <section class="tl-resources" aria-label="Recommended AI Engineering and FinOps Books">
+    <h2>Recommended AI Engineering &amp; Cloud FinOps Books</h2>
+    <div class="tl-res-grid">
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098166302?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>AI Engineering</strong>
+        <span>Chip Huyen (O’Reilly) • Production architecture for foundation models, evaluation, RAG, and latency/cost budgets.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098150724?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>Cloud FinOps (2nd Ed.)</strong>
+        <span>J.R. Storment &amp; Mike Fuller (O’Reilly) • Collaborative cloud &amp; AI unit-economics governance for engineering teams.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098161769?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>Building LLMs for Production</strong>
+        <span>Louis-François Bouchard &amp; Louie Peters • Practical prompting, caching, RAG, and cost-aware inference routing.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+    </div>
+    <p class="tl-disclosure">Editorial note: Curated technical books for AI engineers and FinOps teams. Amazon links include affiliate tag dopabrain-20 (no extra cost to you) and help keep TokenLedger 100% free and ad-free. Interested in sponsoring TokenLedger? <a href="https://github.com/swp1234/tokenledger" target="_blank" rel="noopener" style="color:var(--accent)">Open a Sponsor / Partnership thread on GitHub ↗</a>.</p>
+  </section>
+  </main>
+
+  <footer class="tl-footer">
+    <div class="tl-footer-inner">
+      <div><strong>TokenLedger</strong> &bull; 100% Browser-Private AI &amp; LLM FinOps Studio &bull; Pricing snapshot: 2026-11-24</div>
+      <div>
+        <a href="/about.html">Methodology</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/api/pricing.json">Pricing JSON</a>
+        <a href="https://github.com/swp1234/tokenledger" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+  </footer>
+  <script src="/js/pricing-engine.js"></script>
+  <script src="/js/ui-shell.js"></script>
+  <script src="/js/studio-home.js" defer></script>
+</body>
+</html>

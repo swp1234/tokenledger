@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <title>LLM Cost Optimization Playbook: Cut API Spend 60–85% Without Losing Quality | TokenLedger</title>
+  <meta name="description" content="Field-tested AI FinOps playbook covering prompt caching, frontier-to-mini cascade routing, JSON schema minification, and async batch APIs.">
+  <meta name="dateModified" content="2026-11-24">
+  <link rel="canonical" href="https://tokenledger.pages.dev/guides/llm-cost-optimization-playbook.html">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="LLM Cost Optimization Playbook: Cut API Spend 60–85% Without Losing Quality | TokenLedger">
+  <meta property="og:description" content="Field-tested AI FinOps playbook covering prompt caching, frontier-to-mini cascade routing, JSON schema minification, and async batch APIs.">
+  <meta property="og:url" content="https://tokenledger.pages.dev/guides/llm-cost-optimization-playbook.html">
+  <meta property="og:image" content="https://tokenledger.pages.dev/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="LLM Cost Optimization Playbook: Cut API Spend 60–85% Without Losing Quality | TokenLedger">
+  <meta name="twitter:description" content="Field-tested AI FinOps playbook covering prompt caching, frontier-to-mini cascade routing, JSON schema minification, and async batch APIs.">
+  <meta name="twitter:image" content="https://tokenledger.pages.dev/og-image.png">
+
+  <link rel="stylesheet" href="/css/tokenledger.css">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "LLM Cost Optimization Playbook: Cut API Spend 60–85% Without Losing Quality",
+      "description": "Field-tested AI FinOps playbook covering prompt caching, frontier-to-mini cascade routing, JSON schema minification, and async batch APIs.",
+      "datePublished": "2026-11-24",
+      "dateModified": "2026-11-24",
+      "author": {
+        "@type": "Organization",
+        "name": "TokenLedger"
+      },
+      "mainEntityOfPage": "https://tokenledger.pages.dev/guides/llm-cost-optimization-playbook.html",
+      "image": "https://tokenledger.pages.dev/og-image.png"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "TokenLedger",
+          "item": "https://tokenledger.pages.dev/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "LLM Cost Optimization Playbook: Cut API Spend 60–85% Without Losing Quality",
+          "item": "https://tokenledger.pages.dev/guides/llm-cost-optimization-playbook.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <header class="tl-header">
+    <div class="tl-nav-inner">
+      <a href="/" class="tl-brand"><span class="tl-logo" aria-hidden="true">TL</span><span>TokenLedger</span></a>
+      <nav class="tl-nav-links" aria-label="Primary">
+        <a href="/">Cost Estimator</a>
+        <a href="/tools/agent-budget.html">Agent Burn</a>
+        <a href="/tools/saas-margin.html">SaaS Margin</a>
+        <a href="/tools/rag-calculator.html">RAG TCO</a>
+        <a href="/tools/token-inspector.html">Token Inspector</a>
+        <a href="/guides/llm-cost-optimization-playbook.html" class="active">Playbook</a>
+      </nav>
+      <div class="tl-nav-actions">
+        <a href="/api/pricing.json" class="tl-icon-btn" title="Public JSON Pricing Feed">JSON API</a>
+        <button type="button" id="tlThemeToggle" class="tl-icon-btn" aria-label="Toggle Light or Dark Theme">Light</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="tl-wrap">
+  <section class="tl-hero">
+    <div class="tl-kicker">AI FINOPS ENGINEERING PLAYBOOK</div>
+    <h1>LLM Cost Optimization Playbook: Cut API Spend 60–85% Without Losing Quality</h1>
+    <p>Field-tested AI FinOps playbook covering prompt caching, frontier-to-mini cascade routing, JSON schema minification, and async batch APIs.</p>
+    <div class="tl-btn-bar"><a class="tl-btn tl-btn-primary" href="/">Open 24-Model Live Cost Estimator →</a></div>
+  </section>
+  <article class="tl-panel tl-prose">
+    <h2>1. Put Static Context First to Unlock 75–90% Prompt Caching</h2>
+    <p>Every modern frontier API (Anthropic, OpenAI, Google Gemini, DeepSeek) bills cached prompt prefixes at 10% to 25% of base input cost. Never inject dynamic timestamps, request UUIDs, or per-user metadata at the top of your system prompt—put immutable instructions, JSON tool schemas, and few-shot examples first so prefix hit rates cross 70–90%.</p>
+    <h2>2. Implement a 70/30 Model Cascade Router</h2>
+    <p>Sending every customer inquiry or classification task to a flagship reasoning model wastes 5x–15x budget. Use a fast classifier or rule gate on a mini/flash model ($0.10–$0.30/1M) to handle 70% of routine requests and escalate only complex reasoning to GPT-5 or Claude Sonnet/Opus.</p>
+    <h2>3. Minify Tool Schemas and System Prompts</h2>
+    <p>Pretty-printed JSON tool definitions with verbose descriptions routinely burn 1,500–4,000 input tokens on every single turn. Running whitespace minification and concise parameter descriptions cuts recurring spend permanently—test your exact savings in our Token Inspector.</p>
+    <h2>4. Move Non-Interactive Jobs to 50% Batch APIs</h2>
+    <p>Nightly summarization, eval suites, document enrichment, and SEO classification rarely need 2-second latency. Moving offline queues to OpenAI, Anthropic, or Gemini Batch endpoints cuts both input and output rates by 50% immediately.</p>
+    <div class="tl-btn-bar" style="margin-top:24px"><a class="tl-btn tl-btn-primary" href="/">Open 24-Model Live Cost Estimator →</a><a class="tl-btn" href="/">All 24 Models Estimator</a></div>
+  </article>
+  <section class="tl-resources" aria-label="Recommended AI Engineering and FinOps Books">
+    <h2>Recommended AI Engineering &amp; Cloud FinOps Books</h2>
+    <div class="tl-res-grid">
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098166302?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>AI Engineering</strong>
+        <span>Chip Huyen (O’Reilly) • Production architecture for foundation models, evaluation, RAG, and latency/cost budgets.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098150724?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>Cloud FinOps (2nd Ed.)</strong>
+        <span>J.R. Storment &amp; Mike Fuller (O’Reilly) • Collaborative cloud &amp; AI unit-economics governance for engineering teams.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098161769?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>Building LLMs for Production</strong>
+        <span>Louis-François Bouchard &amp; Louie Peters • Practical prompting, caching, RAG, and cost-aware inference routing.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+    </div>
+    <p class="tl-disclosure">Editorial note: Curated technical books for AI engineers and FinOps teams. Amazon links include affiliate tag dopabrain-20 (no extra cost to you) and help keep TokenLedger 100% free and ad-free. Interested in sponsoring TokenLedger? <a href="https://github.com/swp1234/tokenledger" target="_blank" rel="noopener" style="color:var(--accent)">Open a Sponsor / Partnership thread on GitHub ↗</a>.</p>
+  </section>
+  </main>
+
+  <footer class="tl-footer">
+    <div class="tl-footer-inner">
+      <div><strong>TokenLedger</strong> &bull; 100% Browser-Private AI &amp; LLM FinOps Studio &bull; Pricing snapshot: 2026-11-24</div>
+      <div>
+        <a href="/about.html">Methodology</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/api/pricing.json">Pricing JSON</a>
+        <a href="https://github.com/swp1234/tokenledger" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+  </footer>
+  <script src="/js/pricing-engine.js"></script>
+  <script src="/js/ui-shell.js"></script>
+
+</body>
+</html>

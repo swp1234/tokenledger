@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <title>AI SaaS Gross Margin Benchmarks: Pricing Seats Without Getting Crushed by Power Users | TokenLedger</title>
+  <meta name="description" content="How to model AI COGS, Stripe fees, gross margin targets (&gt;=75%), and break-even usage caps for flat-rate AI subscriptions.">
+  <meta name="dateModified" content="2026-11-24">
+  <link rel="canonical" href="https://tokenledger.pages.dev/guides/saas-ai-gross-margin-benchmarks.html">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="AI SaaS Gross Margin Benchmarks: Pricing Seats Without Getting Crushed by Power Users | TokenLedger">
+  <meta property="og:description" content="How to model AI COGS, Stripe fees, gross margin targets (&gt;=75%), and break-even usage caps for flat-rate AI subscriptions.">
+  <meta property="og:url" content="https://tokenledger.pages.dev/guides/saas-ai-gross-margin-benchmarks.html">
+  <meta property="og:image" content="https://tokenledger.pages.dev/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AI SaaS Gross Margin Benchmarks: Pricing Seats Without Getting Crushed by Power Users | TokenLedger">
+  <meta name="twitter:description" content="How to model AI COGS, Stripe fees, gross margin targets (&gt;=75%), and break-even usage caps for flat-rate AI subscriptions.">
+  <meta name="twitter:image" content="https://tokenledger.pages.dev/og-image.png">
+
+  <link rel="stylesheet" href="/css/tokenledger.css">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "AI SaaS Gross Margin Benchmarks: Pricing Seats Without Getting Crushed by Power Users",
+      "description": "How to model AI COGS, Stripe fees, gross margin targets (>=75%), and break-even usage caps for flat-rate AI subscriptions.",
+      "datePublished": "2026-11-24",
+      "dateModified": "2026-11-24",
+      "author": {
+        "@type": "Organization",
+        "name": "TokenLedger"
+      },
+      "mainEntityOfPage": "https://tokenledger.pages.dev/guides/saas-ai-gross-margin-benchmarks.html",
+      "image": "https://tokenledger.pages.dev/og-image.png"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "TokenLedger",
+          "item": "https://tokenledger.pages.dev/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "AI SaaS Gross Margin Benchmarks: Pricing Seats Without Getting Crushed by Power Users",
+          "item": "https://tokenledger.pages.dev/guides/saas-ai-gross-margin-benchmarks.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <header class="tl-header">
+    <div class="tl-nav-inner">
+      <a href="/" class="tl-brand"><span class="tl-logo" aria-hidden="true">TL</span><span>TokenLedger</span></a>
+      <nav class="tl-nav-links" aria-label="Primary">
+        <a href="/">Cost Estimator</a>
+        <a href="/tools/agent-budget.html">Agent Burn</a>
+        <a href="/tools/saas-margin.html">SaaS Margin</a>
+        <a href="/tools/rag-calculator.html">RAG TCO</a>
+        <a href="/tools/token-inspector.html">Token Inspector</a>
+        <a href="/guides/llm-cost-optimization-playbook.html" class="active">Playbook</a>
+      </nav>
+      <div class="tl-nav-actions">
+        <a href="/api/pricing.json" class="tl-icon-btn" title="Public JSON Pricing Feed">JSON API</a>
+        <button type="button" id="tlThemeToggle" class="tl-icon-btn" aria-label="Toggle Light or Dark Theme">Light</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="tl-wrap">
+  <section class="tl-hero">
+    <div class="tl-kicker">AI FINOPS ENGINEERING PLAYBOOK</div>
+    <h1>AI SaaS Gross Margin Benchmarks: Pricing Seats Without Getting Crushed by Power Users</h1>
+    <p>How to model AI COGS, Stripe fees, gross margin targets (&gt;=75%), and break-even usage caps for flat-rate AI subscriptions.</p>
+    <div class="tl-btn-bar"><a class="tl-btn tl-btn-primary" href="/tools/saas-margin.html">Simulate Your SaaS Gross Margin →</a></div>
+  </section>
+  <article class="tl-panel tl-prose">
+    <h2>Traditional SaaS (85% Margin) vs. AI-Native SaaS (55–78% Margin)</h2>
+    <p>Unlike classic CRUD SaaS where marginal server cost per user approaches pennies, an active AI seat running 500 frontier requests per month can easily burn $8–$20 in direct token COGS—wiping out a $20/month flat subscription once payment fees are included.</p>
+    <h2>Calculating Your Hard Power-User Break-Even Cap</h2>
+    <p>Every subscription tier has an exact break-even request ceiling: (Price − Payment Fee − Fixed Infra) ÷ Cost per Request. Knowing that threshold lets you design fair soft-throttles (e.g., fast frontier credits followed by automatic Flash/Mini fallback) instead of silent negative margins.</p>
+    <h2>Three Pricing Levers That Protect Margin</h2>
+    <p>1) Hybrid seat + pooled team credits; 2) Automatic model routing by task complexity; 3) Prompt caching on shared workspace knowledge bases.</p>
+    <div class="tl-btn-bar" style="margin-top:24px"><a class="tl-btn tl-btn-primary" href="/tools/saas-margin.html">Simulate Your SaaS Gross Margin →</a><a class="tl-btn" href="/">All 24 Models Estimator</a></div>
+  </article>
+  <section class="tl-resources" aria-label="Recommended AI Engineering and FinOps Books">
+    <h2>Recommended AI Engineering &amp; Cloud FinOps Books</h2>
+    <div class="tl-res-grid">
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098166302?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>AI Engineering</strong>
+        <span>Chip Huyen (O’Reilly) • Production architecture for foundation models, evaluation, RAG, and latency/cost budgets.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098150724?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>Cloud FinOps (2nd Ed.)</strong>
+        <span>J.R. Storment &amp; Mike Fuller (O’Reilly) • Collaborative cloud &amp; AI unit-economics governance for engineering teams.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098161769?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>Building LLMs for Production</strong>
+        <span>Louis-François Bouchard &amp; Louie Peters • Practical prompting, caching, RAG, and cost-aware inference routing.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+    </div>
+    <p class="tl-disclosure">Editorial note: Curated technical books for AI engineers and FinOps teams. Amazon links include affiliate tag dopabrain-20 (no extra cost to you) and help keep TokenLedger 100% free and ad-free. Interested in sponsoring TokenLedger? <a href="https://github.com/swp1234/tokenledger" target="_blank" rel="noopener" style="color:var(--accent)">Open a Sponsor / Partnership thread on GitHub ↗</a>.</p>
+  </section>
+  </main>
+
+  <footer class="tl-footer">
+    <div class="tl-footer-inner">
+      <div><strong>TokenLedger</strong> &bull; 100% Browser-Private AI &amp; LLM FinOps Studio &bull; Pricing snapshot: 2026-11-24</div>
+      <div>
+        <a href="/about.html">Methodology</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/api/pricing.json">Pricing JSON</a>
+        <a href="https://github.com/swp1234/tokenledger" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+  </footer>
+  <script src="/js/pricing-engine.js"></script>
+  <script src="/js/ui-shell.js"></script>
+
+</body>
+</html>

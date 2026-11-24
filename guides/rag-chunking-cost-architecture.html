@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <title>RAG &amp; Vector Embedding Cost Architecture: Sizing Chunks, Re-Index Churn &amp; Synthesis Spend | TokenLedger</title>
+  <meta name="description" content="Why embedding ingestion is rarely the real RAG bill—and how Top-K synthesis tokens and HNSW vector RAM dominate monthly TCO.">
+  <meta name="dateModified" content="2026-11-24">
+  <link rel="canonical" href="https://tokenledger.pages.dev/guides/rag-chunking-cost-architecture.html">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="RAG &amp; Vector Embedding Cost Architecture: Sizing Chunks, Re-Index Churn &amp; Synthesis Spend | TokenLedger">
+  <meta property="og:description" content="Why embedding ingestion is rarely the real RAG bill—and how Top-K synthesis tokens and HNSW vector RAM dominate monthly TCO.">
+  <meta property="og:url" content="https://tokenledger.pages.dev/guides/rag-chunking-cost-architecture.html">
+  <meta property="og:image" content="https://tokenledger.pages.dev/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RAG &amp; Vector Embedding Cost Architecture: Sizing Chunks, Re-Index Churn &amp; Synthesis Spend | TokenLedger">
+  <meta name="twitter:description" content="Why embedding ingestion is rarely the real RAG bill—and how Top-K synthesis tokens and HNSW vector RAM dominate monthly TCO.">
+  <meta name="twitter:image" content="https://tokenledger.pages.dev/og-image.png">
+
+  <link rel="stylesheet" href="/css/tokenledger.css">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "RAG & Vector Embedding Cost Architecture: Sizing Chunks, Re-Index Churn & Synthesis Spend",
+      "description": "Why embedding ingestion is rarely the real RAG bill—and how Top-K synthesis tokens and HNSW vector RAM dominate monthly TCO.",
+      "datePublished": "2026-11-24",
+      "dateModified": "2026-11-24",
+      "author": {
+        "@type": "Organization",
+        "name": "TokenLedger"
+      },
+      "mainEntityOfPage": "https://tokenledger.pages.dev/guides/rag-chunking-cost-architecture.html",
+      "image": "https://tokenledger.pages.dev/og-image.png"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "TokenLedger",
+          "item": "https://tokenledger.pages.dev/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "RAG & Vector Embedding Cost Architecture: Sizing Chunks, Re-Index Churn & Synthesis Spend",
+          "item": "https://tokenledger.pages.dev/guides/rag-chunking-cost-architecture.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <header class="tl-header">
+    <div class="tl-nav-inner">
+      <a href="/" class="tl-brand"><span class="tl-logo" aria-hidden="true">TL</span><span>TokenLedger</span></a>
+      <nav class="tl-nav-links" aria-label="Primary">
+        <a href="/">Cost Estimator</a>
+        <a href="/tools/agent-budget.html">Agent Burn</a>
+        <a href="/tools/saas-margin.html">SaaS Margin</a>
+        <a href="/tools/rag-calculator.html">RAG TCO</a>
+        <a href="/tools/token-inspector.html">Token Inspector</a>
+        <a href="/guides/llm-cost-optimization-playbook.html" class="active">Playbook</a>
+      </nav>
+      <div class="tl-nav-actions">
+        <a href="/api/pricing.json" class="tl-icon-btn" title="Public JSON Pricing Feed">JSON API</a>
+        <button type="button" id="tlThemeToggle" class="tl-icon-btn" aria-label="Toggle Light or Dark Theme">Light</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="tl-wrap">
+  <section class="tl-hero">
+    <div class="tl-kicker">AI FINOPS ENGINEERING PLAYBOOK</div>
+    <h1>RAG &amp; Vector Embedding Cost Architecture: Sizing Chunks, Re-Index Churn &amp; Synthesis Spend</h1>
+    <p>Why embedding ingestion is rarely the real RAG bill—and how Top-K synthesis tokens and HNSW vector RAM dominate monthly TCO.</p>
+    <div class="tl-btn-bar"><a class="tl-btn tl-btn-primary" href="/tools/rag-calculator.html">Calculate Your RAG Monthly TCO →</a></div>
+  </section>
+  <article class="tl-panel tl-prose">
+    <h2>The RAG Cost Surprise: Ingestion Is Pennies, Synthesis Is 90% of the Bill</h2>
+    <p>Embedding 25,000 documents with OpenAI text-embedding-3-small ($0.02/1M) costs less than $1 one-time. Yet retrieving Top-10 large chunks (8,000 tokens) into a frontier synthesis LLM 3,000 times a day quickly runs $1,000+/month.</p>
+    <h2>Chunk Size, Overlap &amp; Top-K Discipline</h2>
+    <p>Using 400–600 token semantic chunks with 10–15% overlap and a lightweight reranker to pass only the top 4–6 relevant passages cuts synthesis input tokens in half while improving grounded answer accuracy.</p>
+    <h2>Watch Vector Memory Footprint on High-Dimension Embeddings</h2>
+    <p>3072-dimension float32 vectors consume 2x the RAM of 1536-dimension vectors and 3x that of 1024-dimension models. Dimension reduction (Matryoshka embeddings) or scalar quantization cuts managed vector DB bills sharply at scale.</p>
+    <div class="tl-btn-bar" style="margin-top:24px"><a class="tl-btn tl-btn-primary" href="/tools/rag-calculator.html">Calculate Your RAG Monthly TCO →</a><a class="tl-btn" href="/">All 24 Models Estimator</a></div>
+  </article>
+  <section class="tl-resources" aria-label="Recommended AI Engineering and FinOps Books">
+    <h2>Recommended AI Engineering &amp; Cloud FinOps Books</h2>
+    <div class="tl-res-grid">
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098166302?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>AI Engineering</strong>
+        <span>Chip Huyen (O’Reilly) • Production architecture for foundation models, evaluation, RAG, and latency/cost budgets.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098150724?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>Cloud FinOps (2nd Ed.)</strong>
+        <span>J.R. Storment &amp; Mike Fuller (O’Reilly) • Collaborative cloud &amp; AI unit-economics governance for engineering teams.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098161769?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>Building LLMs for Production</strong>
+        <span>Louis-François Bouchard &amp; Louie Peters • Practical prompting, caching, RAG, and cost-aware inference routing.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+    </div>
+    <p class="tl-disclosure">Editorial note: Curated technical books for AI engineers and FinOps teams. Amazon links include affiliate tag dopabrain-20 (no extra cost to you) and help keep TokenLedger 100% free and ad-free. Interested in sponsoring TokenLedger? <a href="https://github.com/swp1234/tokenledger" target="_blank" rel="noopener" style="color:var(--accent)">Open a Sponsor / Partnership thread on GitHub ↗</a>.</p>
+  </section>
+  </main>
+
+  <footer class="tl-footer">
+    <div class="tl-footer-inner">
+      <div><strong>TokenLedger</strong> &bull; 100% Browser-Private AI &amp; LLM FinOps Studio &bull; Pricing snapshot: 2026-11-24</div>
+      <div>
+        <a href="/about.html">Methodology</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/api/pricing.json">Pricing JSON</a>
+        <a href="https://github.com/swp1234/tokenledger" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+  </footer>
+  <script src="/js/pricing-engine.js"></script>
+  <script src="/js/ui-shell.js"></script>
+
+</body>
+</html>

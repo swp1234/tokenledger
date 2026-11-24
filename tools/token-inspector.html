@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <title>LLM Token Counter, Context Window Gauge &amp; JSON Schema Minifier | TokenLedger</title>
+  <meta name="description" content="Browser-private token estimator for OpenAI, Claude, and Gemini with 128K/200K/1M context fill bars and one-click JSON schema minification savings.">
+  <meta name="dateModified" content="2026-11-24">
+  <link rel="canonical" href="https://tokenledger.pages.dev/tools/token-inspector.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="LLM Token Counter, Context Window Gauge &amp; JSON Schema Minifier | TokenLedger">
+  <meta property="og:description" content="Browser-private token estimator for OpenAI, Claude, and Gemini with 128K/200K/1M context fill bars and one-click JSON schema minification savings.">
+  <meta property="og:url" content="https://tokenledger.pages.dev/tools/token-inspector.html">
+  <meta property="og:image" content="https://tokenledger.pages.dev/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="LLM Token Counter, Context Window Gauge &amp; JSON Schema Minifier | TokenLedger">
+  <meta name="twitter:description" content="Browser-private token estimator for OpenAI, Claude, and Gemini with 128K/200K/1M context fill bars and one-click JSON schema minification savings.">
+  <meta name="twitter:image" content="https://tokenledger.pages.dev/og-image.png">
+
+  <link rel="stylesheet" href="/css/tokenledger.css">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "TokenLedger Token & JSON Inspector",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "url": "https://tokenledger.pages.dev/tools/token-inspector.html",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does minifying JSON tool schemas reduce LLM API costs?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Stripping pretty-printed indentation and redundant whitespace from JSON tool definitions typically trims 15% to 35% of schema tokens on every single API request."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <header class="tl-header">
+    <div class="tl-nav-inner">
+      <a href="/" class="tl-brand"><span class="tl-logo" aria-hidden="true">TL</span><span>TokenLedger</span></a>
+      <nav class="tl-nav-links" aria-label="Primary">
+        <a href="/">Cost Estimator</a>
+        <a href="/tools/agent-budget.html">Agent Burn</a>
+        <a href="/tools/saas-margin.html">SaaS Margin</a>
+        <a href="/tools/rag-calculator.html">RAG TCO</a>
+        <a href="/tools/token-inspector.html" class="active">Token Inspector</a>
+        <a href="/guides/llm-cost-optimization-playbook.html">Playbook</a>
+      </nav>
+      <div class="tl-nav-actions">
+        <a href="/api/pricing.json" class="tl-icon-btn" title="Public JSON Pricing Feed">JSON API</a>
+        <button type="button" id="tlThemeToggle" class="tl-icon-btn" aria-label="Toggle Light or Dark Theme">Light</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="tl-wrap">
+  <section class="tl-hero">
+    <div class="tl-kicker">TOKEN DIAGNOSTICS &bull; ZERO UPLOAD &bull; JSON MINIFIER</div>
+    <h1>Context Window &amp; Prompt Token Inspector</h1>
+    <p>Inspect multi-family token estimates (OpenAI, Claude, Gemini), check context fill gauges across 128K / 200K / 1M windows, and minify bloated JSON tool schemas locally in one click.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">OpenAI Est. Tokens</div><div class="kpi-val accent" id="kpiTokOpenAI">0</div><div class="kpi-sub">o200k_base calibrated</div></div>
+    <div class="kpi-card"><div class="kpi-label">Claude Est. Tokens</div><div class="kpi-val" id="kpiTokClaude">0</div><div class="kpi-sub">Anthropic BPE calibrated</div></div>
+    <div class="kpi-card"><div class="kpi-label">Gemini Est. Tokens</div><div class="kpi-val" id="kpiTokGemini">0</div><div class="kpi-sub">SentencePiece calibrated</div></div>
+    <div class="kpi-card"><div class="kpi-label">Characters</div><div class="kpi-val" id="kpiChars">0</div><div class="kpi-sub" id="kpiCharsSub">0 words · 0 lines</div></div>
+  </section>
+
+  <section class="tl-panel" style="margin-bottom:20px">
+    <h2>Paste Prompt, Code, or JSON Tool Schema (100% Local)</h2>
+    <textarea id="inspectorInput" class="tl-textarea" style="min-height:190px" placeholder="Paste any prompt, system instruction, markdown doc, or JSON schema here..."></textarea>
+    <div id="minifySavings" hidden style="margin-top:10px;padding:10px 14px;border-radius:10px;background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:0.88rem"></div>
+    <div class="tl-btn-bar">
+      <button type="button" id="btnMinifyJson" class="tl-btn tl-btn-primary">Minify JSON Schema</button>
+      <button type="button" id="btnTrimWs" class="tl-btn">Compress Whitespace</button>
+      <button type="button" id="btnSampleJson" class="tl-btn">Load Sample Tool JSON</button>
+      <button type="button" id="btnCopyClean" class="tl-btn">Copy Cleaned Text</button>
+    </div>
+  </section>
+
+  <section class="tl-panel">
+    <h2>Context Window Fill Gauges</h2>
+    <div class="tl-grid-3" style="margin-bottom:0">
+      <div><div class="kpi-label">128K Window (DeepSeek / Mistral) — <span id="lbl128k" class="num">0.00%</span></div><div class="tl-bar-track" style="max-width:none;height:12px"><div id="bar128k" class="tl-bar-fill" style="width:0%"></div></div></div>
+      <div><div class="kpi-label">200K Window (Claude 4 / o3) — <span id="lbl200k" class="num">0.00%</span></div><div class="tl-bar-track" style="max-width:none;height:12px"><div id="bar200k" class="tl-bar-fill" style="width:0%"></div></div></div>
+      <div><div class="kpi-label">1M Window (Gemini 2.5 / GPT-4.1) — <span id="lbl1m" class="num">0.00%</span></div><div class="tl-bar-track" style="max-width:none;height:12px"><div id="bar1m" class="tl-bar-fill" style="width:0%"></div></div></div>
+    </div>
+  </section>
+
+  <section class="tl-prose">
+    <h2>Frequently Asked Questions</h2>
+    <div class="tl-faq-grid">
+      <div class="tl-faq-item"><h3>Does minifying JSON tool schemas reduce LLM API costs?</h3><p>Yes. Stripping pretty-printed indentation and redundant whitespace from JSON tool definitions typically trims 15% to 35% of schema tokens on every single API request.</p></div>
+    </div>
+  </section>
+  <section class="tl-resources" aria-label="Recommended AI Engineering and FinOps Books">
+    <h2>Recommended AI Engineering &amp; Cloud FinOps Books</h2>
+    <div class="tl-res-grid">
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098166302?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>AI Engineering</strong>
+        <span>Chip Huyen (O’Reilly) • Production architecture for foundation models, evaluation, RAG, and latency/cost budgets.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098150724?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>Cloud FinOps (2nd Ed.)</strong>
+        <span>J.R. Storment &amp; Mike Fuller (O’Reilly) • Collaborative cloud &amp; AI unit-economics governance for engineering teams.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098161769?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>Building LLMs for Production</strong>
+        <span>Louis-François Bouchard &amp; Louie Peters • Practical prompting, caching, RAG, and cost-aware inference routing.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+    </div>
+    <p class="tl-disclosure">Editorial note: Curated technical books for AI engineers and FinOps teams. Amazon links include affiliate tag dopabrain-20 (no extra cost to you) and help keep TokenLedger 100% free and ad-free. Interested in sponsoring TokenLedger? <a href="https://github.com/swp1234/tokenledger" target="_blank" rel="noopener" style="color:var(--accent)">Open a Sponsor / Partnership thread on GitHub ↗</a>.</p>
+  </section>
+  </main>
+
+  <footer class="tl-footer">
+    <div class="tl-footer-inner">
+      <div><strong>TokenLedger</strong> &bull; 100% Browser-Private AI &amp; LLM FinOps Studio &bull; Pricing snapshot: 2026-11-24</div>
+      <div>
+        <a href="/about.html">Methodology</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/api/pricing.json">Pricing JSON</a>
+        <a href="https://github.com/swp1234/tokenledger" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+  </footer>
+  <script src="/js/pricing-engine.js"></script>
+  <script src="/js/ui-shell.js"></script>
+  <script src="/js/token-inspector.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <title>Pricing Methodology, Sources &amp; Open JSON Feed | TokenLedger</title>
+  <meta name="description" content="How TokenLedger compiles public LLM API list rates, calibrates client-side token estimates, and keeps calculations 100% browser-private.">
+  <meta name="dateModified" content="2026-11-24">
+  <link rel="canonical" href="https://tokenledger.pages.dev/about.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Pricing Methodology, Sources &amp; Open JSON Feed | TokenLedger">
+  <meta property="og:description" content="How TokenLedger compiles public LLM API list rates, calibrates client-side token estimates, and keeps calculations 100% browser-private.">
+  <meta property="og:url" content="https://tokenledger.pages.dev/about.html">
+  <meta property="og:image" content="https://tokenledger.pages.dev/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pricing Methodology, Sources &amp; Open JSON Feed | TokenLedger">
+  <meta name="twitter:description" content="How TokenLedger compiles public LLM API list rates, calibrates client-side token estimates, and keeps calculations 100% browser-private.">
+  <meta name="twitter:image" content="https://tokenledger.pages.dev/og-image.png">
+
+  <link rel="stylesheet" href="/css/tokenledger.css">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "name": "TokenLedger Methodology",
+      "url": "https://tokenledger.pages.dev/about.html"
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <header class="tl-header">
+    <div class="tl-nav-inner">
+      <a href="/" class="tl-brand"><span class="tl-logo" aria-hidden="true">TL</span><span>TokenLedger</span></a>
+      <nav class="tl-nav-links" aria-label="Primary">
+        <a href="/">Cost Estimator</a>
+        <a href="/tools/agent-budget.html">Agent Burn</a>
+        <a href="/tools/saas-margin.html">SaaS Margin</a>
+        <a href="/tools/rag-calculator.html">RAG TCO</a>
+        <a href="/tools/token-inspector.html">Token Inspector</a>
+        <a href="/guides/llm-cost-optimization-playbook.html">Playbook</a>
+      </nav>
+      <div class="tl-nav-actions">
+        <a href="/api/pricing.json" class="tl-icon-btn" title="Public JSON Pricing Feed">JSON API</a>
+        <button type="button" id="tlThemeToggle" class="tl-icon-btn" aria-label="Toggle Light or Dark Theme">Light</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="tl-wrap">
+  <section class="tl-hero"><div class="tl-kicker">TRANSPARENT METHODOLOGY</div><h1>Pricing Methodology &amp; Public JSON Feed</h1><p>TokenLedger is an independent, open-source AI FinOps workbench designed for engineers, founders, and finance leads.</p></section>
+  <article class="tl-panel tl-prose">
+    <h2>1. Rate Table Integrity</h2>
+    <p>All 24 LLM rates and 6 embedding rates are stored in a single public JSON feed at <a href="/api/pricing.json" style="color:var(--accent)">/api/pricing.json</a> (snapshot date: 2026-11-24). Standard published list prices are used for planning estimates; enterprise committed-use discounts or regional surcharges should be verified directly on each vendor’s console.</p>
+    <h2>2. Client-Side Token Estimation</h2>
+    <p>To keep pasted prompts 100% private with zero server calls, TokenLedger runs a deterministic multi-family estimator calibrated separately for ASCII prose, code/JSON punctuation density, and CJK/Korean UTF-8 scripts across OpenAI o200k_base, Anthropic Claude BPE, and Google Gemini SentencePiece tokenizers. Expect ±5–10% variance compared to exact server-side tokenizers.</p>
+    <h2>3. Sustainability &amp; Sponsorship</h2>
+    <p>TokenLedger is free with no login wall. Selected pages feature curated AI Engineering &amp; FinOps books with disclosed affiliate links (dopabrain-20) and open GitHub sponsorship slots.</p>
+  </article>
+
+  </main>
+
+  <footer class="tl-footer">
+    <div class="tl-footer-inner">
+      <div><strong>TokenLedger</strong> &bull; 100% Browser-Private AI &amp; LLM FinOps Studio &bull; Pricing snapshot: 2026-11-24</div>
+      <div>
+        <a href="/about.html">Methodology</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/api/pricing.json">Pricing JSON</a>
+        <a href="https://github.com/swp1234/tokenledger" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+  </footer>
+  <script src="/js/pricing-engine.js"></script>
+  <script src="/js/ui-shell.js"></script>
+
+</body>
+</html>

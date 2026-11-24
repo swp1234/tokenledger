@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <title>Fixing the AI Agent Token Snowball: Why a 15-Turn Agent Costs 12x More Than Expected | TokenLedger</title>
+  <meta name="description" content="Mathematical breakdown of quadratic context accumulation in multi-turn tool-calling agents and how prefix caching + sliding windows cap burn.">
+  <meta name="dateModified" content="2026-11-24">
+  <link rel="canonical" href="https://tokenledger.pages.dev/guides/ai-agent-token-snowball-fix.html">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Fixing the AI Agent Token Snowball: Why a 15-Turn Agent Costs 12x More Than Expected | TokenLedger">
+  <meta property="og:description" content="Mathematical breakdown of quadratic context accumulation in multi-turn tool-calling agents and how prefix caching + sliding windows cap burn.">
+  <meta property="og:url" content="https://tokenledger.pages.dev/guides/ai-agent-token-snowball-fix.html">
+  <meta property="og:image" content="https://tokenledger.pages.dev/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Fixing the AI Agent Token Snowball: Why a 15-Turn Agent Costs 12x More Than Expected | TokenLedger">
+  <meta name="twitter:description" content="Mathematical breakdown of quadratic context accumulation in multi-turn tool-calling agents and how prefix caching + sliding windows cap burn.">
+  <meta name="twitter:image" content="https://tokenledger.pages.dev/og-image.png">
+
+  <link rel="stylesheet" href="/css/tokenledger.css">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "Fixing the AI Agent Token Snowball: Why a 15-Turn Agent Costs 12x More Than Expected",
+      "description": "Mathematical breakdown of quadratic context accumulation in multi-turn tool-calling agents and how prefix caching + sliding windows cap burn.",
+      "datePublished": "2026-11-24",
+      "dateModified": "2026-11-24",
+      "author": {
+        "@type": "Organization",
+        "name": "TokenLedger"
+      },
+      "mainEntityOfPage": "https://tokenledger.pages.dev/guides/ai-agent-token-snowball-fix.html",
+      "image": "https://tokenledger.pages.dev/og-image.png"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "TokenLedger",
+          "item": "https://tokenledger.pages.dev/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Fixing the AI Agent Token Snowball: Why a 15-Turn Agent Costs 12x More Than Expected",
+          "item": "https://tokenledger.pages.dev/guides/ai-agent-token-snowball-fix.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <header class="tl-header">
+    <div class="tl-nav-inner">
+      <a href="/" class="tl-brand"><span class="tl-logo" aria-hidden="true">TL</span><span>TokenLedger</span></a>
+      <nav class="tl-nav-links" aria-label="Primary">
+        <a href="/">Cost Estimator</a>
+        <a href="/tools/agent-budget.html">Agent Burn</a>
+        <a href="/tools/saas-margin.html">SaaS Margin</a>
+        <a href="/tools/rag-calculator.html">RAG TCO</a>
+        <a href="/tools/token-inspector.html">Token Inspector</a>
+        <a href="/guides/llm-cost-optimization-playbook.html" class="active">Playbook</a>
+      </nav>
+      <div class="tl-nav-actions">
+        <a href="/api/pricing.json" class="tl-icon-btn" title="Public JSON Pricing Feed">JSON API</a>
+        <button type="button" id="tlThemeToggle" class="tl-icon-btn" aria-label="Toggle Light or Dark Theme">Light</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="tl-wrap">
+  <section class="tl-hero">
+    <div class="tl-kicker">AI FINOPS ENGINEERING PLAYBOOK</div>
+    <h1>Fixing the AI Agent Token Snowball: Why a 15-Turn Agent Costs 12x More Than Expected</h1>
+    <p>Mathematical breakdown of quadratic context accumulation in multi-turn tool-calling agents and how prefix caching + sliding windows cap burn.</p>
+    <div class="tl-btn-bar"><a class="tl-btn tl-btn-primary" href="/tools/agent-budget.html">Model Your Agent Burn Curve →</a></div>
+  </section>
+  <article class="tl-panel tl-prose">
+    <h2>The Quadratic Trap Inside Every ReAct / Tool-Calling Loop</h2>
+    <p>In a multi-turn agent, Turn 1 sends the system prompt + user request. Turn 2 resends Turn 1 plus the tool output. By Turn 15, the model re-reads all 14 prior tool payloads—turning linear steps into quadratic O(N²) input token spend.</p>
+    <h2>Why Prompt Caching Alone Is Half the Fix</h2>
+    <p>Prefix caching slashes the cost of re-reading prior turns by up to 90%, yet verbose raw JSON/HTML tool outputs still degrade attention quality and inflate cache writes. Truncating raw tool payloads before appending them to message history compounds caching savings.</p>
+    <h2>Sliding-Window Rolling Summaries for Long Sessions</h2>
+    <p>Capping active message history to the last 4–6 raw turns plus a compact 400-token structured state summary bounds per-turn input tokens flat even on 40-turn autonomous runs.</p>
+    <div class="tl-btn-bar" style="margin-top:24px"><a class="tl-btn tl-btn-primary" href="/tools/agent-budget.html">Model Your Agent Burn Curve →</a><a class="tl-btn" href="/">All 24 Models Estimator</a></div>
+  </article>
+  <section class="tl-resources" aria-label="Recommended AI Engineering and FinOps Books">
+    <h2>Recommended AI Engineering &amp; Cloud FinOps Books</h2>
+    <div class="tl-res-grid">
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098166302?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>AI Engineering</strong>
+        <span>Chip Huyen (O’Reilly) • Production architecture for foundation models, evaluation, RAG, and latency/cost budgets.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098150724?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>Cloud FinOps (2nd Ed.)</strong>
+        <span>J.R. Storment &amp; Mike Fuller (O’Reilly) • Collaborative cloud &amp; AI unit-economics governance for engineering teams.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098161769?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>Building LLMs for Production</strong>
+        <span>Louis-François Bouchard &amp; Louie Peters • Practical prompting, caching, RAG, and cost-aware inference routing.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+    </div>
+    <p class="tl-disclosure">Editorial note: Curated technical books for AI engineers and FinOps teams. Amazon links include affiliate tag dopabrain-20 (no extra cost to you) and help keep TokenLedger 100% free and ad-free. Interested in sponsoring TokenLedger? <a href="https://github.com/swp1234/tokenledger" target="_blank" rel="noopener" style="color:var(--accent)">Open a Sponsor / Partnership thread on GitHub ↗</a>.</p>
+  </section>
+  </main>
+
+  <footer class="tl-footer">
+    <div class="tl-footer-inner">
+      <div><strong>TokenLedger</strong> &bull; 100% Browser-Private AI &amp; LLM FinOps Studio &bull; Pricing snapshot: 2026-11-24</div>
+      <div>
+        <a href="/about.html">Methodology</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/api/pricing.json">Pricing JSON</a>
+        <a href="https://github.com/swp1234/tokenledger" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+  </footer>
+  <script src="/js/pricing-engine.js"></script>
+  <script src="/js/ui-shell.js"></script>
+
+</body>
+</html>

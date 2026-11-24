@@ -1,0 +1,53 @@
+# TokenLedger — AI & LLM API FinOps Studio
+
+> Browser-private AI & LLM API cost calculator, multi-turn agent burn simulator, SaaS gross margin calculator, RAG TCO planner, and public JSON pricing feed covering 24 flagship models.
+
+## Core Interactive Tools
+- [24-Model LLM API Cost Estimator](https://tokenledger.pages.dev/): Live prompt token counter, prompt caching, 50% batch discounts, model cascade savings, CSV/JSON/PDF export.
+- [AI Agent Loop Burn Calculator](https://tokenledger.pages.dev/tools/agent-budget.html): Quadratic O(N²) turn-by-turn token snowballing vs. caching and sliding-window summarization.
+- [AI SaaS Gross Margin Simulator](https://tokenledger.pages.dev/tools/saas-margin.html): Per-seat LLM COGS, payment fees, gross margin %, and power-user break-even caps.
+- [RAG & Vector DB TCO Planner](https://tokenledger.pages.dev/tools/rag-calculator.html): Embedding ingestion, HNSW RAM footprint, re-index churn, and Top-K synthesis spend.
+- [Context Window & JSON Minifier Inspector](https://tokenledger.pages.dev/tools/token-inspector.html): OpenAI/Claude/Gemini token estimates and one-click JSON tool schema minification.
+
+## Public Pricing Data API
+- [Machine-Readable JSON Pricing Feed](https://tokenledger.pages.dev/api/pricing.json): 24 LLM models + 6 embedding models (2026-11-24).
+
+## Model Comparisons & Playbooks
+- [Claude Sonnet 4 vs GPT-4.1 API Cost & Context Comparison (2026)](https://tokenledger.pages.dev/compare/claude-sonnet-vs-gpt-4-1.html): Compare per-request, monthly, prompt-cached, and batch API pricing between Anthropic Claude Sonnet 4 and OpenAI GPT-4.1 across real production workloads.
+- [Claude Opus 4 vs GPT-5 API Cost & Frontier Budget Comparison (2026)](https://tokenledger.pages.dev/compare/claude-opus-vs-gpt-5.html): Calculate the exact monthly API spread between Claude Opus 4 ($15/$75) and GPT-5 ($1.25/$10) with prompt caching and cascade routing strategies.
+- [Gemini 2.5 Pro vs Claude Sonnet 4 API Pricing & 1M Context Economics](https://tokenledger.pages.dev/compare/gemini-2-5-pro-vs-claude-sonnet.html): Side-by-side LLM FinOps breakdown comparing Google Gemini 2.5 Pro 1M context window pricing against Anthropic Claude Sonnet 4.
+- [DeepSeek-V3 vs GPT-4.1 mini API Cost Comparison for High-Volume Apps](https://tokenledger.pages.dev/compare/deepseek-v3-vs-gpt-4-1-mini.html): Benchmark high-throughput unit economics between DeepSeek-V3 ($0.27/$1.10) and OpenAI GPT-4.1 mini ($0.40/$1.60).
+- [Gemini 2.5 Flash vs Claude 3.5 Haiku API Cost & Latency Economics](https://tokenledger.pages.dev/compare/gemini-2-5-flash-vs-claude-haiku.html): Compare low-latency router and classification costs between Google Gemini 2.5 Flash and Anthropic Claude 3.5 Haiku.
+- [OpenAI o3 vs DeepSeek-R1 Reasoning Model API Cost Breakdown](https://tokenledger.pages.dev/compare/o3-vs-deepseek-r1.html): Estimate reasoning-token workloads for OpenAI o3 versus DeepSeek-R1 including prompt caching and async batch discounts.
+- [Llama 4 Maverick (Hosted) vs GPT-4.1 API Cost & 1M Context Analysis](https://tokenledger.pages.dev/compare/llama-4-vs-gpt-4-1.html): Evaluate hosted open-weight Llama 4 Maverick economics against proprietary OpenAI GPT-4.1 across 1M-context workloads.
+- [LLM Prompt Caching vs Batch API (50% Off): Which Saves More Money?](https://tokenledger.pages.dev/compare/prompt-caching-vs-batch-api.html): Quantitative FinOps comparison of 75–90% prompt caching discounts versus 50% async batch API discounts for agents and bulk jobs.
+- [LLM Cost Optimization Playbook: Cut API Spend 60–85% Without Losing Quality](https://tokenledger.pages.dev/guides/llm-cost-optimization-playbook.html): Field-tested AI FinOps playbook covering prompt caching, frontier-to-mini cascade routing, JSON schema minification, and async batch APIs.
+- [Fixing the AI Agent Token Snowball: Why a 15-Turn Agent Costs 12x More Than Expected](https://tokenledger.pages.dev/guides/ai-agent-token-snowball-fix.html): Mathematical breakdown of quadratic context accumulation in multi-turn tool-calling agents and how prefix caching + sliding windows cap burn.
+- [AI SaaS Gross Margin Benchmarks: Pricing Seats Without Getting Crushed by Power Users](https://tokenledger.pages.dev/guides/saas-ai-gross-margin-benchmarks.html): How to model AI COGS, Stripe fees, gross margin targets (>=75%), and break-even usage caps for flat-rate AI subscriptions.
+- [RAG & Vector Embedding Cost Architecture: Sizing Chunks, Re-Index Churn & Synthesis Spend](https://tokenledger.pages.dev/guides/rag-chunking-cost-architecture.html): Why embedding ingestion is rarely the real RAG bill—and how Top-K synthesis tokens and HNSW vector RAM dominate monthly TCO.
+
+## Supported Models (24)
+- GPT-5 (OpenAI): $1.25/1M in, $0.125/1M cached, $10/1M out, 400000 ctx
+- GPT-5 mini (OpenAI): $0.25/1M in, $0.025/1M cached, $2/1M out, 400000 ctx
+- GPT-5 nano (OpenAI): $0.05/1M in, $0.005/1M cached, $0.4/1M out, 400000 ctx
+- GPT-4.1 (OpenAI): $2/1M in, $0.5/1M cached, $8/1M out, 1047576 ctx
+- GPT-4.1 mini (OpenAI): $0.4/1M in, $0.1/1M cached, $1.6/1M out, 1047576 ctx
+- GPT-4.1 nano (OpenAI): $0.1/1M in, $0.025/1M cached, $0.4/1M out, 1047576 ctx
+- OpenAI o3 (OpenAI): $2/1M in, $0.5/1M cached, $8/1M out, 200000 ctx
+- OpenAI o4-mini (OpenAI): $1.1/1M in, $0.275/1M cached, $4.4/1M out, 200000 ctx
+- Claude Opus 4 (Anthropic): $15/1M in, $1.5/1M cached, $75/1M out, 200000 ctx
+- Claude Sonnet 4 (Anthropic): $3/1M in, $0.3/1M cached, $15/1M out, 200000 ctx
+- Claude 3.5 Haiku (Anthropic): $0.8/1M in, $0.08/1M cached, $4/1M out, 200000 ctx
+- Gemini 2.5 Pro (Google): $1.25/1M in, $0.3125/1M cached, $10/1M out, 1048576 ctx
+- Gemini 2.5 Flash (Google): $0.3/1M in, $0.075/1M cached, $2.5/1M out, 1048576 ctx
+- Gemini 2.5 Flash-Lite (Google): $0.1/1M in, $0.025/1M cached, $0.4/1M out, 1048576 ctx
+- DeepSeek-V3 (Chat) (DeepSeek): $0.27/1M in, $0.07/1M cached, $1.1/1M out, 128000 ctx
+- DeepSeek-R1 (DeepSeek): $0.55/1M in, $0.14/1M cached, $2.19/1M out, 128000 ctx
+- Grok 3 (xAI): $3/1M in, $0.75/1M cached, $15/1M out, 131072 ctx
+- Grok 3 Mini (xAI): $0.3/1M in, $0.075/1M cached, $0.5/1M out, 131072 ctx
+- Llama 4 Maverick (Hosted) (Meta): $0.27/1M in, $0.135/1M cached, $0.85/1M out, 1000000 ctx
+- Llama 4 Scout (Hosted) (Meta): $0.11/1M in, $0.055/1M cached, $0.34/1M out, 1000000 ctx
+- Mistral Large 2 (Mistral): $2/1M in, $2/1M cached, $6/1M out, 128000 ctx
+- Mistral Small 3.1 (Mistral): $0.1/1M in, $0.1/1M cached, $0.3/1M out, 128000 ctx
+- Qwen 2.5 72B (Hosted) (Alibaba): $0.35/1M in, $0.175/1M cached, $0.4/1M out, 131072 ctx
+- Perplexity Sonar Pro (Perplexity): $3/1M in, $3/1M cached, $15/1M out, 200000 ctx
