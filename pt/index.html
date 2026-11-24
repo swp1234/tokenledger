@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <title>Calculadora de Custos API LLM e IA (GPT-5, Claude 4, Gemini 2.5, DeepSeek) — Cache e Batch | TokenLedger</title>
+  <meta name="description" content="Simulador gratuito e 100% privado de custos API para 24 modelos LLM com Prompt Caching, desconto Batch 50%, roteamento em cascata e exportação CSV/PDF.">
+  <meta name="dateModified" content="2026-11-24">
+  <link rel="canonical" href="https://tokenledger-8x7.pages.dev/pt/">
+  <link rel="alternate" hreflang="en" href="https://tokenledger-8x7.pages.dev/">
+  <link rel="alternate" hreflang="ko" href="https://tokenledger-8x7.pages.dev/ko/">
+  <link rel="alternate" hreflang="ja" href="https://tokenledger-8x7.pages.dev/ja/">
+  <link rel="alternate" hreflang="de" href="https://tokenledger-8x7.pages.dev/de/">
+  <link rel="alternate" hreflang="fr" href="https://tokenledger-8x7.pages.dev/fr/">
+  <link rel="alternate" hreflang="es" href="https://tokenledger-8x7.pages.dev/es/">
+  <link rel="alternate" hreflang="pt" href="https://tokenledger-8x7.pages.dev/pt/">
+  <link rel="alternate" hreflang="x-default" href="https://tokenledger-8x7.pages.dev/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Calculadora de Custos API LLM e IA (GPT-5, Claude 4, Gemini 2.5, DeepSeek) — Cache e Batch | TokenLedger">
+  <meta property="og:description" content="Simulador gratuito e 100% privado de custos API para 24 modelos LLM com Prompt Caching, desconto Batch 50%, roteamento em cascata e exportação CSV/PDF.">
+  <meta property="og:url" content="https://tokenledger-8x7.pages.dev/pt/">
+  <meta property="og:image" content="https://tokenledger-8x7.pages.dev/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Calculadora de Custos API LLM e IA (GPT-5, Claude 4, Gemini 2.5, DeepSeek) — Cache e Batch | TokenLedger">
+  <meta name="twitter:description" content="Simulador gratuito e 100% privado de custos API para 24 modelos LLM com Prompt Caching, desconto Batch 50%, roteamento em cascata e exportação CSV/PDF.">
+  <meta name="twitter:image" content="https://tokenledger-8x7.pages.dev/og-image.png">
+
+  <link rel="stylesheet" href="/css/tokenledger.css">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "TokenLedger (PT)",
+      "inLanguage": "pt",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "url": "https://tokenledger-8x7.pages.dev/pt/",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <header class="tl-header">
+    <div class="tl-nav-inner">
+      <a href="/" class="tl-brand"><span class="tl-logo" aria-hidden="true">TL</span><span>TokenLedger</span></a>
+      <nav class="tl-nav-links" aria-label="Primary">
+        <a href="/" class="active">Estimator</a>
+        <a href="/tools/agent-budget.html">Agent Burn</a>
+        <a href="/tools/mcp-schema-auditor.html">MCP Tax</a>
+        <a href="/tools/saas-margin.html">SaaS Margin</a>
+        <a href="/tools/rag-calculator.html">RAG TCO</a>
+        <a href="/tools/self-host-vs-api.html">GPU vs API</a>
+        <a href="/tools/multimodal-budget.html">Voice & Vision</a>
+        <a href="/tools/token-inspector.html">Inspector</a>
+      </nav>
+      <div class="tl-nav-actions">
+        <a href="/api/pricing.json" class="tl-icon-btn" title="Public JSON Pricing Feed">JSON API</a>
+        <button type="button" id="tlThemeToggle" class="tl-icon-btn" aria-label="Toggle Light or Dark Theme">Light</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="tl-wrap">
+  <section class="tl-hero">
+    <div class="tl-kicker">24 MODELOS IA · 100% LOCAL NO NAVEGADOR · SEM UPLOAD</div>
+    <h1>Calculadora de Custos API LLM &amp; Estúdio FinOps</h1>
+    <p>Compare custos mensais e anuais em 24 modelos de IA (GPT-5, Claude 4, Gemini 2.5, DeepSeek, Llama 4 e Mistral) com cache de prompts, agentes e margem SaaS.</p>
+    <div class="tl-pills">
+      <a class="tl-pill" href="/" style="text-decoration:none">English</a>
+      <a class="tl-pill" href="/ko/" style="text-decoration:none">한국어</a>
+      <a class="tl-pill" href="/ja/" style="text-decoration:none">日本語</a>
+      <a class="tl-pill" href="/de/" style="text-decoration:none">Deutsch</a>
+      <a class="tl-pill" href="/fr/" style="text-decoration:none">Français</a>
+      <a class="tl-pill" href="/es/" style="text-decoration:none">Español</a>
+      <a class="tl-pill" href="/pt/" style="text-decoration:none">Português</a>
+    </div>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">Lowest Monthly</div><div class="kpi-val accent" id="kpiCheapest">$0.00/mo</div><div class="kpi-sub" id="kpiCheapestSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">OpenAI GPT-5</div><div class="kpi-val" id="kpiGpt5">$0.00/mo</div><div class="kpi-sub" id="kpiGpt5Sub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Claude Sonnet 4</div><div class="kpi-val" id="kpiSonnet">$0.00/mo</div><div class="kpi-sub" id="kpiSonnetSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Cascade Savings</div><div class="kpi-val accent" id="kpiCascadeSave">$0.00/mo</div><div class="kpi-sub" id="kpiCascadeSub">-</div></div>
+  </section>
+
+  <section class="tl-grid-2">
+    <div class="tl-panel">
+      <h2>1. Parâmetros de carga</h2>
+      <div class="tl-chips">
+        <button type="button" class="tl-chip" data-preset="support">Support Bot (5K/d)</button>
+        <button type="button" class="tl-chip" data-preset="coding">Coding Agent (18K in)</button>
+        <button type="button" class="tl-chip" data-preset="rag">RAG Search (2K/d)</button>
+        <button type="button" class="tl-chip" data-preset="batch">Batch ETL (15K/d)</button>
+      </div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="inTokens">Tokens entrada / requisição</label><input id="inTokens" class="tl-input num" type="number" min="0" step="100" value="2500"></div>
+        <div class="tl-field"><label for="outTokens">Tokens saída / requisição</label><input id="outTokens" class="tl-input num" type="number" min="0" step="50" value="600"></div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="dailyReqs">Requisições / dia</label><input id="dailyReqs" class="tl-input num" type="number" min="1" step="100" value="1000"></div>
+        <div class="tl-field"><label for="sortSelect">Sort</label><select id="sortSelect" class="tl-select"><option value="monthly">Monthly Cost</option><option value="input">Input $/1M</option><option value="context">Context Window</option></select></div>
+      </div>
+      <div class="tl-field"><label for="cacheSlider">Taxa de Prompt Cache <strong id="cacheVal">50%</strong></label><input id="cacheSlider" class="tl-range" type="range" min="0" max="95" step="5" value="50"></div>
+      <label class="tl-check-row"><input id="batchToggle" type="checkbox"><span>Aplicar 50% desconto Batch API</span></label>
+      <div class="tl-btn-bar">
+        <button type="button" id="btnShare" class="tl-btn tl-btn-primary">Copiar link</button>
+        <button type="button" id="btnMarkdown" class="tl-btn">Copiar Markdown</button>
+        <button type="button" id="btnCsv" class="tl-btn">CSV</button>
+        <button type="button" id="btnJson" class="tl-btn">JSON</button>
+        <button type="button" id="btnPrint" class="tl-btn">PDF</button>
+      </div>
+    </div>
+    <div class="tl-panel">
+      <h2>2. Contador de tokens e Cascata</h2>
+      <div class="tl-field">
+        <label for="livePrompt">Prompt / JSON (100% Local)</label>
+        <textarea id="livePrompt" class="tl-textarea" placeholder="Paste prompt or JSON here..."></textarea>
+        <div id="promptStats" class="kpi-sub num" style="margin-top:6px">0 OpenAI tok · 0 Claude tok · 0 Gemini tok</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="cascadeFrontier">Frontier Model</label><select id="cascadeFrontier" class="tl-select"></select></div>
+        <div class="tl-field"><label for="cascadeMini">Fast / Mini Model</label><select id="cascadeMini" class="tl-select"></select></div>
+      </div>
+      <div class="tl-field"><label for="offloadSlider">Mini Traffic % <strong id="offloadVal">70%</strong></label><input id="offloadSlider" class="tl-range" type="range" min="0" max="95" step="5" value="70"></div>
+      <div id="cascadeOut" class="kpi-sub num" style="padding:10px 12px;border-radius:10px;background:var(--accent-soft);color:var(--text);font-weight:600"></div>
+    </div>
+  </section>
+
+  <section class="tl-panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+      <h2 style="margin:0">3. Matriz de custos dos 24 modelos</h2>
+      <div id="spreadSummary" class="kpi-sub num" style="margin:0"></div>
+    </div>
+    <div class="tl-chips">
+      <button type="button" class="tl-chip active" data-provider="all">All (24)</button>
+      <button type="button" class="tl-chip" data-provider="OpenAI">OpenAI</button>
+      <button type="button" class="tl-chip" data-provider="Anthropic">Anthropic</button>
+      <button type="button" class="tl-chip" data-provider="Google">Google</button>
+      <button type="button" class="tl-chip" data-provider="DeepSeek">DeepSeek</button>
+    </div>
+    <div class="tl-table-wrap">
+      <table class="tl-table">
+        <thead><tr><th>Model &amp; Context</th><th>Tier</th><th>In / Out (1M)</th><th>Per Req</th><th>Monthly</th><th>Annual</th><th>Relative</th></tr></thead>
+        <tbody id="modelTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+  <section class="tl-resources" aria-label="Recommended AI Engineering and FinOps Books">
+    <h2>Recommended AI Engineering &amp; Cloud FinOps Books</h2>
+    <div class="tl-res-grid">
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098166302?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>AI Engineering</strong>
+        <span>Chip Huyen (O’Reilly) • Production architecture for foundation models, evaluation, RAG, and latency/cost budgets.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098150724?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>Cloud FinOps (2nd Ed.)</strong>
+        <span>J.R. Storment &amp; Mike Fuller (O’Reilly) • Collaborative cloud &amp; AI unit-economics governance for engineering teams.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098161769?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>Building LLMs for Production</strong>
+        <span>Louis-François Bouchard &amp; Louie Peters • Practical prompting, caching, RAG, and cost-aware inference routing.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+    </div>
+    <p class="tl-disclosure">Editorial note: Curated technical books for AI engineers and FinOps teams. Amazon links include affiliate tag dopabrain-20 (no extra cost to you) and help keep TokenLedger 100% free and ad-free. Interested in sponsoring TokenLedger? <a href="https://github.com/swp1234/tokenledger" target="_blank" rel="noopener" style="color:var(--accent)">Open a Sponsor / Partnership thread on GitHub ↗</a>.</p>
+  </section>
+  </main>
+
+  <footer class="tl-footer">
+    <div class="tl-footer-inner">
+      <div><strong>TokenLedger</strong> &bull; 100% Browser-Private AI &amp; LLM FinOps Studio &bull; Pricing snapshot: 2026-11-24</div>
+      <div>
+        <a href="/about.html">Methodology</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/api/pricing.json">Pricing JSON</a>
+        <a href="https://github.com/swp1234/tokenledger" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+  </footer>
+  <script src="/js/pricing-engine.js"></script>
+  <script src="/js/ui-shell.js"></script>
+  <script src="/js/studio-home.js" defer></script>
+</body>
+</html>

@@ -1,7 +1,10 @@
 {
   "name": "tokenledger",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
+  "bin": {
+    "tokenledger": "./bin/tokenledger.js"
+  },
   "description": "100% browser-private AI & LLM API Cost Calculator, Agent Burn Simulator, SaaS Margin Calculator, and RAG TCO Studio.",
   "scripts": {
     "build": "node scripts/build-site.js",

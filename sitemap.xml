@@ -6,6 +6,8 @@
   <url><loc>https://tokenledger-8x7.pages.dev/tools/rag-calculator.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/tools/token-inspector.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/tools/self-host-vs-api.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/tools/mcp-schema-auditor.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/tools/multimodal-budget.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/compare/claude-sonnet-vs-gpt-4-1.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/compare/claude-opus-vs-gpt-5.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/compare/gemini-2-5-pro-vs-claude-sonnet.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
@@ -18,14 +20,26 @@
   <url><loc>https://tokenledger-8x7.pages.dev/compare/gpt-5-mini-vs-gemini-2-5-flash.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/compare/claude-sonnet-vs-deepseek-v3.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/compare/self-hosted-h100-vs-cloud-api.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/compare/claude-sonnet-vs-gemini-2-5-flash.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/compare/gpt-5-vs-gemini-2-5-pro.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/compare/deepseek-r1-vs-claude-sonnet.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/compare/grok-3-vs-gpt-5.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/compare/mistral-large-vs-claude-sonnet.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/compare/openai-realtime-vs-gemini-live.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/guides/llm-cost-optimization-playbook.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/guides/ai-agent-token-snowball-fix.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/guides/saas-ai-gross-margin-benchmarks.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/guides/rag-chunking-cost-architecture.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/guides/mcp-tool-schema-token-bloat.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/guides/multimodal-vision-voice-api-pricing.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/guides/prompt-caching-architecture-guide.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/guides/model-cascade-router-design.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/about.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/privacy.html</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.3</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/ko/</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/ja/</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/de/</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/fr/</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/es/</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/pt/</loc><lastmod>2026-11-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
 </urlset>

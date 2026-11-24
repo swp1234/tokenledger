@@ -13,7 +13,21 @@ Most LLM calculators are single-prompt toys or upload your prompts to a backend.
 2. **AI Agent Loop Burn Calculator (`/tools/agent-budget.html`)** — Models quadratic $O(N^2)$ context accumulation in multi-turn ReAct/tool-calling agents and visualizes **Naive Full History vs. Prefix Prompt Caching vs. Sliding-Window Summarization** turn by turn.
 3. **AI SaaS Gross Margin Simulator (`/tools/saas-margin.html`)** — Calculates per-seat LLM COGS, payment processing fees, gross margin %, net profit at scale, and the exact **break-even request cap per subscriber**.
 4. **RAG & Vector DB TCO Planner (`/tools/rag-calculator.html`)** — Sizes one-time corpus embedding, monthly re-index churn, HNSW vector RAM footprint, and Top-K synthesis spend.
-5. **Context Window & JSON Schema Minifier Inspector (`/tools/token-inspector.html`)** — Estimates OpenAI/Claude/Gemini tokens locally and minifies bloated JSON tool schemas to show immediate annual USD savings.
+5. **Self-Hosted GPU vs. Cloud API Break-Even (`/tools/self-host-vs-api.html`)** — Compares RTX 4090 / L40S / A100 / H100 vLLM hosting + DevOps overhead against cloud APIs to find exact daily break-even request thresholds.
+6. **MCP & Function-Calling Schema Tax Auditor (`/tools/mcp-schema-auditor.html`)** — Measures upfront token bloat from connected MCP servers, compares Prompt Caching vs. Lazy Tool Deferral, and ranks heaviest schemas from pasted JSON.
+7. **Voice, Vision & Multimodal Cost Studio (`/tools/multimodal-budget.html`)** — Models PDF/image vision tokens, OpenAI Realtime vs. Gemini Live audio per-minute costs, and GPT Image / Imagen / Flux generation.
+8. **Context Window & JSON Schema Minifier Inspector (`/tools/token-inspector.html`)** — Estimates OpenAI/Claude/Gemini tokens locally and minifies bloated JSON tool schemas to show immediate annual USD savings.
+
+## Zero-Dependency CLI
+
+```bash
+node bin/tokenledger.js --in 2500 --out 600 --req 1000 --cache 50 --top 10 --format md
+```
+
+Available formats: `table`, `md` (ready for GitHub PRs / Notion RFCs), and `json`.
+
+## International Hubs
+- English (`/`) · 한국어 (`/ko/`) · 日本語 (`/ja/`) · Deutsch (`/de/`) · Français (`/fr/`) · Español (`/es/`) · Português (`/pt/`)
 
 ## Local Development & Verification
 

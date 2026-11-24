@@ -59,6 +59,16 @@ function runUnitTests() {
   const sh = ENGINE.calcSelfHostVsApi('claude-sonnet-4', { gpuHourly: 2.85, hoursPerDay: 24, devopsMonthly: 450, tokPerSec: 340, avgUtilPct: 35, inputTokens: 2500, outputTokens: 600, dailyRequests: 8000, cacheHitRate: 50 });
   assert(sh.selfHostMonthly > 2000 && sh.breakEvenDailyReqs > 500 && ['self-host-wins', 'hybrid-borderline', 'cloud-api-wins', 'needs-more-gpus'].includes(sh.verdict));
 
+  // MCP Schema Tax & Tool JSON Auditor
+  const mcp = ENGINE.calcMcpSchemaTax('claude-sonnet-4', { servers: 5, toolsPerServer: 14, tokensPerTool: 260, turnsPerSession: 16, sessionsPerDay: 400, cacheHitRate: 80, lazyDeferPct: 85 });
+  assert(mcp.totalTools === 70 && mcp.monthlyLazy < mcp.monthlyCached && mcp.monthlyCached < mcp.monthlyUncached);
+  const audit = ENGINE.auditToolJson(JSON.stringify([{ name: 'a', description: 'long desc', inputSchema: { type: 'object' } }]));
+  assert(audit.count === 1 && audit.totalMinified <= audit.totalPretty);
+
+  // Multimodal Vision / Voice / Image Gen
+  const mm = ENGINE.calcMultimodalBudget({ visionModel: 'gemini-2.5-flash-vision', voiceModel: 'gemini-live-flash', imageModel: 'imagen-3', dailyImages: 1500, visionOutTok: 250, dailyVoiceMins: 600, dailyGenImages: 200 });
+  assert(mm.totalMonthly > 500 && mm.voiceMonthly > mm.visionMonthly);
+
   // OG PNG check
   const ogBuf = fs.readFileSync(path.join(ROOT, 'og-image.png'));
   assert(ogBuf.length > 10000 && ogBuf.slice(0, 8).toString('hex') === '89504e470d0a1a0a', 'og-image.png must be a valid PNG');
@@ -85,7 +95,7 @@ function startServer() {
 async function runBrowserTests() {
   const sm = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
   const paths = [...sm.matchAll(/<loc>https:\/\/tokenledger-8x7\.pages\.dev([^<]+)<\/loc>/g)].map(m => m[1]);
-  assert(paths.length === 28, `Expected 28 sitemap URLs, got ${paths.length}`);
+  assert(paths.length === 42, `Expected 42 sitemap URLs, got ${paths.length}`);
 
   const { srv, origin } = await startServer();
   const browser = await chromium.launch({ headless: true });
@@ -141,9 +151,16 @@ async function runBrowserTests() {
     assert((await page.textContent('#kpiRagTotal')).includes('$'));
     await page.goto(`${origin}/tools/self-host-vs-api.html`, { waitUntil: 'domcontentloaded' });
     assert((await page.textContent('#kpiBreakEven')).includes('/day'));
+    await page.goto(`${origin}/tools/mcp-schema-auditor.html`, { waitUntil: 'domcontentloaded' });
+    await page.click('#btnMcpSample');
+    assert((await page.locator('#mcpToolTableBody tr').count()) === 3);
+    await page.goto(`${origin}/tools/multimodal-budget.html`, { waitUntil: 'domcontentloaded' });
+    assert((await page.locator('#voiceCompareBody tr').count()) === 4);
     await page.goto(`${origin}/ko/`, { waitUntil: 'domcontentloaded' });
     assert.strictEqual(await page.evaluate(() => document.documentElement.lang), 'ko');
     assert((await page.locator('#modelTableBody tr').count()) === 24);
+    await page.goto(`${origin}/es/`, { waitUntil: 'domcontentloaded' });
+    assert.strictEqual(await page.evaluate(() => document.documentElement.lang), 'es');
 
     assert.strictEqual(errors.length, 0, `Uncaught page errors: ${errors.join(' | ')}`);
     console.log('[PASS] Interactive E2E tests passed across all 5 workspaces (presets, provider filter, theme, JSON minifier savings, agent chart, SaaS matrix, RAG TCO)');

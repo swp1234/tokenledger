@@ -388,6 +388,117 @@
     };
   }
 
+  // MCP & Function-Calling Tool Schema Tax Auditor
+  function calcMcpSchemaTax(modelId, opts) {
+    var m = getModel(modelId);
+    var servers = Math.round(clamp(opts.servers || 5, 1, 50));
+    var toolsPerServer = Math.round(clamp(opts.toolsPerServer || 12, 1, 100));
+    var tokensPerTool = clamp(opts.tokensPerTool || 260, 40, 4000);
+    var turnsPerSession = Math.round(clamp(opts.turnsPerSession || 15, 1, 100));
+    var sessionsPerDay = clamp(opts.sessionsPerDay || 500, 1, 1000000);
+    var cacheHitRate = clamp(opts.cacheHitRate || 80, 0, 95) / 100;
+    var lazyDeferPct = clamp(opts.lazyDeferPct || 85, 0, 98) / 100;
+
+    var totalTools = servers * toolsPerServer;
+    var schemaTokensPerTurn = totalTools * tokensPerTool;
+    var dailyTurns = turnsPerSession * sessionsPerDay;
+
+    var uncachedTurnCost = (schemaTokensPerTurn / 1e6) * m.input;
+    var cachedTurnCost = ((schemaTokensPerTurn * (1 - cacheHitRate)) / 1e6) * m.input +
+      ((schemaTokensPerTurn * cacheHitRate) / 1e6) * m.cachedInput;
+
+    // Lazy-loading / tool-search defers ~lazyDeferPct of schemas until invoked
+    var lazyTokens = schemaTokensPerTurn * (1 - lazyDeferPct) + (totalTools * 14); // compact name index
+    var lazyTurnCost = ((lazyTokens * (1 - cacheHitRate)) / 1e6) * m.input +
+      ((lazyTokens * cacheHitRate) / 1e6) * m.cachedInput;
+
+    var monthlyUncached = uncachedTurnCost * dailyTurns * 30;
+    var monthlyCached = cachedTurnCost * dailyTurns * 30;
+    var monthlyLazy = lazyTurnCost * dailyTurns * 30;
+
+    return {
+      model: m,
+      totalTools: totalTools,
+      schemaTokensPerTurn: schemaTokensPerTurn,
+      lazyTokensPerTurn: Math.round(lazyTokens),
+      contextTaxPct200k: Math.min(100, (schemaTokensPerTurn / 200000) * 100),
+      monthlyUncached: monthlyUncached,
+      monthlyCached: monthlyCached,
+      monthlyLazy: monthlyLazy,
+      monthlySavedWithLazy: Math.max(0, monthlyCached - monthlyLazy),
+      annualSavedWithLazy: Math.max(0, monthlyCached - monthlyLazy) * 12
+    };
+  }
+
+  // Analyze raw JSON array of MCP/OpenAI tool definitions
+  function auditToolJson(rawJson) {
+    var parsed = JSON.parse(rawJson);
+    var arr = Array.isArray(parsed) ? parsed : (Array.isArray(parsed.tools) ? parsed.tools : [parsed]);
+    var items = arr.map(function (tool, idx) {
+      var str = JSON.stringify(tool);
+      var pretty = JSON.stringify(tool, null, 2);
+      var name = (tool && (tool.name || (tool.function && tool.function.name))) || ('tool_' + (idx + 1));
+      return {
+        name: String(name),
+        prettyTokens: estimateTokens(pretty).tokensOpenAI,
+        minifiedTokens: estimateTokens(str).tokensOpenAI
+      };
+    });
+    items.sort(function (a, b) { return b.prettyTokens - a.prettyTokens; });
+    var totalPretty = items.reduce(function (s, x) { return s + x.prettyTokens; }, 0);
+    var totalMin = items.reduce(function (s, x) { return s + x.minifiedTokens; }, 0);
+    return { count: items.length, totalPretty: totalPretty, totalMinified: totalMin, savedTokens: Math.max(0, totalPretty - totalMin), topTools: items.slice(0, 8) };
+  }
+
+  // Multimodal Vision, PDF OCR, Voice Realtime & Image Gen Budget Studio
+  var MULTIMODAL_RATES = {
+    vision: [
+      { id: 'gpt-5-vision', name: 'OpenAI GPT-5 Vision', tokensPerImage: 765, inputPer1M: 1.25, outputPer1M: 10.00 },
+      { id: 'gpt-4.1-mini-vision', name: 'OpenAI GPT-4.1 mini Vision', tokensPerImage: 765, inputPer1M: 0.40, outputPer1M: 1.60 },
+      { id: 'claude-sonnet-4-vision', name: 'Anthropic Claude Sonnet 4 Vision', tokensPerImage: 1334, inputPer1M: 3.00, outputPer1M: 15.00 },
+      { id: 'gemini-2.5-flash-vision', name: 'Google Gemini 2.5 Flash Vision', tokensPerImage: 258, inputPer1M: 0.30, outputPer1M: 2.50 }
+    ],
+    voice: [
+      { id: 'openai-realtime', name: 'OpenAI Realtime Voice API', usdPerMin: 0.24 },
+      { id: 'openai-realtime-mini', name: 'OpenAI Realtime Mini Voice', usdPerMin: 0.065 },
+      { id: 'gemini-live-flash', name: 'Google Gemini 2.5 Flash Live Audio', usdPerMin: 0.042 },
+      { id: 'cascaded-stt-llm-tts', name: 'Cascaded STT (Whisper) + Flash + TTS', usdPerMin: 0.028 }
+    ],
+    imageGen: [
+      { id: 'gpt-image-1-med', name: 'OpenAI GPT Image 1 (Medium)', usdPerImage: 0.042 },
+      { id: 'imagen-3', name: 'Google Imagen 3 / 4 Standard', usdPerImage: 0.03 },
+      { id: 'flux-pro', name: 'Flux 1.1 Pro (Hosted)', usdPerImage: 0.04 },
+      { id: 'flux-schnell', name: 'Flux Schnell (Fast Open)', usdPerImage: 0.003 }
+    ]
+  };
+
+  function calcMultimodalBudget(opts) {
+    var vRate = MULTIMODAL_RATES.vision.find(function (x) { return x.id === opts.visionModel; }) || MULTIMODAL_RATES.vision[0];
+    var aRate = MULTIMODAL_RATES.voice.find(function (x) { return x.id === opts.voiceModel; }) || MULTIMODAL_RATES.voice[0];
+    var iRate = MULTIMODAL_RATES.imageGen.find(function (x) { return x.id === opts.imageModel; }) || MULTIMODAL_RATES.imageGen[0];
+
+    var dailyImages = clamp(opts.dailyImages || 0, 0, 10000000);
+    var visionOutTok = clamp(opts.visionOutTok || 250, 0, 10000);
+    var dailyVoiceMins = clamp(opts.dailyVoiceMins || 0, 0, 10000000);
+    var dailyGenImages = clamp(opts.dailyGenImages || 0, 0, 10000000);
+
+    var visionMonthly = dailyImages * 30 * (((vRate.tokensPerImage + 120) / 1e6) * vRate.inputPer1M + (visionOutTok / 1e6) * vRate.outputPer1M);
+    var voiceMonthly = dailyVoiceMins * 30 * aRate.usdPerMin;
+    var imageGenMonthly = dailyGenImages * 30 * iRate.usdPerImage;
+    var totalMonthly = visionMonthly + voiceMonthly + imageGenMonthly;
+
+    return {
+      visionModel: vRate,
+      voiceModel: aRate,
+      imageModel: iRate,
+      visionMonthly: visionMonthly,
+      voiceMonthly: voiceMonthly,
+      imageGenMonthly: imageGenMonthly,
+      totalMonthly: totalMonthly,
+      totalAnnual: totalMonthly * 12
+    };
+  }
+
   function formatUsd(n) {
     var x = Number(n);
     if (!isFinite(x)) return '$0.00';
@@ -408,6 +519,7 @@
     MODELS: MODELS,
     EMBEDDINGS: EMBEDDINGS,
     GPU_PRESETS: GPU_PRESETS,
+    MULTIMODAL_RATES: MULTIMODAL_RATES,
     getModel: getModel,
     getEmbedding: getEmbedding,
     estimateTokens: estimateTokens,
@@ -417,6 +529,9 @@
     calcSaasMargin: calcSaasMargin,
     calcRagBudget: calcRagBudget,
     calcSelfHostVsApi: calcSelfHostVsApi,
+    calcMcpSchemaTax: calcMcpSchemaTax,
+    auditToolJson: auditToolJson,
+    calcMultimodalBudget: calcMultimodalBudget,
     formatUsd: formatUsd,
     formatInt: formatInt
   };

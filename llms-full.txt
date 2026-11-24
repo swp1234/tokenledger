@@ -5,13 +5,15 @@
 ## Core Interactive Tools
 - [24-Model LLM API Cost Estimator](https://tokenledger-8x7.pages.dev/): Live prompt token counter, prompt caching, 50% batch discounts, model cascade savings, CSV/JSON/PDF export.
 - [AI Agent Loop Burn Calculator](https://tokenledger-8x7.pages.dev/tools/agent-budget.html): Quadratic O(N²) turn-by-turn token snowballing vs. caching and sliding-window summarization.
+- [MCP & Tool Schema Bloat Auditor](https://tokenledger-8x7.pages.dev/tools/mcp-schema-auditor.html): Upfront MCP server schema token tax, lazy tool deferral savings, and raw JSON tool ranker.
 - [AI SaaS Gross Margin Simulator](https://tokenledger-8x7.pages.dev/tools/saas-margin.html): Per-seat LLM COGS, payment fees, gross margin %, and power-user break-even caps.
 - [RAG & Vector DB TCO Planner](https://tokenledger-8x7.pages.dev/tools/rag-calculator.html): Embedding ingestion, HNSW RAM footprint, re-index churn, and Top-K synthesis spend.
 - [Self-Hosted GPU vs Cloud API Break-Even Calculator](https://tokenledger-8x7.pages.dev/tools/self-host-vs-api.html): H100/A100/L40S/4090 vLLM hourly + DevOps break-even vs cloud LLM APIs.
+- [Voice, Vision & Multimodal Cost Studio](https://tokenledger-8x7.pages.dev/tools/multimodal-budget.html): PDF/image vision tokens, OpenAI Realtime vs Gemini Live voice, and image generation.
 - [Context Window & JSON Minifier Inspector](https://tokenledger-8x7.pages.dev/tools/token-inspector.html): OpenAI/Claude/Gemini token estimates and one-click JSON tool schema minification.
 
 ## International Hubs
-- [Korean (한국어)](https://tokenledger-8x7.pages.dev/ko/) · [Japanese (日本語)](https://tokenledger-8x7.pages.dev/ja/) · [German (Deutsch)](https://tokenledger-8x7.pages.dev/de/) · [French (Français)](https://tokenledger-8x7.pages.dev/fr/)
+- [Korean (한국어)](https://tokenledger-8x7.pages.dev/ko/) · [Japanese (日本語)](https://tokenledger-8x7.pages.dev/ja/) · [German (Deutsch)](https://tokenledger-8x7.pages.dev/de/) · [French (Français)](https://tokenledger-8x7.pages.dev/fr/) · [Spanish (Español)](https://tokenledger-8x7.pages.dev/es/) · [Portuguese (Português)](https://tokenledger-8x7.pages.dev/pt/)
 
 ## Public Pricing Data API
 - [Machine-Readable JSON Pricing Feed](https://tokenledger-8x7.pages.dev/api/pricing.json): 24 LLM models + 6 embedding models (2026-11-24).
@@ -29,10 +31,20 @@
 - [GPT-5 mini vs Gemini 2.5 Flash API Cost & High-Volume Routing Comparison](https://tokenledger-8x7.pages.dev/compare/gpt-5-mini-vs-gemini-2-5-flash.html): Compare the two top value workhorse models for production classification, RAG synthesis, and cascade routing.
 - [Claude Sonnet 4 vs DeepSeek-V3 API Cost & Cascade Economics (2026)](https://tokenledger-8x7.pages.dev/compare/claude-sonnet-vs-deepseek-v3.html): Calculate monthly API savings comparing Anthropic Claude Sonnet 4 ($3/$15) against DeepSeek-V3 ($0.27/$1.10).
 - [Self-Hosted H100 vLLM vs Cloud LLM API: Break-Even Cost Analysis (2026)](https://tokenledger-8x7.pages.dev/compare/self-hosted-h100-vs-cloud-api.html): When does renting an NVIDIA H100 GPU beat paying per token for Claude Sonnet 4 or hosted Llama 4? See the exact daily request threshold.
+- [Claude Sonnet 4 vs Gemini 2.5 Flash API Cost & Routing Comparison](https://tokenledger-8x7.pages.dev/compare/claude-sonnet-vs-gemini-2-5-flash.html): Quantify the 10x cost gap between Anthropic Claude Sonnet 4 and Google Gemini 2.5 Flash across agentic and RAG workloads.
+- [GPT-5 vs Gemini 2.5 Pro API Cost & Caching Comparison (2026)](https://tokenledger-8x7.pages.dev/compare/gpt-5-vs-gemini-2-5-pro.html): Compare OpenAI GPT-5 ($1.25/$10, 90% cache) against Google Gemini 2.5 Pro ($1.25/$10, 1M context) on production token budgets.
+- [DeepSeek-R1 vs Claude Sonnet 4 Reasoning & Coding Cost Analysis](https://tokenledger-8x7.pages.dev/compare/deepseek-r1-vs-claude-sonnet.html): Benchmark DeepSeek-R1 ($0.55/$2.19) against Claude Sonnet 4 ($3/$15) for multi-step coding and reasoning pipelines.
+- [xAI Grok 3 vs OpenAI GPT-5 API Pricing Breakdown (2026)](https://tokenledger-8x7.pages.dev/compare/grok-3-vs-gpt-5.html): Head-to-head monthly cost analysis comparing xAI Grok 3 ($3/$15) and OpenAI GPT-5 ($1.25/$10) with prompt caching.
+- [Mistral Large 2 vs Claude Sonnet 4 EU Enterprise API Cost Comparison](https://tokenledger-8x7.pages.dev/compare/mistral-large-vs-claude-sonnet.html): Compare EU-sovereign Mistral Large 2 ($2/$6) against Anthropic Claude Sonnet 4 ($3/$15) across high-volume workloads.
+- [OpenAI Realtime Voice vs Gemini Live Audio API Cost Comparison](https://tokenledger-8x7.pages.dev/compare/openai-realtime-vs-gemini-live.html): Compare per-minute voice agent economics ($0.24/min vs $0.042/min) and cascaded STT+LLM+TTS alternatives.
 - [LLM Cost Optimization Playbook: Cut API Spend 60–85% Without Losing Quality](https://tokenledger-8x7.pages.dev/guides/llm-cost-optimization-playbook.html): Field-tested AI FinOps playbook covering prompt caching, frontier-to-mini cascade routing, JSON schema minification, and async batch APIs.
 - [Fixing the AI Agent Token Snowball: Why a 15-Turn Agent Costs 12x More Than Expected](https://tokenledger-8x7.pages.dev/guides/ai-agent-token-snowball-fix.html): Mathematical breakdown of quadratic context accumulation in multi-turn tool-calling agents and how prefix caching + sliding windows cap burn.
 - [AI SaaS Gross Margin Benchmarks: Pricing Seats Without Getting Crushed by Power Users](https://tokenledger-8x7.pages.dev/guides/saas-ai-gross-margin-benchmarks.html): How to model AI COGS, Stripe fees, gross margin targets (>=75%), and break-even usage caps for flat-rate AI subscriptions.
 - [RAG & Vector Embedding Cost Architecture: Sizing Chunks, Re-Index Churn & Synthesis Spend](https://tokenledger-8x7.pages.dev/guides/rag-chunking-cost-architecture.html): Why embedding ingestion is rarely the real RAG bill—and how Top-K synthesis tokens and HNSW vector RAM dominate monthly TCO.
+- [MCP Tool Schema Token Bloat: Why 70 Connected Tools Quietly Burn 18,000 Tokens Every Turn](https://tokenledger-8x7.pages.dev/guides/mcp-tool-schema-token-bloat.html): How Model Context Protocol (MCP) JSON schemas inflate upfront prompt cost across Claude Code, Cursor, and custom agents—and how lazy tool deferral cuts it by 85%.
+- [Multimodal Vision, PDF OCR & Realtime Voice API Pricing Guide (2026)](https://tokenledger-8x7.pages.dev/guides/multimodal-vision-voice-api-pricing.html): Compare image tile billing, PDF page token counts, OpenAI Realtime ($0.24/min) vs Gemini Live ($0.042/min), and cascaded voice pipelines.
+- [LLM Prompt Caching Architecture: Ordering System Prompts for 80–90% Cache Hits](https://tokenledger-8x7.pages.dev/guides/prompt-caching-architecture-guide.html): Practical engineering rules for maximizing prefix cache hit rates across Anthropic, OpenAI, Google Gemini, and DeepSeek.
+- [Model Cascade & Semantic Router Design: Cut Frontier LLM Bills 70% in Production](https://tokenledger-8x7.pages.dev/guides/model-cascade-router-design.html): How to route routine traffic to Gemini 2.5 Flash or GPT-5 mini while reserving Claude Sonnet/Opus and GPT-5 for complex tasks.
 
 ## Supported Models (24)
 - GPT-5 (OpenAI): $1.25/1M in, $0.125/1M cached, $10/1M out, 400000 ctx

@@ -37,13 +37,14 @@ ${cards}
 function renderShell(opts) {
   const canonical = `${ORIGIN}${opts.path}`;
   const nav = [
-    { href: '/', label: 'Cost Estimator', key: 'home' },
+    { href: '/', label: 'Estimator', key: 'home' },
     { href: '/tools/agent-budget.html', label: 'Agent Burn', key: 'agent' },
+    { href: '/tools/mcp-schema-auditor.html', label: 'MCP Tax', key: 'mcp' },
     { href: '/tools/saas-margin.html', label: 'SaaS Margin', key: 'saas' },
     { href: '/tools/rag-calculator.html', label: 'RAG TCO', key: 'rag' },
     { href: '/tools/self-host-vs-api.html', label: 'GPU vs API', key: 'selfhost' },
-    { href: '/tools/token-inspector.html', label: 'Token Inspector', key: 'inspector' },
-    { href: '/guides/llm-cost-optimization-playbook.html', label: 'Playbook', key: 'guide' }
+    { href: '/tools/multimodal-budget.html', label: 'Voice & Vision', key: 'multimodal' },
+    { href: '/tools/token-inspector.html', label: 'Inspector', key: 'inspector' }
   ];
   const navHtml = nav.map(n => `        <a href="${n.href}"${opts.active === n.key ? ' class="active"' : ''}>${n.label}</a>`).join('\n');
   const scriptsHtml = (opts.scripts || []).map(s => `  <script src="${s}" defer></script>`).join('\n');
@@ -131,7 +132,13 @@ const COMPARISONS = [
   { slug: 'gpt-5-vs-gpt-4-1', a: 'gpt-5', b: 'gpt-4.1', title: 'GPT-5 vs GPT-4.1 API Pricing & Workload Migration Guide (2026)', summary: 'Compare input, cached input, output, and 1M-context costs between OpenAI GPT-5 ($1.25/$10) and GPT-4.1 ($2/$8).' },
   { slug: 'gpt-5-mini-vs-gemini-2-5-flash', a: 'gpt-5-mini', b: 'gemini-2.5-flash', title: 'GPT-5 mini vs Gemini 2.5 Flash API Cost & High-Volume Routing Comparison', summary: 'Compare the two top value workhorse models for production classification, RAG synthesis, and cascade routing.' },
   { slug: 'claude-sonnet-vs-deepseek-v3', a: 'claude-sonnet-4', b: 'deepseek-v3', title: 'Claude Sonnet 4 vs DeepSeek-V3 API Cost & Cascade Economics (2026)', summary: 'Calculate monthly API savings comparing Anthropic Claude Sonnet 4 ($3/$15) against DeepSeek-V3 ($0.27/$1.10).' },
-  { slug: 'self-hosted-h100-vs-cloud-api', a: 'claude-sonnet-4', b: 'llama-4-maverick', title: 'Self-Hosted H100 vLLM vs Cloud LLM API: Break-Even Cost Analysis (2026)', summary: 'When does renting an NVIDIA H100 GPU beat paying per token for Claude Sonnet 4 or hosted Llama 4? See the exact daily request threshold.' }
+  { slug: 'self-hosted-h100-vs-cloud-api', a: 'claude-sonnet-4', b: 'llama-4-maverick', title: 'Self-Hosted H100 vLLM vs Cloud LLM API: Break-Even Cost Analysis (2026)', summary: 'When does renting an NVIDIA H100 GPU beat paying per token for Claude Sonnet 4 or hosted Llama 4? See the exact daily request threshold.' },
+  { slug: 'claude-sonnet-vs-gemini-2-5-flash', a: 'claude-sonnet-4', b: 'gemini-2.5-flash', title: 'Claude Sonnet 4 vs Gemini 2.5 Flash API Cost & Routing Comparison', summary: 'Quantify the 10x cost gap between Anthropic Claude Sonnet 4 and Google Gemini 2.5 Flash across agentic and RAG workloads.' },
+  { slug: 'gpt-5-vs-gemini-2-5-pro', a: 'gpt-5', b: 'gemini-2.5-pro', title: 'GPT-5 vs Gemini 2.5 Pro API Cost & Caching Comparison (2026)', summary: 'Compare OpenAI GPT-5 ($1.25/$10, 90% cache) against Google Gemini 2.5 Pro ($1.25/$10, 1M context) on production token budgets.' },
+  { slug: 'deepseek-r1-vs-claude-sonnet', a: 'deepseek-r1', b: 'claude-sonnet-4', title: 'DeepSeek-R1 vs Claude Sonnet 4 Reasoning & Coding Cost Analysis', summary: 'Benchmark DeepSeek-R1 ($0.55/$2.19) against Claude Sonnet 4 ($3/$15) for multi-step coding and reasoning pipelines.' },
+  { slug: 'grok-3-vs-gpt-5', a: 'grok-3', b: 'gpt-5', title: 'xAI Grok 3 vs OpenAI GPT-5 API Pricing Breakdown (2026)', summary: 'Head-to-head monthly cost analysis comparing xAI Grok 3 ($3/$15) and OpenAI GPT-5 ($1.25/$10) with prompt caching.' },
+  { slug: 'mistral-large-vs-claude-sonnet', a: 'mistral-large-2', b: 'claude-sonnet-4', title: 'Mistral Large 2 vs Claude Sonnet 4 EU Enterprise API Cost Comparison', summary: 'Compare EU-sovereign Mistral Large 2 ($2/$6) against Anthropic Claude Sonnet 4 ($3/$15) across high-volume workloads.' },
+  { slug: 'openai-realtime-vs-gemini-live', a: 'gpt-5-mini', b: 'gemini-2.5-flash', title: 'OpenAI Realtime Voice vs Gemini Live Audio API Cost Comparison', summary: 'Compare per-minute voice agent economics ($0.24/min vs $0.042/min) and cascaded STT+LLM+TTS alternatives.' }
 ];
 
 const GUIDES = [
@@ -179,6 +186,47 @@ const GUIDES = [
       { h2: 'Watch Vector Memory Footprint on High-Dimension Embeddings', p: '3072-dimension float32 vectors consume 2x the RAM of 1536-dimension vectors and 3x that of 1024-dimension models. Dimension reduction (Matryoshka embeddings) or scalar quantization cuts managed vector DB bills sharply at scale.' }
     ],
     ctaHref: '/tools/rag-calculator.html', ctaLabel: 'Calculate Your RAG Monthly TCO →'
+  },
+  {
+    slug: 'mcp-tool-schema-token-bloat',
+    title: 'MCP Tool Schema Token Bloat: Why 70 Connected Tools Quietly Burn 18,000 Tokens Every Turn',
+    desc: 'How Model Context Protocol (MCP) JSON schemas inflate upfront prompt cost across Claude Code, Cursor, and custom agents—and how lazy tool deferral cuts it by 85%.',
+    sections: [
+      { h2: 'The Hidden Upfront Tax of Connected MCP Servers', p: 'Every MCP server you connect injects JSON tool names, verbose descriptions, and nested parameter schemas into the system context on every single turn. Five servers with 14 tools each easily consume 15,000 to 22,000 tokens before the user types a single word.' },
+      { h2: 'Why Lazy Tool Deferral Beats Always-On Schemas', p: 'Sending only a compact 14-token name/summary index upfront and loading full JSON schemas on demand trims 80–90% of recurring schema tokens while also improving tool-selection accuracy.' },
+      { h2: 'Audit & Minify Tool Descriptions Before Shipping', p: 'Paste your raw MCP or OpenAI tools JSON into TokenLedger’s MCP Schema Auditor to rank your heaviest tool definitions and strip redundant prose and pretty-print whitespace.' }
+    ],
+    ctaHref: '/tools/mcp-schema-auditor.html', ctaLabel: 'Audit Your MCP Schema Tax →'
+  },
+  {
+    slug: 'multimodal-vision-voice-api-pricing',
+    title: 'Multimodal Vision, PDF OCR & Realtime Voice API Pricing Guide (2026)',
+    desc: 'Compare image tile billing, PDF page token counts, OpenAI Realtime ($0.24/min) vs Gemini Live ($0.042/min), and cascaded voice pipelines.',
+    sections: [
+      { h2: 'Why PDF & Image Billing Differs 5x Across Providers', p: 'Google Gemini bills standard images/pages at a flat ~258 tokens, whereas tile-based vision models (OpenAI high-detail, Anthropic Claude) can consume 765 to 1,600+ tokens per page depending on resolution. Resizing document scans to 1024px before upload saves 40–60% without hurting OCR accuracy.' },
+      { h2: 'Speech-to-Speech Realtime vs. Cascaded Voice Pipelines', p: 'Native speech-to-speech Realtime APIs deliver ultra-low latency (~300ms) at $0.04–$0.24/minute, while a cascaded Whisper STT + Flash LLM + streaming TTS pipeline runs ~$0.025–$0.035/minute for structured support calls.' }
+    ],
+    ctaHref: '/tools/multimodal-budget.html', ctaLabel: 'Open Voice & Vision Cost Studio →'
+  },
+  {
+    slug: 'prompt-caching-architecture-guide',
+    title: 'LLM Prompt Caching Architecture: Ordering System Prompts for 80–90% Cache Hits',
+    desc: 'Practical engineering rules for maximizing prefix cache hit rates across Anthropic, OpenAI, Google Gemini, and DeepSeek.',
+    sections: [
+      { h2: 'Prefix Stability Is Everything', p: 'Prompt caching hashes exact token prefixes from byte 0. Placing a changing ISO timestamp, user name, or random request ID near the top of your system prompt invalidates 100% of downstream cache blocks. Always order: (1) Static system rules, (2) Tool schemas, (3) Shared reference docs, (4) Dynamic user/session turn at the very bottom.' },
+      { h2: 'Mind Minimum Block Thresholds & TTL Windows', p: 'Anthropic and OpenAI require minimum cacheable prefix lengths (1,024+ tokens) and keep ephemeral caches warm for 5–60 minutes. Batching traffic per tenant or workspace keeps hit rates consistently above 75%.' }
+    ],
+    ctaHref: '/', ctaLabel: 'Simulate Prompt Cache Hit Rates →'
+  },
+  {
+    slug: 'model-cascade-router-design',
+    title: 'Model Cascade & Semantic Router Design: Cut Frontier LLM Bills 70% in Production',
+    desc: 'How to route routine traffic to Gemini 2.5 Flash or GPT-5 mini while reserving Claude Sonnet/Opus and GPT-5 for complex tasks.',
+    sections: [
+      { h2: 'Not Every Prompt Deserves a $15/1M Frontier Model', p: 'In most SaaS and support workloads, 65–80% of requests are classification, formatting, lookup summarization, or simple Q&A where a $0.25–$0.30/1M model achieves parity with frontier models at 1/10th the cost and 3x the speed.' },
+      { h2: 'Confidence-Gated Escalation', p: 'Start with a lightweight rubric or structured JSON confidence score on the fast tier; escalate to the frontier tier only when multi-file reasoning, ambiguous edge cases, or low-confidence flags trigger.' }
+    ],
+    ctaHref: '/?frontier=claude-sonnet-4&mini=gemini-2.5-flash&offload=75', ctaLabel: 'Simulate 75/25 Cascade Savings →'
   }
 ];
 
@@ -213,6 +261,8 @@ const HOME_HREFLANGS = [
   `  <link rel="alternate" hreflang="ja" href="${ORIGIN}/ja/">`,
   `  <link rel="alternate" hreflang="de" href="${ORIGIN}/de/">`,
   `  <link rel="alternate" hreflang="fr" href="${ORIGIN}/fr/">`,
+  `  <link rel="alternate" hreflang="es" href="${ORIGIN}/es/">`,
+  `  <link rel="alternate" hreflang="pt" href="${ORIGIN}/pt/">`,
   `  <link rel="alternate" hreflang="x-default" href="${ORIGIN}/">`
 ].join('\n');
 
@@ -328,9 +378,11 @@ registerPage('/', 'index.html', renderShell({
     <h2 style="margin:0 0 12px">Specialized AI FinOps Workspaces</h2>
     <div class="tl-card-grid">
       <a class="tl-link-card" href="/tools/agent-budget.html"><strong>AI Agent Loop Burn Calculator</strong><span>Visualize O(N²) multi-turn context snowballing vs. prompt caching &amp; sliding windows.</span><em>Open Calculator →</em></a>
+      <a class="tl-link-card" href="/tools/mcp-schema-auditor.html"><strong>MCP &amp; Tool Schema Tax Auditor</strong><span>Audit hidden upfront token bloat across connected MCP servers + JSON schema ranker.</span><em>Audit MCP Tax →</em></a>
       <a class="tl-link-card" href="/tools/saas-margin.html"><strong>AI SaaS Gross Margin Simulator</strong><span>Calculate per-seat AI COGS, Stripe fees, net profit, and power-user break-even caps.</span><em>Open Simulator →</em></a>
       <a class="tl-link-card" href="/tools/rag-calculator.html"><strong>RAG &amp; Vector DB TCO Planner</strong><span>Estimate embedding ingestion, HNSW RAM footprint, re-index churn, and synthesis cost.</span><em>Open Planner →</em></a>
       <a class="tl-link-card" href="/tools/self-host-vs-api.html"><strong>Self-Hosted GPU vs Cloud API</strong><span>Calculate exact daily request break-even for H100/A100/L40S/4090 vLLM vs cloud APIs.</span><em>Compare GPU vs API →</em></a>
+      <a class="tl-link-card" href="/tools/multimodal-budget.html"><strong>Voice, Vision &amp; Image Cost Studio</strong><span>Estimate PDF/image vision tokens, OpenAI Realtime vs Gemini Live voice, and Imagen/Flux.</span><em>Open Studio →</em></a>
       <a class="tl-link-card" href="/tools/token-inspector.html"><strong>Context &amp; JSON Minifier Inspector</strong><span>Inspect OpenAI/Claude/Gemini tokens and minify tool JSON schemas for instant savings.</span><em>Open Inspector →</em></a>
     </div>
     <div class="tl-pills" style="margin-top:14px">
@@ -338,6 +390,8 @@ registerPage('/', 'index.html', renderShell({
       <a class="tl-pill" href="/ja/" style="text-decoration:none;color:var(--accent)">日本語 (JA)</a>
       <a class="tl-pill" href="/de/" style="text-decoration:none;color:var(--accent)">Deutsch (DE)</a>
       <a class="tl-pill" href="/fr/" style="text-decoration:none;color:var(--accent)">Français (FR)</a>
+      <a class="tl-pill" href="/es/" style="text-decoration:none;color:var(--accent)">Español (ES)</a>
+      <a class="tl-pill" href="/pt/" style="text-decoration:none;color:var(--accent)">Português (PT)</a>
     </div>
   </section>
 
@@ -666,6 +720,136 @@ registerPage('/tools/self-host-vs-api.html', 'tools/self-host-vs-api.html', rend
   </section>`
 }), '0.9');
 
+// --- PAGE 7: MCP & TOOL-CALLING SCHEMA BLOAT AUDITOR ---
+registerPage('/tools/mcp-schema-auditor.html', 'tools/mcp-schema-auditor.html', renderShell({
+  path: '/tools/mcp-schema-auditor.html',
+  active: 'mcp',
+  title: 'MCP & Function-Calling Tool Schema Token Bloat Auditor (Claude, Cursor & Agents)',
+  description: 'Calculate hidden upfront token tax from connected MCP servers and function schemas. Paste raw MCP tools JSON to rank bloated tools and estimate lazy-loading savings.',
+  scripts: ['/js/mcp-auditor.js'],
+  schemaGraph: [
+    { '@type': 'SoftwareApplication', name: 'TokenLedger MCP Schema Tax Auditor', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}/tools/mcp-schema-auditor.html`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+    { '@type': 'FAQPage', mainEntity: [
+      { '@type': 'Question', name: 'How many tokens do connected MCP servers add to every LLM turn?', acceptedAnswer: { '@type': 'Answer', text: 'A typical MCP tool schema uses 180 to 400 tokens; connecting 5 servers with 14 tools each injects roughly 15,000 to 22,000 tokens before the user types a prompt.' } }
+    ] }
+  ],
+  body: `  <section class="tl-hero">
+    <div class="tl-kicker">MCP FINOPS &bull; TOOL SCHEMA TAX &bull; 100% LOCAL JSON AUDIT</div>
+    <h1>MCP &amp; Tool-Calling Schema Bloat Auditor</h1>
+    <p>Quantify the hidden upfront token tax of connected MCP servers (Claude Code, Cursor, OpenAI Agents SDK), compare Prompt Caching vs. Lazy Tool Deferral, and paste raw tool JSON to expose your heaviest schemas.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">Upfront Schema Tax</div><div class="kpi-val warn" id="kpiMcpTokens">0 tok</div><div class="kpi-sub" id="kpiMcpTokensSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Uncached MCP Tax</div><div class="kpi-val danger" id="kpiMcpUncached">$0/mo</div><div class="kpi-sub" id="kpiMcpUncachedSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">With Prompt Caching</div><div class="kpi-val" id="kpiMcpCached">$0/mo</div><div class="kpi-sub" id="kpiMcpCachedSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">With Lazy Tool Deferral</div><div class="kpi-val accent" id="kpiMcpLazy">$0/mo</div><div class="kpi-sub" id="kpiMcpLazySub">-</div></div>
+  </section>
+
+  <section class="tl-grid-2">
+    <div class="tl-panel">
+      <h2>1. Connected MCP Fleet Parameters</h2>
+      <div class="tl-field"><label for="mcpModel">Agent / IDE Model</label><select id="mcpModel" class="tl-select"></select></div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="mcpServers">Connected MCP Servers</label><input id="mcpServers" class="tl-input num" type="number" min="1" max="50" value="5"></div>
+        <div class="tl-field"><label for="mcpToolsPer">Avg Tools / Server</label><input id="mcpToolsPer" class="tl-input num" type="number" min="1" max="100" value="14"></div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="mcpTokPer">Avg Tokens / Tool Schema</label><input id="mcpTokPer" class="tl-input num" type="number" min="40" step="20" value="260"></div>
+        <div class="tl-field"><label for="mcpTurns">Avg Turns / Session</label><input id="mcpTurns" class="tl-input num" type="number" min="1" max="100" value="16"></div>
+      </div>
+      <div class="tl-field"><label for="mcpSessions">Sessions / Day</label><input id="mcpSessions" class="tl-input num" type="number" min="1" step="50" value="400"></div>
+      <div class="tl-field"><label for="mcpCache">Prefix Cache Hit Rate <strong id="mcpCacheVal">80%</strong></label><input id="mcpCache" class="tl-range" type="range" min="0" max="95" step="5" value="80"></div>
+      <div class="tl-field"><label for="mcpLazy">Lazy Tool-Search Deferral <strong id="mcpLazyVal">85%</strong></label><input id="mcpLazy" class="tl-range" type="range" min="0" max="95" step="5" value="85"></div>
+      <div class="tl-btn-bar"><button type="button" id="btnMcpExport" class="tl-btn tl-btn-primary">Export MCP Audit JSON</button></div>
+    </div>
+
+    <div class="tl-panel">
+      <h2>2. Paste Raw MCP / OpenAI Tools JSON (Local Ranker)</h2>
+      <textarea id="mcpJsonInput" class="tl-textarea" style="min-height:170px" placeholder="Paste a JSON array of MCP or function-calling tool definitions..."></textarea>
+      <div class="tl-btn-bar" style="margin-bottom:12px"><button type="button" id="btnMcpSample" class="tl-btn">Load Sample MCP Tools JSON</button></div>
+      <div id="mcpAuditOut" hidden>
+        <div id="mcpAuditSummary" class="kpi-sub num" style="margin-bottom:10px;color:var(--accent);font-weight:700"></div>
+        <div class="tl-table-wrap">
+          <table class="tl-table" style="min-width:360px">
+            <thead><tr><th>Tool Name</th><th>Pretty Tok</th><th>Minified</th><th>Saved</th></tr></thead>
+            <tbody id="mcpToolTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tl-prose">
+    <h2>Frequently Asked Questions</h2>
+    <div class="tl-faq-grid">
+      <div class="tl-faq-item"><h3>How many tokens do connected MCP servers add to every LLM turn?</h3><p>A typical MCP tool schema uses 180 to 400 tokens; connecting 5 servers with 14 tools each injects roughly 15,000 to 22,000 tokens before the user types a prompt.</p></div>
+    </div>
+  </section>`
+}), '0.9');
+
+// --- PAGE 8: VOICE, REALTIME & MULTIMODAL COST STUDIO ---
+registerPage('/tools/multimodal-budget.html', 'tools/multimodal-budget.html', renderShell({
+  path: '/tools/multimodal-budget.html',
+  active: 'multimodal',
+  title: 'Voice Realtime, Vision PDF OCR & Image Generation API Cost Calculator',
+  description: 'Calculate monthly spend for OpenAI Realtime Voice vs Gemini Live Audio, Vision/PDF page OCR tokens (GPT-5, Claude 4, Gemini 2.5), and GPT Image / Imagen / Flux generation.',
+  scripts: ['/js/multimodal-budget.js'],
+  schemaGraph: [
+    { '@type': 'SoftwareApplication', name: 'TokenLedger Multimodal Voice & Vision Cost Studio', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}/tools/multimodal-budget.html`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+    { '@type': 'FAQPage', mainEntity: [
+      { '@type': 'Question', name: 'How much does a Realtime AI voice agent cost per minute?', acceptedAnswer: { '@type': 'Answer', text: 'Depending on provider and speech-to-speech vs. cascaded architecture, AI voice agents typically range from $0.028/min (cascaded STT+Flash+TTS) to $0.042/min (Gemini Live) up to $0.24/min (OpenAI Realtime full).' } }
+    ] }
+  ],
+  body: `  <section class="tl-hero">
+    <div class="tl-kicker">MULTIMODAL FINOPS &bull; VISION OCR &bull; REALTIME VOICE &bull; IMAGE GEN</div>
+    <h1>Voice, Vision &amp; Multimodal API Cost Studio</h1>
+    <p>Budget non-text AI workloads accurately — combining PDF/image vision token billing, per-minute Realtime Voice agents (OpenAI Realtime vs. Gemini Live vs. Cascaded STT+LLM+TTS), and Image Generation.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">Vision / PDF OCR</div><div class="kpi-val" id="kpiMmVision">$0/mo</div><div class="kpi-sub" id="kpiMmVisionSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Realtime Voice</div><div class="kpi-val warn" id="kpiMmVoice">$0/mo</div><div class="kpi-sub" id="kpiMmVoiceSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Image Generation</div><div class="kpi-val" id="kpiMmGen">$0/mo</div><div class="kpi-sub" id="kpiMmGenSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Combined Multimodal</div><div class="kpi-val accent" id="kpiMmTotal">$0/mo</div><div class="kpi-sub" id="kpiMmTotalSub">-</div></div>
+  </section>
+
+  <section class="tl-grid-2">
+    <div class="tl-panel">
+      <h2>Multimodal Workload Inputs</h2>
+      <div class="tl-field"><label for="mmVisionModel">Vision / PDF OCR Model</label><select id="mmVisionModel" class="tl-select"></select></div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="mmDailyImgs">Images or PDF Pages / Day</label><input id="mmDailyImgs" class="tl-input num" type="number" min="0" step="100" value="1500"></div>
+        <div class="tl-field"><label for="mmVisionOut">Avg Output Tokens / Page</label><input id="mmVisionOut" class="tl-input num" type="number" min="0" step="50" value="250"></div>
+      </div>
+      <div class="tl-field"><label for="mmVoiceModel">Realtime Voice Pipeline</label><select id="mmVoiceModel" class="tl-select"></select></div>
+      <div class="tl-field"><label for="mmVoiceMins">Total Voice Audio Minutes / Day</label><input id="mmVoiceMins" class="tl-input num" type="number" min="0" step="50" value="600"></div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="mmImageModel">Image Generation Model</label><select id="mmImageModel" class="tl-select"></select></div>
+        <div class="tl-field"><label for="mmGenImgs">Generated Images / Day</label><input id="mmGenImgs" class="tl-input num" type="number" min="0" step="50" value="200"></div>
+      </div>
+      <div class="tl-btn-bar"><button type="button" id="btnMmExport" class="tl-btn tl-btn-primary">Export Multimodal Budget JSON</button></div>
+    </div>
+
+    <div class="tl-panel">
+      <h2>Voice Agent Cost Comparison (Current Daily Minutes)</h2>
+      <div class="tl-table-wrap">
+        <table class="tl-table" style="min-width:440px">
+          <thead><tr><th>Voice Stack</th><th>Rate / Min</th><th>Monthly (30d)</th><th>Annual</th></tr></thead>
+          <tbody id="voiceCompareBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="tl-prose">
+    <h2>Frequently Asked Questions</h2>
+    <div class="tl-faq-grid">
+      <div class="tl-faq-item"><h3>How much does a Realtime AI voice agent cost per minute?</h3><p>Depending on provider and speech-to-speech vs. cascaded architecture, AI voice agents typically range from $0.028/min (cascaded STT+Flash+TTS) to $0.042/min (Gemini Live) up to $0.24/min (OpenAI Realtime full).</p></div>
+    </div>
+  </section>`
+}), '0.9');
+
 // --- PAGES 6–13: 8 PROGRAMMATIC MODEL COMPARISON PAGES ---
 for (const c of COMPARISONS) {
   const mA = ENGINE.getModel(c.a);
@@ -806,7 +990,7 @@ registerPage('/privacy.html', 'privacy.html', renderShell({
   </article>`
 }), '0.3');
 
-// --- INTERNATIONAL LOCALIZED LANDING HUBS (/ko/, /ja/, /de/, /fr/) ---
+// --- INTERNATIONAL LOCALIZED LANDING HUBS (/ko/, /ja/, /de/, /fr/, /es/, /pt/) ---
 const LOCALE_HUBS = [
   {
     lang: 'ko',
@@ -815,7 +999,8 @@ const LOCALE_HUBS = [
     desc: 'GPT-5, Claude 4, Gemini 2.5, DeepSeek, Llama 4 등 24개 LLM API 요금을 프롬프트 캐싱, 50% 배치 할인, 모델 라우팅 절감액과 함께 브라우저에서 무료로 계산하세요.',
     h1: 'AI · LLM API 비용 계산기 & FinOps 스튜디오',
     lead: 'OpenAI GPT-5, Anthropic Claude 4, Google Gemini 2.5, DeepSeek, Llama 4 등 24개 모델의 요청당·월간·연간 비용을 프롬프트 캐싱과 70/30 모델 라우팅 절감까지 포함해 즉시 비교하세요.',
-    s1: '1. 워크로드 설정', s2: '2. 실시간 토큰 계산기 & 모델 캐스케이드', s3: '3. 24개 모델 실시간 비용 비교표'
+    s1: '1. 워크로드 설정', s2: '2. 실시간 토큰 계산기 & 모델 캐스케이드', s3: '3. 24개 모델 실시간 비용 비교표',
+    lIn: '요청당 입력 토큰', lOut: '요청당 출력 토큰', lReq: '일일 요청 수', lCache: '프롬프트 캐시 적중률', lBatch: '50% 비동기 Batch API 할인 적용', bShare: '공유 URL 복사', bMd: 'Markdown 표 복사'
   },
   {
     lang: 'ja',
@@ -824,7 +1009,8 @@ const LOCALE_HUBS = [
     desc: 'GPT-5・Claude 4・Gemini 2.5・DeepSeek・Llama 4など24モデルのAPI料金をプロンプトキャッシュや50%バッチ割引込みでブラウザ完結シミュレーション。',
     h1: 'AI・LLM API 料金シミュレーター & FinOps スタジオ',
     lead: '主要24モデルの1リクエスト・月額・年額コストをリアルタイム比較。プロンプトキャッシュ、50%バッチ割引、モデルルーティング削減効果やCSV/Markdown出力に対応。',
-    s1: '1. ワークロード設定', s2: '2. ライブトークン計測 & モデルカスケード', s3: '3. 24モデル月額・年額比較マトリクス'
+    s1: '1. ワークロード設定', s2: '2. ライブトークン計測 & モデルカスケード', s3: '3. 24モデル月額・年額比較マトリクス',
+    lIn: '入力トークン / リクエスト', lOut: '出力トークン / リクエスト', lReq: '1日のリクエスト数', lCache: 'プロンプトキャッシュ率', lBatch: '50% Batch API 割引を適用', bShare: '共有URLコピー', bMd: 'Markdownコピー'
   },
   {
     lang: 'de',
@@ -833,7 +1019,8 @@ const LOCALE_HUBS = [
     desc: 'Kostenloser, 100% privater LLM API Kostenrechner für 24 Modelle inkl. Prompt Caching, 50% Batch-Rabatt, Model-Cascade-Routing sowie CSV- und PDF-Export.',
     h1: 'KI & LLM API Kostenrechner & FinOps Studio',
     lead: 'Vergleiche reale Produktionskosten für GPT-5, Claude 4, Gemini 2.5, DeepSeek, Llama 4 und Mistral – inklusive Prompt Caching, Batch-API, Agenten-Burn und SaaS-Marge.',
-    s1: '1. Workload-Parameter', s2: '2. Live-Token-Schätzer & Model-Cascade', s3: '3. 24-Modelle Kostenmatrix im Vergleich'
+    s1: '1. Workload-Parameter', s2: '2. Live-Token-Schätzer & Model-Cascade', s3: '3. 24-Modelle Kostenmatrix im Vergleich',
+    lIn: 'Input-Tokens / Anfrage', lOut: 'Output-Tokens / Anfrage', lReq: 'Anfragen / Tag', lCache: 'Prompt-Cache-Trefferquote', lBatch: '50% Async Batch-API-Rabatt anwenden', bShare: 'Link kopieren', bMd: 'Markdown kopieren'
   },
   {
     lang: 'fr',
@@ -842,7 +1029,28 @@ const LOCALE_HUBS = [
     desc: 'Simulateur gratuit et 100% privé des coûts API de 24 LLM (GPT-5, Claude 4, Gemini 2.5, DeepSeek, Mistral) avec Prompt Caching, remise Batch 50% et export CSV/PDF.',
     h1: 'Calculateur de Coût API LLM & Studio FinOps',
     lead: 'Estimez vos coûts mensuels et annuels sur 24 modèles IA (OpenAI, Anthropic, Google, DeepSeek, Meta, Mistral) avec mise en cache de prompts, routage cascade et export CSV/Markdown.',
-    s1: '1. Paramètres de charge', s2: '2. Compteur de tokens & Routage Cascade', s3: '3. Comparatif des 24 modèles LLM'
+    s1: '1. Paramètres de charge', s2: '2. Compteur de tokens & Routage Cascade', s3: '3. Comparatif des 24 modèles LLM',
+    lIn: 'Tokens entrée / requête', lOut: 'Tokens sortie / requête', lReq: 'Requêtes / jour', lCache: 'Taux de cache prompt', lBatch: 'Appliquer -50% Batch API', bShare: 'Copier le lien', bMd: 'Copier Markdown'
+  },
+  {
+    lang: 'es',
+    kicker: '24 MODELOS IA · 100% PRIVADO EN NAVEGADOR · SIN ENVÍOS',
+    title: 'Calculadora de Costos API LLM e IA (GPT-5, Claude 4, Gemini 2.5, DeepSeek) — Caché y Batch',
+    desc: 'Calculadora gratuita y 100% local de costos API para 24 modelos LLM con Prompt Caching, descuento Batch 50%, enrutamiento en cascada y exportación CSV/Markdown.',
+    h1: 'Calculadora de Costos API LLM & Estudio FinOps',
+    lead: 'Compara el gasto mensual y anual en 24 modelos IA (GPT-5, Claude 4, Gemini 2.5, DeepSeek, Llama 4 y Mistral) con caché de prompts, agentes multiturno y márgenes SaaS.',
+    s1: '1. Parámetros de carga', s2: '2. Contador de tokens y Cascada', s3: '3. Matriz comparativa de 24 modelos',
+    lIn: 'Tokens entrada / petición', lOut: 'Tokens salida / petición', lReq: 'Peticiones / día', lCache: 'Acierto de Prompt Cache', lBatch: 'Aplicar 50% descuento Batch API', bShare: 'Copiar enlace', bMd: 'Copiar Markdown'
+  },
+  {
+    lang: 'pt',
+    kicker: '24 MODELOS IA · 100% LOCAL NO NAVEGADOR · SEM UPLOAD',
+    title: 'Calculadora de Custos API LLM e IA (GPT-5, Claude 4, Gemini 2.5, DeepSeek) — Cache e Batch',
+    desc: 'Simulador gratuito e 100% privado de custos API para 24 modelos LLM com Prompt Caching, desconto Batch 50%, roteamento em cascata e exportação CSV/PDF.',
+    h1: 'Calculadora de Custos API LLM & Estúdio FinOps',
+    lead: 'Compare custos mensais e anuais em 24 modelos de IA (GPT-5, Claude 4, Gemini 2.5, DeepSeek, Llama 4 e Mistral) com cache de prompts, agentes e margem SaaS.',
+    s1: '1. Parâmetros de carga', s2: '2. Contador de tokens e Cascata', s3: '3. Matriz de custos dos 24 modelos',
+    lIn: 'Tokens entrada / requisição', lOut: 'Tokens saída / requisição', lReq: 'Requisições / dia', lCache: 'Taxa de Prompt Cache', lBatch: 'Aplicar 50% desconto Batch API', bShare: 'Copiar link', bMd: 'Copiar Markdown'
   }
 ];
 
@@ -869,6 +1077,8 @@ for (const lh of LOCALE_HUBS) {
       <a class="tl-pill" href="/ja/" style="text-decoration:none">日本語</a>
       <a class="tl-pill" href="/de/" style="text-decoration:none">Deutsch</a>
       <a class="tl-pill" href="/fr/" style="text-decoration:none">Français</a>
+      <a class="tl-pill" href="/es/" style="text-decoration:none">Español</a>
+      <a class="tl-pill" href="/pt/" style="text-decoration:none">Português</a>
     </div>
   </section>
 
@@ -889,18 +1099,18 @@ for (const lh of LOCALE_HUBS) {
         <button type="button" class="tl-chip" data-preset="batch">Batch ETL (15K/d)</button>
       </div>
       <div class="tl-row">
-        <div class="tl-field"><label for="inTokens">Input Tokens / Req</label><input id="inTokens" class="tl-input num" type="number" min="0" step="100" value="2500"></div>
-        <div class="tl-field"><label for="outTokens">Output Tokens / Req</label><input id="outTokens" class="tl-input num" type="number" min="0" step="50" value="600"></div>
+        <div class="tl-field"><label for="inTokens">${esc(lh.lIn)}</label><input id="inTokens" class="tl-input num" type="number" min="0" step="100" value="2500"></div>
+        <div class="tl-field"><label for="outTokens">${esc(lh.lOut)}</label><input id="outTokens" class="tl-input num" type="number" min="0" step="50" value="600"></div>
       </div>
       <div class="tl-row">
-        <div class="tl-field"><label for="dailyReqs">Requests / Day</label><input id="dailyReqs" class="tl-input num" type="number" min="1" step="100" value="1000"></div>
+        <div class="tl-field"><label for="dailyReqs">${esc(lh.lReq)}</label><input id="dailyReqs" class="tl-input num" type="number" min="1" step="100" value="1000"></div>
         <div class="tl-field"><label for="sortSelect">Sort</label><select id="sortSelect" class="tl-select"><option value="monthly">Monthly Cost</option><option value="input">Input $/1M</option><option value="context">Context Window</option></select></div>
       </div>
-      <div class="tl-field"><label for="cacheSlider">Prompt Cache Hit Rate <strong id="cacheVal">50%</strong></label><input id="cacheSlider" class="tl-range" type="range" min="0" max="95" step="5" value="50"></div>
-      <label class="tl-check-row"><input id="batchToggle" type="checkbox"><span>50% Batch API Discount</span></label>
+      <div class="tl-field"><label for="cacheSlider">${esc(lh.lCache)} <strong id="cacheVal">50%</strong></label><input id="cacheSlider" class="tl-range" type="range" min="0" max="95" step="5" value="50"></div>
+      <label class="tl-check-row"><input id="batchToggle" type="checkbox"><span>${esc(lh.lBatch)}</span></label>
       <div class="tl-btn-bar">
-        <button type="button" id="btnShare" class="tl-btn tl-btn-primary">Copy Share URL</button>
-        <button type="button" id="btnMarkdown" class="tl-btn">Copy Markdown</button>
+        <button type="button" id="btnShare" class="tl-btn tl-btn-primary">${esc(lh.bShare)}</button>
+        <button type="button" id="btnMarkdown" class="tl-btn">${esc(lh.bMd)}</button>
         <button type="button" id="btnCsv" class="tl-btn">CSV</button>
         <button type="button" id="btnJson" class="tl-btn">JSON</button>
         <button type="button" id="btnPrint" class="tl-btn">PDF</button>
@@ -974,13 +1184,15 @@ const llmsTxt = `# TokenLedger — AI & LLM API FinOps Studio
 ## Core Interactive Tools
 - [24-Model LLM API Cost Estimator](${ORIGIN}/): Live prompt token counter, prompt caching, 50% batch discounts, model cascade savings, CSV/JSON/PDF export.
 - [AI Agent Loop Burn Calculator](${ORIGIN}/tools/agent-budget.html): Quadratic O(N²) turn-by-turn token snowballing vs. caching and sliding-window summarization.
+- [MCP & Tool Schema Bloat Auditor](${ORIGIN}/tools/mcp-schema-auditor.html): Upfront MCP server schema token tax, lazy tool deferral savings, and raw JSON tool ranker.
 - [AI SaaS Gross Margin Simulator](${ORIGIN}/tools/saas-margin.html): Per-seat LLM COGS, payment fees, gross margin %, and power-user break-even caps.
 - [RAG & Vector DB TCO Planner](${ORIGIN}/tools/rag-calculator.html): Embedding ingestion, HNSW RAM footprint, re-index churn, and Top-K synthesis spend.
 - [Self-Hosted GPU vs Cloud API Break-Even Calculator](${ORIGIN}/tools/self-host-vs-api.html): H100/A100/L40S/4090 vLLM hourly + DevOps break-even vs cloud LLM APIs.
+- [Voice, Vision & Multimodal Cost Studio](${ORIGIN}/tools/multimodal-budget.html): PDF/image vision tokens, OpenAI Realtime vs Gemini Live voice, and image generation.
 - [Context Window & JSON Minifier Inspector](${ORIGIN}/tools/token-inspector.html): OpenAI/Claude/Gemini token estimates and one-click JSON tool schema minification.
 
 ## International Hubs
-- [Korean (한국어)](${ORIGIN}/ko/) · [Japanese (日本語)](${ORIGIN}/ja/) · [German (Deutsch)](${ORIGIN}/de/) · [French (Français)](${ORIGIN}/fr/)
+- [Korean (한국어)](${ORIGIN}/ko/) · [Japanese (日本語)](${ORIGIN}/ja/) · [German (Deutsch)](${ORIGIN}/de/) · [French (Français)](${ORIGIN}/fr/) · [Spanish (Español)](${ORIGIN}/es/) · [Portuguese (Português)](${ORIGIN}/pt/)
 
 ## Public Pricing Data API
 - [Machine-Readable JSON Pricing Feed](${ORIGIN}/api/pricing.json): 24 LLM models + 6 embedding models (${TODAY}).

@@ -13,6 +13,8 @@
   <link rel="alternate" hreflang="ja" href="https://tokenledger-8x7.pages.dev/ja/">
   <link rel="alternate" hreflang="de" href="https://tokenledger-8x7.pages.dev/de/">
   <link rel="alternate" hreflang="fr" href="https://tokenledger-8x7.pages.dev/fr/">
+  <link rel="alternate" hreflang="es" href="https://tokenledger-8x7.pages.dev/es/">
+  <link rel="alternate" hreflang="pt" href="https://tokenledger-8x7.pages.dev/pt/">
   <link rel="alternate" hreflang="x-default" href="https://tokenledger-8x7.pages.dev/">
 
   <meta property="og:type" content="website">
@@ -54,13 +56,14 @@
     <div class="tl-nav-inner">
       <a href="/" class="tl-brand"><span class="tl-logo" aria-hidden="true">TL</span><span>TokenLedger</span></a>
       <nav class="tl-nav-links" aria-label="Primary">
-        <a href="/" class="active">Cost Estimator</a>
+        <a href="/" class="active">Estimator</a>
         <a href="/tools/agent-budget.html">Agent Burn</a>
+        <a href="/tools/mcp-schema-auditor.html">MCP Tax</a>
         <a href="/tools/saas-margin.html">SaaS Margin</a>
         <a href="/tools/rag-calculator.html">RAG TCO</a>
         <a href="/tools/self-host-vs-api.html">GPU vs API</a>
-        <a href="/tools/token-inspector.html">Token Inspector</a>
-        <a href="/guides/llm-cost-optimization-playbook.html">Playbook</a>
+        <a href="/tools/multimodal-budget.html">Voice & Vision</a>
+        <a href="/tools/token-inspector.html">Inspector</a>
       </nav>
       <div class="tl-nav-actions">
         <a href="/api/pricing.json" class="tl-icon-btn" title="Public JSON Pricing Feed">JSON API</a>
@@ -80,6 +83,8 @@
       <a class="tl-pill" href="/ja/" style="text-decoration:none">日本語</a>
       <a class="tl-pill" href="/de/" style="text-decoration:none">Deutsch</a>
       <a class="tl-pill" href="/fr/" style="text-decoration:none">Français</a>
+      <a class="tl-pill" href="/es/" style="text-decoration:none">Español</a>
+      <a class="tl-pill" href="/pt/" style="text-decoration:none">Português</a>
     </div>
   </section>
 
@@ -100,18 +105,18 @@
         <button type="button" class="tl-chip" data-preset="batch">Batch ETL (15K/d)</button>
       </div>
       <div class="tl-row">
-        <div class="tl-field"><label for="inTokens">Input Tokens / Req</label><input id="inTokens" class="tl-input num" type="number" min="0" step="100" value="2500"></div>
-        <div class="tl-field"><label for="outTokens">Output Tokens / Req</label><input id="outTokens" class="tl-input num" type="number" min="0" step="50" value="600"></div>
+        <div class="tl-field"><label for="inTokens">Tokens entrée / requête</label><input id="inTokens" class="tl-input num" type="number" min="0" step="100" value="2500"></div>
+        <div class="tl-field"><label for="outTokens">Tokens sortie / requête</label><input id="outTokens" class="tl-input num" type="number" min="0" step="50" value="600"></div>
       </div>
       <div class="tl-row">
-        <div class="tl-field"><label for="dailyReqs">Requests / Day</label><input id="dailyReqs" class="tl-input num" type="number" min="1" step="100" value="1000"></div>
+        <div class="tl-field"><label for="dailyReqs">Requêtes / jour</label><input id="dailyReqs" class="tl-input num" type="number" min="1" step="100" value="1000"></div>
         <div class="tl-field"><label for="sortSelect">Sort</label><select id="sortSelect" class="tl-select"><option value="monthly">Monthly Cost</option><option value="input">Input $/1M</option><option value="context">Context Window</option></select></div>
       </div>
-      <div class="tl-field"><label for="cacheSlider">Prompt Cache Hit Rate <strong id="cacheVal">50%</strong></label><input id="cacheSlider" class="tl-range" type="range" min="0" max="95" step="5" value="50"></div>
-      <label class="tl-check-row"><input id="batchToggle" type="checkbox"><span>50% Batch API Discount</span></label>
+      <div class="tl-field"><label for="cacheSlider">Taux de cache prompt <strong id="cacheVal">50%</strong></label><input id="cacheSlider" class="tl-range" type="range" min="0" max="95" step="5" value="50"></div>
+      <label class="tl-check-row"><input id="batchToggle" type="checkbox"><span>Appliquer -50% Batch API</span></label>
       <div class="tl-btn-bar">
-        <button type="button" id="btnShare" class="tl-btn tl-btn-primary">Copy Share URL</button>
-        <button type="button" id="btnMarkdown" class="tl-btn">Copy Markdown</button>
+        <button type="button" id="btnShare" class="tl-btn tl-btn-primary">Copier le lien</button>
+        <button type="button" id="btnMarkdown" class="tl-btn">Copier Markdown</button>
         <button type="button" id="btnCsv" class="tl-btn">CSV</button>
         <button type="button" id="btnJson" class="tl-btn">JSON</button>
         <button type="button" id="btnPrint" class="tl-btn">PDF</button>

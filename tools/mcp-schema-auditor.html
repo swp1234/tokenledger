@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <title>MCP &amp; Function-Calling Tool Schema Token Bloat Auditor (Claude, Cursor &amp; Agents) | TokenLedger</title>
+  <meta name="description" content="Calculate hidden upfront token tax from connected MCP servers and function schemas. Paste raw MCP tools JSON to rank bloated tools and estimate lazy-loading savings.">
+  <meta name="dateModified" content="2026-11-24">
+  <link rel="canonical" href="https://tokenledger-8x7.pages.dev/tools/mcp-schema-auditor.html">
+
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="MCP &amp; Function-Calling Tool Schema Token Bloat Auditor (Claude, Cursor &amp; Agents) | TokenLedger">
+  <meta property="og:description" content="Calculate hidden upfront token tax from connected MCP servers and function schemas. Paste raw MCP tools JSON to rank bloated tools and estimate lazy-loading savings.">
+  <meta property="og:url" content="https://tokenledger-8x7.pages.dev/tools/mcp-schema-auditor.html">
+  <meta property="og:image" content="https://tokenledger-8x7.pages.dev/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MCP &amp; Function-Calling Tool Schema Token Bloat Auditor (Claude, Cursor &amp; Agents) | TokenLedger">
+  <meta name="twitter:description" content="Calculate hidden upfront token tax from connected MCP servers and function schemas. Paste raw MCP tools JSON to rank bloated tools and estimate lazy-loading savings.">
+  <meta name="twitter:image" content="https://tokenledger-8x7.pages.dev/og-image.png">
+
+  <link rel="stylesheet" href="/css/tokenledger.css">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "TokenLedger MCP Schema Tax Auditor",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "url": "https://tokenledger-8x7.pages.dev/tools/mcp-schema-auditor.html",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How many tokens do connected MCP servers add to every LLM turn?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A typical MCP tool schema uses 180 to 400 tokens; connecting 5 servers with 14 tools each injects roughly 15,000 to 22,000 tokens before the user types a prompt."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <header class="tl-header">
+    <div class="tl-nav-inner">
+      <a href="/" class="tl-brand"><span class="tl-logo" aria-hidden="true">TL</span><span>TokenLedger</span></a>
+      <nav class="tl-nav-links" aria-label="Primary">
+        <a href="/">Estimator</a>
+        <a href="/tools/agent-budget.html">Agent Burn</a>
+        <a href="/tools/mcp-schema-auditor.html" class="active">MCP Tax</a>
+        <a href="/tools/saas-margin.html">SaaS Margin</a>
+        <a href="/tools/rag-calculator.html">RAG TCO</a>
+        <a href="/tools/self-host-vs-api.html">GPU vs API</a>
+        <a href="/tools/multimodal-budget.html">Voice & Vision</a>
+        <a href="/tools/token-inspector.html">Inspector</a>
+      </nav>
+      <div class="tl-nav-actions">
+        <a href="/api/pricing.json" class="tl-icon-btn" title="Public JSON Pricing Feed">JSON API</a>
+        <button type="button" id="tlThemeToggle" class="tl-icon-btn" aria-label="Toggle Light or Dark Theme">Light</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="tl-wrap">
+  <section class="tl-hero">
+    <div class="tl-kicker">MCP FINOPS &bull; TOOL SCHEMA TAX &bull; 100% LOCAL JSON AUDIT</div>
+    <h1>MCP &amp; Tool-Calling Schema Bloat Auditor</h1>
+    <p>Quantify the hidden upfront token tax of connected MCP servers (Claude Code, Cursor, OpenAI Agents SDK), compare Prompt Caching vs. Lazy Tool Deferral, and paste raw tool JSON to expose your heaviest schemas.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">Upfront Schema Tax</div><div class="kpi-val warn" id="kpiMcpTokens">0 tok</div><div class="kpi-sub" id="kpiMcpTokensSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Uncached MCP Tax</div><div class="kpi-val danger" id="kpiMcpUncached">$0/mo</div><div class="kpi-sub" id="kpiMcpUncachedSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">With Prompt Caching</div><div class="kpi-val" id="kpiMcpCached">$0/mo</div><div class="kpi-sub" id="kpiMcpCachedSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">With Lazy Tool Deferral</div><div class="kpi-val accent" id="kpiMcpLazy">$0/mo</div><div class="kpi-sub" id="kpiMcpLazySub">-</div></div>
+  </section>
+
+  <section class="tl-grid-2">
+    <div class="tl-panel">
+      <h2>1. Connected MCP Fleet Parameters</h2>
+      <div class="tl-field"><label for="mcpModel">Agent / IDE Model</label><select id="mcpModel" class="tl-select"></select></div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="mcpServers">Connected MCP Servers</label><input id="mcpServers" class="tl-input num" type="number" min="1" max="50" value="5"></div>
+        <div class="tl-field"><label for="mcpToolsPer">Avg Tools / Server</label><input id="mcpToolsPer" class="tl-input num" type="number" min="1" max="100" value="14"></div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="mcpTokPer">Avg Tokens / Tool Schema</label><input id="mcpTokPer" class="tl-input num" type="number" min="40" step="20" value="260"></div>
+        <div class="tl-field"><label for="mcpTurns">Avg Turns / Session</label><input id="mcpTurns" class="tl-input num" type="number" min="1" max="100" value="16"></div>
+      </div>
+      <div class="tl-field"><label for="mcpSessions">Sessions / Day</label><input id="mcpSessions" class="tl-input num" type="number" min="1" step="50" value="400"></div>
+      <div class="tl-field"><label for="mcpCache">Prefix Cache Hit Rate <strong id="mcpCacheVal">80%</strong></label><input id="mcpCache" class="tl-range" type="range" min="0" max="95" step="5" value="80"></div>
+      <div class="tl-field"><label for="mcpLazy">Lazy Tool-Search Deferral <strong id="mcpLazyVal">85%</strong></label><input id="mcpLazy" class="tl-range" type="range" min="0" max="95" step="5" value="85"></div>
+      <div class="tl-btn-bar"><button type="button" id="btnMcpExport" class="tl-btn tl-btn-primary">Export MCP Audit JSON</button></div>
+    </div>
+
+    <div class="tl-panel">
+      <h2>2. Paste Raw MCP / OpenAI Tools JSON (Local Ranker)</h2>
+      <textarea id="mcpJsonInput" class="tl-textarea" style="min-height:170px" placeholder="Paste a JSON array of MCP or function-calling tool definitions..."></textarea>
+      <div class="tl-btn-bar" style="margin-bottom:12px"><button type="button" id="btnMcpSample" class="tl-btn">Load Sample MCP Tools JSON</button></div>
+      <div id="mcpAuditOut" hidden>
+        <div id="mcpAuditSummary" class="kpi-sub num" style="margin-bottom:10px;color:var(--accent);font-weight:700"></div>
+        <div class="tl-table-wrap">
+          <table class="tl-table" style="min-width:360px">
+            <thead><tr><th>Tool Name</th><th>Pretty Tok</th><th>Minified</th><th>Saved</th></tr></thead>
+            <tbody id="mcpToolTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tl-prose">
+    <h2>Frequently Asked Questions</h2>
+    <div class="tl-faq-grid">
+      <div class="tl-faq-item"><h3>How many tokens do connected MCP servers add to every LLM turn?</h3><p>A typical MCP tool schema uses 180 to 400 tokens; connecting 5 servers with 14 tools each injects roughly 15,000 to 22,000 tokens before the user types a prompt.</p></div>
+    </div>
+  </section>
+  <section class="tl-resources" aria-label="Recommended AI Engineering and FinOps Books">
+    <h2>Recommended AI Engineering &amp; Cloud FinOps Books</h2>
+    <div class="tl-res-grid">
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098166302?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>AI Engineering</strong>
+        <span>Chip Huyen (O’Reilly) • Production architecture for foundation models, evaluation, RAG, and latency/cost budgets.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098150724?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>Cloud FinOps (2nd Ed.)</strong>
+        <span>J.R. Storment &amp; Mike Fuller (O’Reilly) • Collaborative cloud &amp; AI unit-economics governance for engineering teams.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098161769?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>Building LLMs for Production</strong>
+        <span>Louis-François Bouchard &amp; Louie Peters • Practical prompting, caching, RAG, and cost-aware inference routing.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+    </div>
+    <p class="tl-disclosure">Editorial note: Curated technical books for AI engineers and FinOps teams. Amazon links include affiliate tag dopabrain-20 (no extra cost to you) and help keep TokenLedger 100% free and ad-free. Interested in sponsoring TokenLedger? <a href="https://github.com/swp1234/tokenledger" target="_blank" rel="noopener" style="color:var(--accent)">Open a Sponsor / Partnership thread on GitHub ↗</a>.</p>
+  </section>
+  </main>
+
+  <footer class="tl-footer">
+    <div class="tl-footer-inner">
+      <div><strong>TokenLedger</strong> &bull; 100% Browser-Private AI &amp; LLM FinOps Studio &bull; Pricing snapshot: 2026-11-24</div>
+      <div>
+        <a href="/about.html">Methodology</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/api/pricing.json">Pricing JSON</a>
+        <a href="https://github.com/swp1234/tokenledger" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+  </footer>
+  <script src="/js/pricing-engine.js"></script>
+  <script src="/js/ui-shell.js"></script>
+  <script src="/js/mcp-auditor.js" defer></script>
+</body>
+</html>
