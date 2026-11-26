@@ -59,6 +59,7 @@ function renderShell(opts) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="SaGeXV5HO2lva9I9zv9PY--mkPvtS7n29UgDVj5rM9I">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <title>${esc(opts.title)} | TokenLedger</title>
   <meta name="description" content="${esc(opts.description)}">
