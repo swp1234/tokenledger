@@ -1,6 +1,6 @@
 {
-  "schemaVersion": "1.0.0",
-  "updatedAt": "2026-11-24",
+  "schemaVersion": "1.1.0",
+  "updatedAt": "2026-11-26",
   "currency": "USD",
   "unit": "per_1m_tokens",
   "disclaimer": "Published standard API list rates compiled for engineering estimation. Always verify enterprise volume tiers and regional pricing on each provider's billing console.",
@@ -28,7 +28,13 @@
     { "id": "mistral-large-2", "name": "Mistral Large 2", "provider": "Mistral", "tier": "balanced", "input": 2.00, "cachedInput": 2.00, "output": 6.00, "batchDiscount": 0.5, "context": 128000, "badge": "EU Sovereign" },
     { "id": "mistral-small-3", "name": "Mistral Small 3.1", "provider": "Mistral", "tier": "mini", "input": 0.10, "cachedInput": 0.10, "output": 0.30, "batchDiscount": 0.5, "context": 128000, "badge": "EU Budget" },
     { "id": "qwen-2.5-72b", "name": "Qwen 2.5 72B (Hosted)", "provider": "Alibaba", "tier": "balanced", "input": 0.35, "cachedInput": 0.175, "output": 0.40, "batchDiscount": 0.0, "context": 131072, "badge": "Multilingual" },
-    { "id": "sonar-pro", "name": "Perplexity Sonar Pro", "provider": "Perplexity", "tier": "balanced", "input": 3.00, "cachedInput": 3.00, "output": 15.00, "batchDiscount": 0.0, "context": 200000, "badge": "Search API" }
+    { "id": "sonar-pro", "name": "Perplexity Sonar Pro", "provider": "Perplexity", "tier": "balanced", "input": 3.00, "cachedInput": 3.00, "output": 15.00, "batchDiscount": 0.0, "context": 200000, "badge": "Search API" },
+    { "id": "claude-sonnet-4.5", "name": "Claude 4.5 Sonnet", "provider": "Anthropic", "tier": "balanced", "input": 3.00, "cachedInput": 0.30, "output": 15.00, "batchDiscount": 0.5, "context": 200000, "badge": "Coding Leader" },
+    { "id": "claude-haiku-4.5", "name": "Claude 4.5 Haiku", "provider": "Anthropic", "tier": "mini", "input": 1.00, "cachedInput": 0.10, "output": 5.00, "batchDiscount": 0.5, "context": 200000, "badge": "Fast Agent" },
+    { "id": "o3-pro", "name": "OpenAI o3-pro", "provider": "OpenAI", "tier": "reasoning", "input": 20.00, "cachedInput": 5.00, "output": 80.00, "batchDiscount": 0.5, "context": 200000, "badge": "Deep Research" },
+    { "id": "deepseek-v3.1", "name": "DeepSeek-V3.1 (Hybrid)", "provider": "DeepSeek", "tier": "balanced", "input": 0.28, "cachedInput": 0.07, "output": 1.10, "batchDiscount": 0.5, "context": 128000, "badge": "Hybrid MoE" },
+    { "id": "qwen-3-235b", "name": "Qwen 3 235B-A22B (MoE)", "provider": "Alibaba", "tier": "balanced", "input": 0.22, "cachedInput": 0.11, "output": 0.88, "batchDiscount": 0.0, "context": 131072, "badge": "Open MoE" },
+    { "id": "amazon-nova-pro", "name": "Amazon Nova Pro (Bedrock)", "provider": "AWS", "tier": "balanced", "input": 0.80, "cachedInput": 0.20, "output": 3.20, "batchDiscount": 0.5, "context": 300000, "badge": "AWS Native" }
   ],
   "embeddings": [
     { "id": "text-embedding-3-small", "name": "OpenAI text-embedding-3-small", "provider": "OpenAI", "per1M": 0.02, "dims": 1536 },

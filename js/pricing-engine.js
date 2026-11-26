@@ -32,7 +32,13 @@
     { id: 'mistral-large-2', name: 'Mistral Large 2', provider: 'Mistral', tier: 'balanced', input: 2.00, cachedInput: 2.00, output: 6.00, batchDiscount: 0.5, context: 128000, badge: 'EU Sovereign' },
     { id: 'mistral-small-3', name: 'Mistral Small 3.1', provider: 'Mistral', tier: 'mini', input: 0.10, cachedInput: 0.10, output: 0.30, batchDiscount: 0.5, context: 128000, badge: 'EU Budget' },
     { id: 'qwen-2.5-72b', name: 'Qwen 2.5 72B (Hosted)', provider: 'Alibaba', tier: 'balanced', input: 0.35, cachedInput: 0.175, output: 0.40, batchDiscount: 0.0, context: 131072, badge: 'Multilingual' },
-    { id: 'sonar-pro', name: 'Perplexity Sonar Pro', provider: 'Perplexity', tier: 'balanced', input: 3.00, cachedInput: 3.00, output: 15.00, batchDiscount: 0.0, context: 200000, badge: 'Search API' }
+    { id: 'sonar-pro', name: 'Perplexity Sonar Pro', provider: 'Perplexity', tier: 'balanced', input: 3.00, cachedInput: 3.00, output: 15.00, batchDiscount: 0.0, context: 200000, badge: 'Search API' },
+    { id: 'claude-sonnet-4.5', name: 'Claude 4.5 Sonnet', provider: 'Anthropic', tier: 'balanced', input: 3.00, cachedInput: 0.30, output: 15.00, batchDiscount: 0.5, context: 200000, badge: 'Coding Leader' },
+    { id: 'claude-haiku-4.5', name: 'Claude 4.5 Haiku', provider: 'Anthropic', tier: 'mini', input: 1.00, cachedInput: 0.10, output: 5.00, batchDiscount: 0.5, context: 200000, badge: 'Fast Agent' },
+    { id: 'o3-pro', name: 'OpenAI o3-pro', provider: 'OpenAI', tier: 'reasoning', input: 20.00, cachedInput: 5.00, output: 80.00, batchDiscount: 0.5, context: 200000, badge: 'Deep Research' },
+    { id: 'deepseek-v3.1', name: 'DeepSeek-V3.1 (Hybrid)', provider: 'DeepSeek', tier: 'balanced', input: 0.28, cachedInput: 0.07, output: 1.10, batchDiscount: 0.5, context: 128000, badge: 'Hybrid MoE' },
+    { id: 'qwen-3-235b', name: 'Qwen 3 235B-A22B (MoE)', provider: 'Alibaba', tier: 'balanced', input: 0.22, cachedInput: 0.11, output: 0.88, batchDiscount: 0.0, context: 131072, badge: 'Open MoE' },
+    { id: 'amazon-nova-pro', name: 'Amazon Nova Pro (Bedrock)', provider: 'AWS', tier: 'balanced', input: 0.80, cachedInput: 0.20, output: 3.20, batchDiscount: 0.5, context: 300000, badge: 'AWS Native' }
   ];
 
   var EMBEDDINGS = [
@@ -934,6 +940,112 @@
     };
   }
 
+  // LLM Latency, TTFT & Streaming UX Speed Calculator
+  var LATENCY_PROFILES = [
+    { id: 'cerebras-llama70b', name: 'Cerebras Llama 3.3 70B', provider: 'Cerebras', ttftMs: 180, tokPerSec: 2100, inRate: 0.85, outRate: 1.20 },
+    { id: 'groq-llama70b', name: 'Groq Llama 3.3 70B', provider: 'Groq', ttftMs: 240, tokPerSec: 330, inRate: 0.59, outRate: 0.79 },
+    { id: 'fireworks-deepseek', name: 'Fireworks DeepSeek-V3.1', provider: 'Fireworks', ttftMs: 380, tokPerSec: 180, inRate: 0.56, outRate: 1.68 },
+    { id: 'gemini-2.5-flash-lat', name: 'Google Gemini 2.5 Flash', provider: 'Google', ttftMs: 420, tokPerSec: 170, inRate: 0.30, outRate: 2.50 },
+    { id: 'gpt-5-mini-lat', name: 'OpenAI GPT-5 mini', provider: 'OpenAI', ttftMs: 460, tokPerSec: 120, inRate: 0.25, outRate: 2.00 },
+    { id: 'claude-haiku-4.5-lat', name: 'Anthropic Claude 4.5 Haiku', provider: 'Anthropic', ttftMs: 440, tokPerSec: 115, inRate: 1.00, outRate: 5.00 },
+    { id: 'amazon-nova-pro-lat', name: 'AWS Bedrock Nova Pro', provider: 'AWS', ttftMs: 490, tokPerSec: 105, inRate: 0.80, outRate: 3.20 },
+    { id: 'gemini-2.5-pro-lat', name: 'Google Gemini 2.5 Pro', provider: 'Google', ttftMs: 850, tokPerSec: 90, inRate: 1.25, outRate: 10.00 },
+    { id: 'gpt-5-lat', name: 'OpenAI GPT-5', provider: 'OpenAI', ttftMs: 780, tokPerSec: 85, inRate: 1.25, outRate: 10.00 },
+    { id: 'claude-sonnet-4.5-lat', name: 'Anthropic Claude 4.5 Sonnet', provider: 'Anthropic', ttftMs: 740, tokPerSec: 75, inRate: 3.00, outRate: 15.00 },
+    { id: 'deepseek-r1-lat', name: 'DeepSeek-R1 (Reasoning)', provider: 'DeepSeek', ttftMs: 1450, tokPerSec: 45, inRate: 0.55, outRate: 2.19 },
+    { id: 'claude-opus-4-lat', name: 'Anthropic Claude Opus 4', provider: 'Anthropic', ttftMs: 1150, tokPerSec: 40, inRate: 15.00, outRate: 75.00 }
+  ];
+
+  function calcLatencyBudget(opts) {
+    var inputTokens = clamp(opts.inputTokens != null ? opts.inputTokens : 2500, 50, 500000);
+    var outputTokens = clamp(opts.outputTokens != null ? opts.outputTokens : 500, 10, 32000);
+    var networkRttMs = clamp(opts.networkRttMs != null ? opts.networkRttMs : 80, 0, 2000);
+    var slaTargetSec = clamp(opts.slaTargetSec != null ? opts.slaTargetSec : 5.0, 0.5, 120);
+
+    var rows = LATENCY_PROFILES.map(function (p) {
+      // Prefill scales mildly with input length (~30ms per additional 1K input tokens beyond 1K)
+      var prefillAddMs = Math.max(0, (inputTokens - 1000) / 1000) * 32;
+      var ttftSec = (p.ttftMs + prefillAddMs + networkRttMs) / 1000;
+      var genSec = outputTokens / p.tokPerSec;
+      var totalSec = ttftSec + genSec;
+      var costPer10k = 10000 * ((inputTokens / 1e6) * p.inRate + (outputTokens / 1e6) * p.outRate);
+      var uxBand = totalSec <= 1.5 ? 'Instant' : totalSec <= 4.0 ? 'Snappy' : totalSec <= 9.0 ? 'Noticeable' : 'Async / Queue';
+      return {
+        profile: p,
+        ttftSec: ttftSec,
+        genSec: genSec,
+        totalSec: totalSec,
+        meetsSla: totalSec <= slaTargetSec,
+        uxBand: uxBand,
+        costPer10k: costPer10k
+      };
+    }).sort(function (a, b) { return a.totalSec - b.totalSec; });
+
+    var selected = rows.find(function (r) { return r.profile.id === opts.profileId; }) || rows[4];
+    var passingCount = rows.filter(function (r) { return r.meetsSla; }).length;
+    return {
+      selected: selected,
+      fastest: rows[0],
+      passingCount: passingCount,
+      slaTargetSec: slaTargetSec,
+      rows: rows
+    };
+  }
+
+  // AI SaaS Pricing Tier & Credit-Pack Architect
+  function calcPricingTiers(opts) {
+    var m = getModel(opts.modelId || 'gemini-2.5-flash');
+    var inputTokens = clamp(opts.inputTokens != null ? opts.inputTokens : 2800, 50, 200000);
+    var outputTokens = clamp(opts.outputTokens != null ? opts.outputTokens : 650, 20, 32000);
+    var cacheHitRate = clamp(opts.cacheHitRate != null ? opts.cacheHitRate : 55, 0, 95);
+    var targetMarginPct = clamp(opts.targetMarginPct != null ? opts.targetMarginPct : 78, 40, 95);
+    var proPrice = clamp(opts.proPrice != null ? opts.proPrice : 29, 5, 500);
+    var teamPrice = clamp(opts.teamPrice != null ? opts.teamPrice : 79, 10, 2000);
+    var entPrice = clamp(opts.entPrice != null ? opts.entPrice : 299, 50, 10000);
+    var fixedInfraPerUser = clamp(opts.fixedInfraPerUser != null ? opts.fixedInfraPerUser : 0.65, 0, 50);
+
+    var perActionCost = calcModelWorkload(m, { inputTokens: inputTokens, outputTokens: outputTokens, dailyRequests: 1, cacheHitRate: cacheHitRate, useBatch: false }).perReq;
+    var safePerAction = Math.max(0.00005, perActionCost);
+
+    function buildTier(name, price, freeCap) {
+      if (price === 0) {
+        var cogsFree = freeCap * safePerAction + fixedInfraPerUser * 0.25;
+        return { name: name, price: 0, maxCredits: freeCap, maxAiCogs: cogsFree, stripeFee: 0, netAfterAll: -cogsFree, grossMarginPct: 0, overagePer1k: Math.ceil(safePerAction * 1000 * 4 * 100) / 100 };
+      }
+      var stripeFee = price * 0.029 + 0.30;
+      var maxTotalCogs = price * (1 - targetMarginPct / 100);
+      var aiBudget = Math.max(0.10, maxTotalCogs - stripeFee - fixedInfraPerUser);
+      var safeCredits = Math.max(50, Math.floor((aiBudget / safePerAction) / 50) * 50);
+      var actualAiCogs = safeCredits * safePerAction;
+      var actualMarginPct = ((price - stripeFee - fixedInfraPerUser - actualAiCogs) / price) * 100;
+      var overagePer1k = Math.max(1, Math.ceil((safePerAction * 1000) / (1 - targetMarginPct / 100) * 100) / 100);
+      return {
+        name: name,
+        price: price,
+        maxCredits: safeCredits,
+        maxAiCogs: actualAiCogs,
+        stripeFee: stripeFee,
+        netAfterAll: price - stripeFee - fixedInfraPerUser - actualAiCogs,
+        grossMarginPct: actualMarginPct,
+        overagePer1k: overagePer1k
+      };
+    }
+
+    var tiers = [
+      buildTier('Free / Trial', 0, 50),
+      buildTier('Pro (Individual)', proPrice, 0),
+      buildTier('Team (Per Seat)', teamPrice, 0),
+      buildTier('Enterprise (Org Seat)', entPrice, 0)
+    ];
+
+    return {
+      model: m,
+      perActionCost: safePerAction,
+      targetMarginPct: targetMarginPct,
+      tiers: tiers
+    };
+  }
+
   var CURRENCIES = {
     USD: { code: 'USD', symbol: '$', rate: 1, decimals: 2 },
     EUR: { code: 'EUR', symbol: '€', rate: 0.92, decimals: 2 },
@@ -984,6 +1096,7 @@
     AUDIO_TTS_MODELS: AUDIO_TTS_MODELS,
     IMAGE_GEN_MODELS: IMAGE_GEN_MODELS,
     VIDEO_GEN_MODELS: VIDEO_GEN_MODELS,
+    LATENCY_PROFILES: LATENCY_PROFILES,
     CURRENCIES: CURRENCIES,
     getModel: getModel,
     getEmbedding: getEmbedding,
@@ -1007,6 +1120,8 @@
     calcHybridWaterfall: calcHybridWaterfall,
     calcAudioPipeline: calcAudioPipeline,
     calcMediaGenBudget: calcMediaGenBudget,
+    calcLatencyBudget: calcLatencyBudget,
+    calcPricingTiers: calcPricingTiers,
     formatUsd: formatUsd,
     formatInt: formatInt
   };

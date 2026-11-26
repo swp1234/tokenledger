@@ -115,7 +115,9 @@
   };
 
   var CMD_ITEMS = [
-    { t: '24-Model Live Cost Estimator', u: '/', k: 'home pricing gpt-5 claude gemini deepseek' },
+    { t: '30-Model Live Cost Estimator', u: '/', k: 'home pricing gpt-5 claude 4.5 gemini deepseek qwen 3 nova' },
+    { t: 'LLM Latency, TTFT & Streaming UX Calculator', u: '/tools/llm-latency-ttft-calculator.html', k: 'latency ttft speed tok/s cerebras groq fireworks sla streaming' },
+    { t: 'AI SaaS Pricing Tier & Credit-Pack Architect', u: '/tools/ai-pricing-tier-designer.html', k: 'pricing tier credits overage stripe saas margin packaging' },
     { t: 'GPU VRAM & KV-Cache Quantization Calculator', u: '/tools/gpu-vram-calculator.html', k: 'vram llama 70b deepseek q4 fp8 h100 4090' },
     { t: 'CFO Hybrid Caching + Batch + Cascade Waterfall', u: '/tools/batch-vs-realtime-router.html', k: 'cfo waterfall batch routing savings' },
     { t: 'Fine-Tuning vs. RAG vs. Prompt Caching 12-Month TCO', u: '/tools/fine-tune-vs-rag.html', k: 'lora sft rag vector adr' },

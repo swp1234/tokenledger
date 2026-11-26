@@ -1,6 +1,6 @@
-# TokenLedger v5.0 — Precision AI & LLM API FinOps Studio
+# TokenLedger v6.0 — Precision AI & LLM API FinOps Studio
 
-> **100% browser-private** AI & LLM FinOps suite with **16 interactive workspaces**, **100 static pages**, **11 international markets**, **5-currency live switcher** (USD/EUR/GBP/JPY/KRW), **Ctrl+K Command Palette**, zero-dep CLI, and an open CORS JSON pricing feed across **24 flagship LLMs**, **15 STT/TTS audio engines**, and **16 image/video generation APIs**.
+> **100% browser-private** AI & LLM FinOps suite with **18 interactive workspaces**, **120 static pages**, **11 international markets**, **5-currency live switcher** (USD/EUR/GBP/JPY/KRW), **Ctrl+K Command Palette**, zero-dep CLI, and an open CORS JSON pricing feed across **30 flagship LLMs**, **15 STT/TTS audio engines**, and **16 image/video generation APIs**.
 
 - Live Studio: **[https://tokenledger-8x7.pages.dev](https://tokenledger-8x7.pages.dev)**
 - Public Pricing JSON API: **[https://tokenledger-8x7.pages.dev/api/pricing.json](https://tokenledger-8x7.pages.dev/api/pricing.json)**
@@ -10,8 +10,8 @@
 
 Most LLM calculators only price a single prompt or upload your prompts to a backend. TokenLedger runs **100% locally in your browser** (zero prompt uploads, zero login walls) and models the real architectural cost drivers that blow up production AI budgets:
 
-### 16 Interactive FinOps Workspaces
-1. **24-Model Live API Cost Estimator (`/`)** — Compare OpenAI (GPT-5, GPT-4.1, o3, o4-mini), Anthropic (Claude Opus 4, Sonnet 4, Haiku 3.5), Google (Gemini 2.5 Pro/Flash/Flash-Lite), DeepSeek (V3, R1), xAI (Grok 3), Meta (Llama 4), Mistral, Qwen, and Perplexity with **Prompt Caching (0–95%)**, **50% Batch API**, **Model Cascade 70/30 routing**, shareable scenario URLs, **PNG Budget Cards**, and **CSV / JSON / Markdown / Print PDF** exports.
+### 18 Interactive FinOps Workspaces
+1. **30-Model Live API Cost Estimator (`/`)** — Compare OpenAI (GPT-5, GPT-4.1, o3, o3-pro, o4-mini), Anthropic (Claude 4.5 Sonnet/Haiku, Opus 4, Sonnet 4, Haiku 3.5), Google (Gemini 2.5 Pro/Flash/Flash-Lite), DeepSeek (V3.1, V3, R1), Alibaba (Qwen 3 235B MoE, Qwen 2.5), AWS Bedrock (Amazon Nova Pro), xAI (Grok 3), Meta (Llama 4), Mistral, and Perplexity with **Prompt Caching (0–95%)**, **50% Batch API**, **Model Cascade 70/30 routing**, shareable scenario URLs, **PNG Budget Cards**, and **CSV / JSON / Markdown / Print PDF** exports.
 2. **AI Agent Loop Burn Calculator (`/tools/agent-budget.html`)** — Models quadratic $O(N^2)$ context accumulation in multi-turn ReAct/tool-calling agents and compares **Naive Full History vs. Prefix Caching vs. Sliding-Window Summarization** turn by turn.
 3. **GPU VRAM & KV-Cache Quantization Calculator (`/tools/gpu-vram-calculator.html`)** — Calculates Q4/FP8/FP16 model weights + KV-cache memory across Llama 70B, DeepSeek-R1, Qwen 32B, and Mistral with FP8 KV-cache savings and GPU sizing (4090 / L40S / A100 / H100).
 4. **CFO Hybrid Caching + Batch + Cascade Waterfall (`/tools/batch-vs-realtime-router.html`)** — Stacks prompt caching, frontier-to-mini cascade routing, and 50%-off async batch tiers into an executive annual savings waterfall.
@@ -27,6 +27,8 @@ Most LLM calculators only price a single prompt or upload your prompts to a back
 14. **Context Window & JSON Schema Minifier Inspector (`/tools/token-inspector.html`)** — Estimates OpenAI/Claude/Gemini tokens locally and minifies bloated JSON tool schemas to show immediate annual savings.
 15. **Speech-to-Text (STT) & TTS Audio API Cost Calculator (`/tools/audio-transcription-cost.html`)** — Compares 7 STT engines (Whisper, Deepgram Nova-3, Groq Whisper Turbo, AssemblyAI, Gemini Audio) and 8 TTS engines (ElevenLabs, Cartesia, OpenAI TTS, Deepgram Aura) with client/edge VAD silence trimming and phrase caching.
 16. **AI Image & Video Generation Studio Budget (`/tools/image-video-gen-budget.html`)** — Models creative unit economics across 10 image APIs (FLUX 1.1 Pro/schnell, GPT-Image-1, Imagen 3, Ideogram 3) and 6 video APIs (Veo 2/3, Runway Gen-4 Turbo, Kling, Luma, Sora) with retry multipliers and draft-cascade savings.
+17. **LLM Latency, TTFT & Streaming UX Speed Calculator (`/tools/llm-latency-ttft-calculator.html`)** — Benchmarks Time-to-First-Token, generation speed, total response wait, and SLA pass rates across 12 inference endpoints (Cerebras, Groq, Fireworks, Gemini, GPT-5, Claude 4.5, Nova Pro).
+18. **AI SaaS Pricing Tier & Credit-Pack Architect (`/tools/ai-pricing-tier-designer.html`)** — Designs margin-safe Free/Pro/Team/Enterprise monthly credit allowances and overage pack pricing with Stripe fee modeling and copyable billing JSON specs.
 
 ## Zero-Dependency CLI
 
@@ -39,15 +41,15 @@ Available formats: `table`, `md` (ready for GitHub PRs / Notion RFCs), and `json
 ## 11 International Markets
 English (`/`) · 한국어 (`/ko/`) · 日本語 (`/ja/`) · Deutsch (`/de/`) · Français (`/fr/`) · Español (`/es/`) · Português (`/pt/`) · 中文 (`/zh/`) · हिन्दी (`/hi/`) · Bahasa Indonesia (`/id/`) · Türkçe (`/tr/`)
 
-Plus **50 head-to-head model & cloud comparisons** (`/compare/`) and **22 engineering FinOps guides** (`/guides/`).
+Plus **62 head-to-head model & cloud comparisons** (`/compare/`) and **28 engineering FinOps guides** (`/guides/`).
 
 ## Local Development & Verification
 
 ```bash
-# Regenerate all 100 static pages, sitemap.xml, robots.txt, and llms*.txt
+# Regenerate all 120 static pages, sitemap.xml, robots.txt, and llms*.txt
 node scripts/build-site.js
 
-# Run pricing-engine unit tests + 100-page mobile/desktop Playwright E2E suite
+# Run pricing-engine unit tests + 120-page mobile/desktop Playwright E2E suite
 node scripts/verify-tokenledger.js
 ```
 

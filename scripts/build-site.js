@@ -179,7 +179,19 @@ const COMPARISONS = [
   { slug: 'pinecone-vs-qdrant-vs-pgvector-rag-cost', a: 'gemini-2.5-flash', b: 'gpt-4.1-mini', title: 'Pinecone vs Qdrant vs pgvector RAG Storage & Query TCO Comparison (2026)', summary: 'Model HNSW memory footprints, monthly vector hosting costs, and top-K synthesis token budgets across 1M–50M embeddings.' },
   { slug: 'openai-embeddings-vs-voyage-3-vs-cohere', a: 'gpt-4.1-mini', b: 'gemini-2.5-flash-lite', title: 'OpenAI text-embedding-3 vs Voyage 3 Large vs Cohere Embed v3 Cost Guide', summary: 'Compare initial corpus ingestion, monthly churn re-indexing, and vector dimensionality RAM impact for enterprise RAG.' },
   { slug: 'cloudflare-workers-ai-vs-openai-mini', a: 'llama-4-scout', b: 'gpt-5-mini', title: 'Cloudflare Workers AI vs OpenAI GPT-5 mini Edge Inference Cost Comparison', summary: 'Benchmark edge-hosted open-weight inference pricing against OpenAI GPT-5 mini for high-volume classification and extraction.' },
-  { slug: 'deepseek-v3-vs-llama-4-maverick-cost', a: 'deepseek-v3', b: 'llama-4-maverick', title: 'DeepSeek-V3 vs Llama 4 Maverick (1M Context) API Cost & Speed Comparison', summary: 'Head-to-head open-weight API pricing comparing DeepSeek-V3 ($0.27/$1.10) and hosted Llama 4 Maverick ($0.27/$0.85, 1M context).' }
+  { slug: 'deepseek-v3-vs-llama-4-maverick-cost', a: 'deepseek-v3', b: 'llama-4-maverick', title: 'DeepSeek-V3 vs Llama 4 Maverick (1M Context) API Cost & Speed Comparison', summary: 'Head-to-head open-weight API pricing comparing DeepSeek-V3 ($0.27/$1.10) and hosted Llama 4 Maverick ($0.27/$0.85, 1M context).' },
+  { slug: 'claude-sonnet-4-5-vs-gpt-5', a: 'claude-sonnet-4.5', b: 'gpt-5', title: 'Claude 4.5 Sonnet vs OpenAI GPT-5 API Cost & Coding Agent Comparison (2026)', summary: 'Compare Anthropic Claude 4.5 Sonnet ($3/$15) against OpenAI GPT-5 ($1.25/$10) with 90% prompt caching across production coding agents.' },
+  { slug: 'claude-haiku-4-5-vs-gpt-5-mini', a: 'claude-haiku-4.5', b: 'gpt-5-mini', title: 'Claude 4.5 Haiku vs OpenAI GPT-5 mini Fast Agent Cost Comparison (2026)', summary: 'Head-to-head FinOps breakdown comparing Anthropic Claude 4.5 Haiku ($1/$5) and OpenAI GPT-5 mini ($0.25/$2) for low-latency routers.' },
+  { slug: 'claude-haiku-4-5-vs-gemini-2-5-flash', a: 'claude-haiku-4.5', b: 'gemini-2.5-flash', title: 'Claude 4.5 Haiku vs Google Gemini 2.5 Flash API Pricing & Speed Guide (2026)', summary: 'Evaluate Claude 4.5 Haiku ($1/$5, 200K ctx) against Gemini 2.5 Flash ($0.30/$2.50, 1M ctx) for high-throughput RAG and extraction.' },
+  { slug: 'openai-o3-pro-vs-claude-opus-4', a: 'o3-pro', b: 'claude-opus-4', title: 'OpenAI o3-pro vs Claude Opus 4 Ultra-Frontier API Cost Analysis (2026)', summary: 'Calculate monthly spend for deep multi-step reasoning between OpenAI o3-pro ($20/$80) and Anthropic Claude Opus 4 ($15/$75).' },
+  { slug: 'deepseek-v3-1-vs-gpt-5-mini', a: 'deepseek-v3.1', b: 'gpt-5-mini', title: 'DeepSeek-V3.1 (Hybrid Thinking) vs GPT-5 mini API Cost Comparison (2026)', summary: 'Compare hybrid reasoning open-weight DeepSeek-V3.1 ($0.28/$1.10) against OpenAI GPT-5 mini ($0.25/$2) across real daily workloads.' },
+  { slug: 'qwen-3-235b-vs-deepseek-v3-1', a: 'qwen-3-235b', b: 'deepseek-v3.1', title: 'Qwen 3 235B (MoE) vs DeepSeek-V3.1 Open-Weight API Pricing Comparison', summary: 'Benchmark Alibaba Qwen 3 235B-A22B ($0.22/$0.88) against DeepSeek-V3.1 ($0.28/$1.10) for multilingual production apps.' },
+  { slug: 'amazon-nova-pro-vs-gemini-2-5-flash', a: 'amazon-nova-pro', b: 'gemini-2.5-flash', title: 'Amazon Nova Pro (AWS Bedrock) vs Gemini 2.5 Flash API Cost Comparison', summary: 'Compare AWS-native Amazon Nova Pro ($0.80/$3.20, 300K ctx) against Google Gemini 2.5 Flash ($0.30/$2.50, 1M ctx) on enterprise workloads.' },
+  { slug: 'amazon-nova-pro-vs-claude-sonnet-4-5', a: 'amazon-nova-pro', b: 'claude-sonnet-4.5', title: 'Amazon Nova Pro vs Claude 4.5 Sonnet on AWS Bedrock: FinOps Cost Guide', summary: 'How AWS Bedrock teams save 70%+ by cascading routine workloads to Amazon Nova Pro while reserving Claude 4.5 Sonnet for hard reasoning.' },
+  { slug: 'cerebras-vs-groq-llm-inference-speed-cost', a: 'llama-4-maverick', b: 'llama-4-scout', title: 'Cerebras vs Groq Ultra-Fast LLM Inference Latency & Cost Comparison (2026)', summary: 'Compare wafer-scale Cerebras (2,100 tok/s) against Groq LPU (330 tok/s) for voice agents, real-time coding autocomplete, and SLA budgets.' },
+  { slug: 'qwen-3-235b-vs-gpt-5-mini', a: 'qwen-3-235b', b: 'gpt-5-mini', title: 'Qwen 3 235B MoE vs OpenAI GPT-5 mini Production API Cost Breakdown', summary: 'Quantify exact monthly API savings between hosted Qwen 3 235B ($0.22/$0.88) and GPT-5 mini ($0.25/$2.00) on output-heavy generation.' },
+  { slug: 'deepseek-v3-1-vs-claude-sonnet-4-5', a: 'deepseek-v3.1', b: 'claude-sonnet-4.5', title: 'DeepSeek-V3.1 vs Claude 4.5 Sonnet Coding & Agent Cost Comparison (2026)', summary: 'Measure the 10x token-cost spread between DeepSeek-V3.1 and Claude 4.5 Sonnet and model a hybrid 70/30 engineering router.' },
+  { slug: 'o3-pro-vs-gemini-2-5-pro', a: 'o3-pro', b: 'gemini-2.5-pro', title: 'OpenAI o3-pro vs Google Gemini 2.5 Pro Deep Reasoning Cost Guide (2026)', summary: 'Compare ultra-premium o3-pro ($20/$80) against Gemini 2.5 Pro ($1.25/$10, 1M context) for long-document synthesis and research pipelines.' }
 ];
 
 const GUIDES = [
@@ -410,6 +422,66 @@ const GUIDES = [
       { h2: '2. Aligning Fallback Model Cost Tiers', p: 'Never fail over a $0.25/1M mini workload onto a $15/1M frontier model during an outage—map every tier to a same-cost cross-vendor peer (e.g., GPT-5 mini <-> Gemini 2.5 Flash).' }
     ],
     ctaHref: '/tools/llm-rate-limit-planner.html', ctaLabel: 'Generate Failover Rate-Limit Policy →'
+  },
+  {
+    slug: 'llm-ttft-streaming-latency-ux-guide',
+    title: 'LLM Latency & TTFT Engineering: Meeting Sub-2-Second Streaming UX SLAs Without Overpaying',
+    desc: 'How Time-to-First-Token (TTFT), tokens-per-second throughput, and prompt-prefix caching control perceived responsiveness in production AI apps.',
+    sections: [
+      { h2: '1. Separate Perceived Latency (TTFT) From Total Generation Time', p: 'Users perceive an AI chat or voice agent as responsive when the first token streams under 500–800ms. Switching from non-streaming REST waits to Server-Sent Events (SSE) immediately cuts perceived lag by 70%.' },
+      { h2: '2. Matching Inference Hardware to SLA Tier', p: 'Use ultra-fast Cerebras or Groq endpoints (300–2,100 tok/s) for voice agents and autocomplete, while reserving slower deep-reasoning models (o3, DeepSeek-R1) for async background research tabs.' }
+    ],
+    ctaHref: '/tools/llm-latency-ttft-calculator.html', ctaLabel: 'Open LLM Latency & TTFT Calculator →'
+  },
+  {
+    slug: 'ai-saas-credit-pricing-tier-architecture',
+    title: 'How to Price AI SaaS Tiers & Credit Packs Without Losing Money on Power Users',
+    desc: 'Step-by-step packaging playbook covering Stripe fee drag, worst-case COGS caps, 75–82% gross margin floors, and transparent overage packs.',
+    sections: [
+      { h2: '1. Never Ship "Unlimited AI" on Frontier Models Without a Margin Floor', p: 'Even 2% of heavy subscribers running continuous multi-turn agents can turn a $29/mo flat subscription deeply cash-negative. Express tier allowances in clear monthly AI credits derived directly from your target gross margin floor.' },
+      { h2: '2. Price Overage Packs at Target Margin Plus Buffer', p: 'When a user exhausts included credits, offer frictionless top-up packs priced at 4x–5x raw token COGS so expansion revenue boosts net dollar retention rather than eroding margins.' }
+    ],
+    ctaHref: '/tools/ai-pricing-tier-designer.html', ctaLabel: 'Design Margin-Safe Pricing Tiers →'
+  },
+  {
+    slug: 'claude-4-5-sonnet-vs-haiku-agent-routing',
+    title: 'Anthropic Claude 4.5 Sonnet + Haiku Routing: Cutting Agent Spend 60% While Keeping Quality',
+    desc: 'Production patterns for pairing Claude 4.5 Haiku as planner/tool-filter with Claude 4.5 Sonnet as code/synthesis engine under shared 90% prompt caches.',
+    sections: [
+      { h2: '1. Offload Tool Parsing & Sub-Agent Summarization to Haiku 4.5', p: 'In multi-step coding and support agents, over half of LLM calls merely classify intent, compress long logs, or validate JSON outputs—tasks where Claude 4.5 Haiku runs 3x cheaper and noticeably faster than Sonnet.' },
+      { h2: '2. Preserve Cache Breakpoints Across Multi-Turn Loops', p: 'Keep repository maps and tool definitions pinned above your cache breakpoint so every subsequent turn reads static context at 90% off.' }
+    ],
+    ctaHref: '/tools/batch-vs-realtime-router.html', ctaLabel: 'Simulate Cascade + Cache Waterfall →'
+  },
+  {
+    slug: 'aws-bedrock-amazon-nova-finops-playbook',
+    title: 'AWS Bedrock FinOps Playbook: Pairing Amazon Nova Pro With Claude Under Enterprise Commitments',
+    desc: 'How AWS enterprise teams cut Bedrock monthly bills 50–70% using Nova Pro for routine extraction, prompt caching, and batch inference jobs.',
+    sections: [
+      { h2: '1. Right-Sizing Between Nova Pro ($0.80/$3.20) and Claude Sonnet ($3/$15)', p: 'Routing document classification, structured JSON extraction, and internal Q&A to Amazon Nova Pro immediately reduces AWS Bedrock token spend by 73% while remaining 100% inside IAM/VPC governance.' },
+      { h2: '2. Avoiding Provisioned Throughput Over-Commitment', p: 'Only purchase Provisioned Throughput once sustained 24/7 utilization exceeds 60%; bursty daytime B2B traffic almost always costs less on On-Demand + Batch.' }
+    ],
+    ctaHref: '/compare/amazon-nova-pro-vs-claude-sonnet-4-5.html', ctaLabel: 'Compare Nova Pro vs Claude 4.5 →'
+  },
+  {
+    slug: 'reasoning-model-token-budget-o3-deepseek-r1',
+    title: 'Controlling Hidden Reasoning Tokens on OpenAI o3-pro & DeepSeek-R1',
+    desc: 'Why invisible chain-of-thought output tokens inflate reasoning model bills 4x–10x and how reasoning_effort caps keep latency and spend predictable.',
+    sections: [
+      { h2: '1. Invisible Thinking Tokens Bill at Full Output Rates', p: 'A 300-word final answer from a reasoning model can silently consume 4,000–12,000 internal thinking tokens billed at full output rates ($8–$80/1M). Always monitor reasoning_tokens separately in telemetry.' },
+      { h2: '2. Gate Reasoning Models Behind Complexity Classifiers', p: 'Reserve o3 and o3-pro strictly for hard architectural, mathematical, or legal synthesis—never for simple greetings, formatting, or schema lookups.' }
+    ],
+    ctaHref: '/tools/agent-budget.html', ctaLabel: 'Model Multi-Turn Reasoning Burn →'
+  },
+  {
+    slug: 'qwen-3-open-weight-moe-finops-guide',
+    title: 'Qwen 3 235B MoE & DeepSeek-V3.1: Open-Weight Economics for High-Volume Global Apps',
+    desc: 'Why sparse Mixture-of-Experts open weights deliver near-frontier quality under $0.30/1M input tokens for multilingual SaaS products.',
+    sections: [
+      { h2: '1. Sparse Activation Unlocks Sub-Dollar Output Pricing', p: 'By activating only ~22B–37B parameters per token out of 235B–671B total weights, modern MoE architectures deliver massive quality-per-dollar breakthroughs for Asian and European multilingual workloads.' },
+      { h2: '2. Serverless Hosted MoE vs. Dedicated Multi-GPU Nodes', p: 'Hosted endpoints let startups pay $0.22–$0.28/1M input with zero idle GPU burn, whereas self-hosting only makes financial sense above tens of millions of daily tokens.' }
+    ],
+    ctaHref: '/tools/self-host-vs-api.html', ctaLabel: 'Check GPU vs API Break-Even →'
   }
 ];
 
@@ -457,8 +529,8 @@ registerPage('/', 'index.html', renderShell({
   path: '/',
   active: 'home',
   hreflangs: HOME_HREFLANGS,
-  title: 'AI & LLM API Cost Calculator (24 Models) — Prompt Caching, Batch & FinOps Studio',
-  description: 'Free, 100% browser-private AI & LLM API cost calculator comparing 24 models (GPT-5, Claude 4, Gemini 2.5, DeepSeek, Llama 4, Grok 3) with prompt caching, cascade routing, and CSV/PDF export.',
+  title: 'AI & LLM API Cost Calculator (30 Models) — Prompt Caching, Batch & FinOps Studio',
+  description: 'Free, 100% browser-private AI & LLM API cost calculator comparing 30 flagship models (GPT-5, Claude 4.5, Gemini 2.5, DeepSeek-V3.1, Qwen 3, Nova Pro, Llama 4) with prompt caching, cascade routing, and CSV/PDF export.',
   scripts: ['/js/budget-card.js', '/js/studio-home.js'],
   schemaGraph: [
     { '@type': 'SoftwareApplication', name: 'TokenLedger AI & LLM Cost Studio', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}/`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, description: 'Browser-private LLM API cost estimator, agent burn simulator, SaaS gross margin calculator, and RAG TCO planner.' },
@@ -580,6 +652,8 @@ registerPage('/', 'index.html', renderShell({
       <a class="tl-link-card" href="/tools/batch-vs-realtime-router.html"><strong>CFO Hybrid FinOps Waterfall Simulator</strong><span>Stack Prompt Caching + Mini Cascade + 50% Async Batch lanes and export an executive memo.</span><em>Model Savings →</em></a>
       <a class="tl-link-card" href="/tools/audio-transcription-cost.html"><strong>STT &amp; TTS Audio API Cost Calculator</strong><span>Compare Whisper, Deepgram Nova-3, Groq, ElevenLabs &amp; Cartesia with VAD silence trimming.</span><em>Price Audio Pipeline →</em></a>
       <a class="tl-link-card" href="/tools/image-video-gen-budget.html"><strong>AI Image &amp; Video Gen Studio Budget</strong><span>Estimate FLUX, GPT-Image-1, Imagen 3, Veo, Runway &amp; Sora with retry &amp; draft-cascade math.</span><em>Size Creative Budget →</em></a>
+      <a class="tl-link-card" href="/tools/llm-latency-ttft-calculator.html"><strong>LLM Latency, TTFT &amp; Speed Calculator</strong><span>Compare Cerebras, Groq, Fireworks, Gemini, GPT-5 &amp; Claude 4.5 streaming UX against your SLA.</span><em>Benchmark Speed →</em></a>
+      <a class="tl-link-card" href="/tools/ai-pricing-tier-designer.html"><strong>AI SaaS Pricing Tier &amp; Credit Architect</strong><span>Generate Free/Pro/Team/Enterprise credit caps &amp; Stripe JSON with hard gross-margin floors.</span><em>Design Tiers →</em></a>
       <a class="tl-link-card" href="/tools/token-inspector.html"><strong>Context &amp; JSON Minifier Inspector</strong><span>Inspect OpenAI/Claude/Gemini tokens and minify tool JSON schemas for instant savings.</span><em>Open Inspector →</em></a>
     </div>
     <div class="tl-pills" style="margin-top:14px">
@@ -1507,6 +1581,111 @@ registerPage('/tools/image-video-gen-budget.html', 'tools/image-video-gen-budget
   </section>`
 }), '0.9');
 
+// --- PAGE 17: LLM LATENCY, TTFT & STREAMING UX SPEED CALCULATOR ---
+registerPage('/tools/llm-latency-ttft-calculator.html', 'tools/llm-latency-ttft-calculator.html', renderShell({
+  path: '/tools/llm-latency-ttft-calculator.html',
+  active: 'selfhost',
+  title: 'LLM Latency, TTFT & Streaming UX Speed Calculator — Cerebras, Groq, OpenAI, Anthropic, Gemini',
+  description: 'Calculate Time-to-First-Token (TTFT), inter-token generation speed, total response time, and SLA compliance across 12 inference providers including Cerebras, Groq, Fireworks, GPT-5, and Claude 4.5.',
+  scripts: ['/js/llm-latency-ttft-calculator.js'],
+  schemaGraph: [
+    { '@type': 'SoftwareApplication', name: 'TokenLedger LLM Latency & TTFT Calculator', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}/tools/llm-latency-ttft-calculator.html`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+    { '@type': 'FAQPage', mainEntity: [
+      { '@type': 'Question', name: 'How is total LLM streaming response latency calculated?', acceptedAnswer: { '@type': 'Answer', text: 'Total end-to-end latency equals Network RTT + Time-to-First-Token (prefill time) + (Output Tokens divided by Output Tokens Per Second).' } }
+    ] }
+  ],
+  body: `  <section class="tl-hero">
+    <div class="tl-kicker">STREAMING UX &amp; SLA ENGINEERING &bull; TTFT + TOK/SEC</div>
+    <h1>LLM Latency, TTFT &amp; Streaming Speed Calculator</h1>
+    <p>Model Time-to-First-Token (TTFT), full generation time, and cost per 10K requests across Cerebras, Groq, Fireworks, Google Gemini, OpenAI GPT-5, AWS Nova, and Anthropic Claude 4.5.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">Selected TTFT</div><div class="kpi-val accent" id="kpiLtTtft">0.00s</div><div class="kpi-sub" id="kpiLtTtftSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Total Wait Time</div><div class="kpi-val" id="kpiLtTotal">0.00s</div><div class="kpi-sub" id="kpiLtTotalSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Fastest Endpoint</div><div class="kpi-val accent" id="kpiLtFastest">0.00s</div><div class="kpi-sub" id="kpiLtFastestSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">SLA Pass Rate</div><div class="kpi-val" id="kpiLtPass">0 / 12</div><div class="kpi-sub" id="kpiLtPassSub">-</div></div>
+  </section>
+
+  <section class="tl-panel" style="margin-bottom:20px">
+    <h2>Workload &amp; SLA Parameters</h2>
+    <div class="tl-row">
+      <div class="tl-field"><label for="ltProfile">Primary Inference Endpoint</label><select id="ltProfile" class="tl-select"></select></div>
+      <div class="tl-field"><label for="ltSla">Target End-to-End SLA (Seconds)</label><input id="ltSla" class="tl-input num" type="number" min="0.5" max="120" step="0.5" value="5.0"></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-field"><label for="ltInTok">Input Prompt Tokens</label><input id="ltInTok" class="tl-input num" type="number" min="50" step="250" value="2500"></div>
+      <div class="tl-field"><label for="ltOutTok">Generated Output Tokens</label><input id="ltOutTok" class="tl-input num" type="number" min="10" step="50" value="500"></div>
+      <div class="tl-field"><label for="ltRtt">Network RTT Overhead (ms)</label><input id="ltRtt" class="tl-input num" type="number" min="0" max="2000" step="20" value="80"></div>
+    </div>
+    <div class="tl-btn-bar"><button type="button" id="btnLtCopyMd" class="tl-btn tl-btn-primary">Copy Latency &amp; SLA Report (Markdown)</button></div>
+  </section>
+
+  <section class="tl-panel">
+    <h2>12 Inference Endpoints Speed vs. Cost Matrix</h2>
+    <div class="tl-table-wrap"><table class="tl-table" style="min-width:580px"><thead><tr><th>Endpoint &amp; Speed</th><th>TTFT</th><th>Gen Time</th><th>Total</th><th>Cost / 10K</th><th>SLA</th></tr></thead><tbody id="ltTableBody"></tbody></table></div>
+  </section>`
+}), '0.9');
+
+// --- PAGE 18: AI SAAS PRICING TIER & CREDIT-PACK ARCHITECT ---
+registerPage('/tools/ai-pricing-tier-designer.html', 'tools/ai-pricing-tier-designer.html', renderShell({
+  path: '/tools/ai-pricing-tier-designer.html',
+  active: 'saas',
+  title: 'AI SaaS Pricing Tier & Credit-Pack Architect — Margin-Safe Credit Caps & Stripe JSON',
+  description: 'Design Free, Pro, Team, and Enterprise AI SaaS pricing tiers with mathematically safe monthly credit caps, Stripe fee modeling, overage pack pricing, and copyable Markdown/JSON.',
+  scripts: ['/js/ai-pricing-tier-designer.js'],
+  schemaGraph: [
+    { '@type': 'SoftwareApplication', name: 'TokenLedger AI SaaS Pricing Tier Architect', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}/tools/ai-pricing-tier-designer.html`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+    { '@type': 'FAQPage', mainEntity: [
+      { '@type': 'Question', name: 'How do you set safe monthly AI credit limits per SaaS tier?', acceptedAnswer: { '@type': 'Answer', text: 'Subtract Stripe fees (2.9% + $0.30) and fixed hosting overhead from your allowable COGS budget at your target gross margin floor (e.g. 78%), then divide the remaining AI budget by your per-action LLM token cost.' } }
+    ] }
+  ],
+  body: `  <section class="tl-hero">
+    <div class="tl-kicker">SAAS MONETIZATION &bull; CREDIT CAPS + GROSS MARGIN FLOOR</div>
+    <h1>AI SaaS Pricing Tier &amp; Credit-Pack Architect</h1>
+    <p>Stop guessing monthly AI credit limits. Set your target gross margin floor, select your underlying LLM, and auto-generate worst-case-safe Free, Pro, Team, and Enterprise tiers plus overage pack pricing.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">COGS / AI Action</div><div class="kpi-val" id="kpiPtAction">$0.0000</div><div class="kpi-sub" id="kpiPtActionSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Safe Pro Allowance</div><div class="kpi-val accent" id="kpiPtProCap">0 cr/mo</div><div class="kpi-sub" id="kpiPtProCapSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Safe Team Allowance</div><div class="kpi-val accent" id="kpiPtTeamCap">0 cr/mo</div><div class="kpi-sub" id="kpiPtTeamCapSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Overage Pack Rate</div><div class="kpi-val warn" id="kpiPtOverage">$0 / 1K</div><div class="kpi-sub" id="kpiPtOverageSub">-</div></div>
+  </section>
+
+  <section class="tl-grid-2">
+    <div class="tl-panel">
+      <h2>1. Unit Action Economics</h2>
+      <div class="tl-field"><label for="ptModel">Underlying LLM Model</label><select id="ptModel" class="tl-select"></select></div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="ptInTok">Avg Input Tokens / Action</label><input id="ptInTok" class="tl-input num" type="number" min="50" step="100" value="2800"></div>
+        <div class="tl-field"><label for="ptOutTok">Avg Output Tokens / Action</label><input id="ptOutTok" class="tl-input num" type="number" min="20" step="50" value="650"></div>
+      </div>
+      <div class="tl-field"><label for="ptCache">Prompt Cache Hit Rate <strong id="ptCacheVal">55%</strong></label><input id="ptCache" class="tl-range" type="range" min="0" max="95" step="5" value="55"></div>
+      <div class="tl-field"><label for="ptFixedInfra">Fixed Non-AI Infra / User ($/mo)</label><input id="ptFixedInfra" class="tl-input num" type="number" min="0" step="0.1" value="0.65"></div>
+    </div>
+
+    <div class="tl-panel">
+      <h2>2. Tier Prices &amp; Margin Guardrail</h2>
+      <div class="tl-field"><label for="ptMargin">Target Gross Margin Floor <strong id="ptMarginVal">78%</strong></label><input id="ptMargin" class="tl-range" type="range" min="50" max="92" step="1" value="78"></div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="ptProPrice">Pro ($/mo)</label><input id="ptProPrice" class="tl-input num" type="number" min="5" step="1" value="29"></div>
+        <div class="tl-field"><label for="ptTeamPrice">Team ($/seat)</label><input id="ptTeamPrice" class="tl-input num" type="number" min="10" step="5" value="79"></div>
+        <div class="tl-field"><label for="ptEntPrice">Enterprise ($/seat)</label><input id="ptEntPrice" class="tl-input num" type="number" min="50" step="10" value="299"></div>
+      </div>
+      <div class="tl-btn-bar">
+        <button type="button" id="btnPtCopyMd" class="tl-btn tl-btn-primary">Copy Pricing Table Markdown</button>
+        <button type="button" id="btnPtCopyJson" class="tl-btn">Copy Billing JSON Spec</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="tl-panel">
+    <h2>Generated Margin-Safe SaaS Pricing Architecture</h2>
+    <div class="tl-table-wrap"><table class="tl-table" style="min-width:600px"><thead><tr><th>Tier</th><th>Price</th><th>Safe Credit Cap</th><th>Max AI COGS</th><th>Worst-Case Net</th><th>Margin Floor</th><th>Overage</th></tr></thead><tbody id="ptTableBody"></tbody></table></div>
+  </section>`
+}), '0.9');
+
 // --- PAGES 6–13: 8 PROGRAMMATIC MODEL COMPARISON PAGES ---
 for (const c of COMPARISONS) {
   const mA = ENGINE.getModel(c.a);
@@ -1837,7 +2016,7 @@ for (const lh of LOCALE_HUBS) {
       <div id="spreadSummary" class="kpi-sub num" style="margin:0"></div>
     </div>
     <div class="tl-chips">
-      <button type="button" class="tl-chip active" data-provider="all">All (24)</button>
+      <button type="button" class="tl-chip active" data-provider="all">All (30)</button>
       <button type="button" class="tl-chip" data-provider="OpenAI">OpenAI</button>
       <button type="button" class="tl-chip" data-provider="Anthropic">Anthropic</button>
       <button type="button" class="tl-chip" data-provider="Google">Google</button>
@@ -1895,6 +2074,8 @@ const llmsTxt = `# TokenLedger — AI & LLM API FinOps Studio
 - [Enterprise LLM Savings Waterfall (Cache + Cascade + Batch)](${ORIGIN}/tools/batch-vs-realtime-router.html): Stacked FinOps savings waterfall & CFO executive memo export.
 - [Speech-to-Text (STT) & TTS Audio API Cost Calculator](${ORIGIN}/tools/audio-transcription-cost.html): Compare Whisper, Deepgram Nova-3, Groq, AssemblyAI, ElevenLabs & Cartesia with VAD silence trimming.
 - [AI Image & Video Generation Studio Budget Calculator](${ORIGIN}/tools/image-video-gen-budget.html): Unit economics for FLUX, GPT-Image-1, Imagen 3, Veo, Runway Gen-4 & Sora with retry multipliers and draft cascades.
+- [LLM Latency, TTFT & Streaming Speed Calculator](${ORIGIN}/tools/llm-latency-ttft-calculator.html): Benchmark TTFT, tok/s throughput, and SLA pass rates across Cerebras, Groq, Fireworks, Gemini, GPT-5 & Claude 4.5.
+- [AI SaaS Pricing Tier & Credit-Pack Architect](${ORIGIN}/tools/ai-pricing-tier-designer.html): Generate margin-safe Free/Pro/Team/Enterprise credit allowances & Stripe billing JSON specs.
 - [Context Window & JSON Minifier Inspector](${ORIGIN}/tools/token-inspector.html): OpenAI/Claude/Gemini token estimates and one-click JSON tool schema minification.
 
 ## International Hubs

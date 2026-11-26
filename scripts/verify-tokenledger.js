@@ -15,7 +15,7 @@ catch (_) { ({ chromium } = require('e:\\Fire Project\\node_modules\\playwright'
 
 function runUnitTests() {
   const apiJson = JSON.parse(fs.readFileSync(path.join(ROOT, 'api', 'pricing.json'), 'utf8'));
-  assert.strictEqual(apiJson.models.length, 24, 'Expected 24 models in api/pricing.json');
+  assert.strictEqual(apiJson.models.length, 30, 'Expected 30 models in api/pricing.json');
   assert.strictEqual(apiJson.models.length, ENGINE.MODELS.length, 'api/pricing.json and pricing-engine.js model count mismatch');
   assert.strictEqual(apiJson.embeddings.length, ENGINE.EMBEDDINGS.length, 'embedding count mismatch');
   for (let i = 0; i < apiJson.models.length; i++) {
@@ -94,6 +94,10 @@ function runUnitTests() {
   assert(au.optTotalMonthly < au.rawTotalMonthly && au.sttComparison.length === 7 && au.ttsComparison.length === 8);
   const mv = ENGINE.calcMediaGenBudget({ imgModelId: 'flux-1-1-pro', vidModelId: 'runway-gen4-turbo', dailyPublishedImages: 150, imgRetryFactor: 2.5, dailyVideoClips: 15, avgClipSec: 6, vidRetryFactor: 3.0, useDraftCascade: true });
   assert(mv.effImgMonthly < mv.rawImgMonthly && mv.draftSavingsMonthly > 0 && mv.totalMonthly > 0);
+  const lt = ENGINE.calcLatencyBudget({ profileId: 'gpt-5-mini-lat', inputTokens: 2500, outputTokens: 500, networkRttMs: 80, slaTargetSec: 5.0 });
+  assert(lt.rows.length === 12 && lt.fastest.totalSec < lt.selected.totalSec && lt.passingCount >= 5);
+  const pt = ENGINE.calcPricingTiers({ modelId: 'gemini-2.5-flash', inputTokens: 2800, outputTokens: 650, cacheHitRate: 55, targetMarginPct: 78, proPrice: 29, teamPrice: 79, entPrice: 299, fixedInfraPerUser: 0.65 });
+  assert(pt.tiers.length === 4 && pt.tiers[1].grossMarginPct >= 77 && pt.tiers[1].maxCredits >= 100);
 
   // OG PNG check
   const ogBuf = fs.readFileSync(path.join(ROOT, 'og-image.png'));
@@ -121,7 +125,7 @@ function startServer() {
 async function runBrowserTests() {
   const sm = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
   const paths = [...sm.matchAll(/<loc>https:\/\/tokenledger-8x7\.pages\.dev([^<]+)<\/loc>/g)].map(m => m[1]);
-  assert(paths.length === 100, `Expected 100 sitemap URLs, got ${paths.length}`);
+  assert(paths.length === 120, `Expected 120 sitemap URLs, got ${paths.length}`);
 
   const { srv, origin } = await startServer();
   const browser = await chromium.launch({ headless: true });
@@ -161,7 +165,7 @@ async function runBrowserTests() {
     assert(beforeSonnet !== afterSonnet, 'Coding preset did not update KPI');
     await page.click('[data-provider="Anthropic"]');
     const anthropicRows = await page.locator('#modelTableBody tr').count();
-    assert.strictEqual(anthropicRows, 3, `Expected 3 Anthropic rows, got ${anthropicRows}`);
+    assert.strictEqual(anthropicRows, 5, `Expected 5 Anthropic rows, got ${anthropicRows}`);
     await page.click('#tlThemeToggle');
     const theme = await page.evaluate(() => document.documentElement.getAttribute('data-theme'));
     assert.strictEqual(theme, 'light', 'Theme toggle failed');
@@ -195,7 +199,7 @@ async function runBrowserTests() {
     assert((await page.locator('#voiceCompareBody tr').count()) === 4);
     await page.goto(`${origin}/ko/`, { waitUntil: 'domcontentloaded' });
     assert.strictEqual(await page.evaluate(() => document.documentElement.lang), 'ko');
-    assert((await page.locator('#modelTableBody tr').count()) === 24);
+    assert((await page.locator('#modelTableBody tr').count()) === 30);
     await page.goto(`${origin}/es/`, { waitUntil: 'domcontentloaded' });
     assert.strictEqual(await page.evaluate(() => document.documentElement.lang), 'es');
     await page.goto(`${origin}/tools/ai-runway.html`, { waitUntil: 'domcontentloaded' });
@@ -224,15 +228,21 @@ async function runBrowserTests() {
     assert((await page.locator('#mvImgTableBody tr').count()) === 10);
     assert((await page.locator('#mvVidTableBody tr').count()) === 6);
     assert((await page.textContent('#kpiMvTotal')).includes('/mo'));
+    await page.goto(`${origin}/tools/llm-latency-ttft-calculator.html`, { waitUntil: 'domcontentloaded' });
+    assert((await page.locator('#ltTableBody tr').count()) === 12);
+    assert((await page.textContent('#kpiLtTtft')).includes('s'));
+    await page.goto(`${origin}/tools/ai-pricing-tier-designer.html`, { waitUntil: 'domcontentloaded' });
+    assert((await page.locator('#ptTableBody tr').count()) === 4);
+    assert((await page.textContent('#kpiPtProCap')).includes('cr/mo'));
     await page.click('#tlCmdOpen');
-    await page.fill('#tlCmdInput', 'whisper');
+    await page.fill('#tlCmdInput', 'cerebras');
     assert((await page.locator('#tlCmdList .tl-cmd-item').count()) === 1, 'Command palette search failed');
     await page.keyboard.press('Escape');
     await page.goto(`${origin}/?embed=1`, { waitUntil: 'domcontentloaded' });
     assert(await page.evaluate(() => document.documentElement.classList.contains('tl-embed-mode')));
 
     assert.strictEqual(errors.length, 0, `Uncaught page errors: ${errors.join(' | ')}`);
-    console.log('[PASS] Interactive E2E tests passed across all 16 workspaces + Ctrl+K Command Palette + 5-currency switcher');
+    console.log('[PASS] Interactive E2E tests passed across all 18 workspaces (30 models) + Ctrl+K Command Palette + 5-currency switcher');
   } finally {
     await browser.close();
     await new Promise(r => srv.close(r));
