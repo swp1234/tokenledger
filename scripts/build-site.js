@@ -122,6 +122,7 @@ ${opts.hideBooks ? '' : renderResourcesCard()}
   <script src="/js/pricing-engine.js"></script>
   <script src="/js/ui-shell.js"></script>
 ${scriptsHtml}
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"5b25f3b3091241dfbaf9f4ff2f1f6cdb"}'></script>
 </body>
 </html>`;
 }
@@ -1447,7 +1448,9 @@ registerPage('/privacy.html', 'privacy.html', renderShell({
     <h2>Zero Prompt &amp; Financial Data Collection</h2>
     <p>Anything you type or paste into TokenLedger — prompts, system instructions, JSON schemas, revenue numbers, or seat counts — is computed exclusively inside your browser’s local JavaScript runtime. We never upload, store, log, or train on your inputs.</p>
     <h2>Local Storage</h2>
-    <p>We store only your dark/light theme preference (<code>tl_theme_v1</code>) in browser <code>localStorage</code>.</p>
+    <p>We store only your dark/light theme preference (<code>tl_theme_v1</code>) and display currency preference (<code>tl_currency_v1</code>) in browser <code>localStorage</code>.</p>
+    <h2>Cookie-Free Privacy-First Analytics</h2>
+    <p>We use <strong>Cloudflare Web Analytics</strong> solely to count aggregated page views and Core Web Vitals performance without cookies, cross-site tracking, or personal identifiers. Your calculator inputs, prompts, and JSON schemas are never sent to any analytics service.</p>
     <h2>Affiliate Disclosure</h2>
     <p>Curated technical book recommendations link to Amazon with affiliate tag <code>dopabrain-20</code> and <code>rel="sponsored"</code> attributes.</p>
   </article>`

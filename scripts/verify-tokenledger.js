@@ -124,10 +124,15 @@ async function runBrowserTests() {
   try {
     const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
     const page = await ctx.newPage();
+    await page.route('**/*', route => {
+      const url = route.request().url();
+      if (url.startsWith(origin) || url.startsWith('data:') || url.startsWith('blob:')) return route.continue();
+      return route.abort();
+    });
     const errors = [];
     page.on('pageerror', e => errors.push(String(e)));
 
-    // Check all 19 pages on mobile 390x844
+    // Check all pages on mobile 390x844
     for (const p of paths) {
       const resp = await page.goto(`${origin}${p}`, { waitUntil: 'domcontentloaded' });
       assert.strictEqual(resp.status(), 200, `HTTP ${resp.status()} on ${p}`);
@@ -136,9 +141,11 @@ async function runBrowserTests() {
         title: document.title,
         h1: document.querySelector('h1')?.textContent?.trim() || '',
         canonical: document.querySelector('link[rel="canonical"]')?.getAttribute('href') || '',
+        hasBeacon: Boolean(document.querySelector('script[src*="cloudflareinsights.com/beacon.min.js"][data-cf-beacon*="5b25f3b3091241dfbaf9f4ff2f1f6cdb"]'))
       }));
       assert(rep.overflow <= 1, `Mobile 390px overflow ${rep.overflow}px on ${p}`);
       assert(rep.h1.length > 5 && rep.canonical.startsWith('https://tokenledger-8x7.pages.dev'), `Metadata issue on ${p}`);
+      assert(rep.hasBeacon, `Missing Cloudflare Web Analytics beacon on ${p}`);
     }
     console.log(`[PASS] All ${paths.length} pages verified on 390x844 mobile (0px overflow, 200 OK, metadata intact)`);
 
