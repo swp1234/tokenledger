@@ -129,6 +129,8 @@
     { t: 'AI Startup Monthly Burn & Default-Alive Runway', u: '/tools/ai-runway.html', k: 'startup runway mrr burn cash' },
     { t: 'Prompt A/B Compression Cost Diff & GitHub CI Guard', u: '/tools/prompt-diff.html', k: 'prompt diff compression github action ci yaml' },
     { t: 'Context Window & JSON Schema Minifier Inspector', u: '/tools/token-inspector.html', k: 'token counter minify json context 128k 1m' },
+    { t: 'Speech-to-Text (STT) & TTS Audio API Cost Calculator', u: '/tools/audio-transcription-cost.html', k: 'whisper deepgram assemblyai elevenlabs tts stt audio voice vad' },
+    { t: 'AI Image & Video Generation Studio Budget Calculator', u: '/tools/image-video-gen-budget.html', k: 'flux imagen gpt-image veo sora runway kling image video gen' },
     { t: 'AWS Bedrock vs. Direct Anthropic API Comparison', u: '/compare/aws-bedrock-vs-direct-anthropic-api.html', k: 'aws bedrock anthropic enterprise' },
     { t: 'Public Machine-Readable Pricing API (JSON)', u: '/api/pricing.json', k: 'json api feed pricing' }
   ];

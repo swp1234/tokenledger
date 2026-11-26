@@ -800,6 +800,140 @@
     };
   }
 
+  // Speech-to-Text (STT) & Text-to-Speech (TTS) Audio API FinOps Calculator
+  var AUDIO_STT_MODELS = [
+    { id: 'groq-whisper-v3-turbo', name: 'Groq Whisper Large-v3-Turbo', provider: 'Groq', perMin: 0.00067, diarizationAdd: 0, note: 'Fastest batch STT ($0.04/hr)' },
+    { id: 'gemini-2.5-flash-audio', name: 'Gemini 2.5 Flash Audio', provider: 'Google', perMin: 0.0019, diarizationAdd: 0, note: 'Multimodal audio + reasoning' },
+    { id: 'openai-gpt4o-mini-transcribe', name: 'GPT-4o-mini Transcribe', provider: 'OpenAI', perMin: 0.0030, diarizationAdd: 0, note: 'Low-cost OpenAI STT' },
+    { id: 'deepgram-nova-3', name: 'Deepgram Nova-3 (Pre-recorded)', provider: 'Deepgram', perMin: 0.0043, diarizationAdd: 0.0020, note: 'Streaming & enterprise accuracy' },
+    { id: 'openai-whisper', name: 'OpenAI Whisper (whisper-1)', provider: 'OpenAI', perMin: 0.0060, diarizationAdd: 0, note: 'Industry baseline STT' },
+    { id: 'openai-gpt4o-transcribe', name: 'OpenAI GPT-4o Transcribe', provider: 'OpenAI', perMin: 0.0060, diarizationAdd: 0, note: 'Higher accuracy on noisy audio' },
+    { id: 'assemblyai-universal-2', name: 'AssemblyAI Universal-2', provider: 'AssemblyAI', perMin: 0.0062, diarizationAdd: 0.0015, note: 'Speaker labels & PII redaction' }
+  ];
+
+  var AUDIO_TTS_MODELS = [
+    { id: 'openai-gpt4o-mini-tts', name: 'OpenAI GPT-4o-mini-TTS', provider: 'OpenAI', per1MChars: 12.00, note: 'Steerable budget voice' },
+    { id: 'openai-tts-1', name: 'OpenAI TTS-1', provider: 'OpenAI', per1MChars: 15.00, note: 'Standard low-latency TTS' },
+    { id: 'deepgram-aura-2', name: 'Deepgram Aura-2', provider: 'Deepgram', per1MChars: 15.00, note: 'Voice-agent tuned streaming' },
+    { id: 'google-chirp-3', name: 'Google Cloud Neural2 / Chirp', provider: 'Google', per1MChars: 16.00, note: 'Global multilingual TTS' },
+    { id: 'openai-tts-1-hd', name: 'OpenAI TTS-1 HD', provider: 'OpenAI', per1MChars: 30.00, note: 'High-definition narration' },
+    { id: 'cartesia-sonic-2', name: 'Cartesia Sonic 2', provider: 'Cartesia', per1MChars: 45.00, note: 'Ultra-low latency (<90ms)' },
+    { id: 'elevenlabs-flash-v2.5', name: 'ElevenLabs Flash v2.5 (Scale)', provider: 'ElevenLabs', per1MChars: 90.00, note: 'Expressive real-time voice' },
+    { id: 'elevenlabs-multilingual-v2', name: 'ElevenLabs Multilingual v2', provider: 'ElevenLabs', per1MChars: 180.00, note: 'Studio-grade cloning & dubbing' }
+  ];
+
+  function calcAudioPipeline(opts) {
+    var stt = AUDIO_STT_MODELS.find(function (x) { return x.id === opts.sttId; }) || AUDIO_STT_MODELS[3];
+    var tts = AUDIO_TTS_MODELS.find(function (x) { return x.id === opts.ttsId; }) || AUDIO_TTS_MODELS[1];
+    var dailyAudioMins = clamp(opts.dailyAudioMins != null ? opts.dailyAudioMins : 1200, 0, 10000000);
+    var vadSilenceTrimPct = clamp(opts.vadSilenceTrimPct != null ? opts.vadSilenceTrimPct : 30, 0, 75);
+    var needDiarization = Boolean(opts.needDiarization);
+    var dailyTtsChars = clamp(opts.dailyTtsChars != null ? opts.dailyTtsChars : 250000, 0, 1000000000);
+    var ttsCacheHitPct = clamp(opts.ttsCacheHitPct != null ? opts.ttsCacheHitPct : 25, 0, 95);
+
+    var rawSttRate = stt.perMin + (needDiarization ? stt.diarizationAdd : 0);
+    var rawSttMonthly = dailyAudioMins * 30 * rawSttRate;
+    var billedMinsPerDay = dailyAudioMins * (1 - vadSilenceTrimPct / 100);
+    var optSttMonthly = billedMinsPerDay * 30 * rawSttRate;
+
+    var rawTtsMonthly = ((dailyTtsChars * 30) / 1e6) * tts.per1MChars;
+    var optTtsMonthly = rawTtsMonthly * (1 - ttsCacheHitPct / 100);
+
+    var rawTotalMonthly = rawSttMonthly + rawTtsMonthly;
+    var optTotalMonthly = optSttMonthly + optTtsMonthly;
+    var monthlySaved = Math.max(0, rawTotalMonthly - optTotalMonthly);
+
+    var sttComparison = AUDIO_STT_MODELS.map(function (m) {
+      var rate = m.perMin + (needDiarization ? m.diarizationAdd : 0);
+      var mo = billedMinsPerDay * 30 * rate;
+      return { model: m, effectivePerMin: rate, monthly: mo, annual: mo * 12 };
+    }).sort(function (a, b) { return a.monthly - b.monthly; });
+
+    var ttsComparison = AUDIO_TTS_MODELS.map(function (m) {
+      var mo = ((dailyTtsChars * 30 * (1 - ttsCacheHitPct / 100)) / 1e6) * m.per1MChars;
+      return { model: m, monthly: mo, annual: mo * 12 };
+    }).sort(function (a, b) { return a.monthly - b.monthly; });
+
+    return {
+      stt: stt,
+      tts: tts,
+      billedMinsPerDay: billedMinsPerDay,
+      rawSttMonthly: rawSttMonthly,
+      optSttMonthly: optSttMonthly,
+      rawTtsMonthly: rawTtsMonthly,
+      optTtsMonthly: optTtsMonthly,
+      rawTotalMonthly: rawTotalMonthly,
+      optTotalMonthly: optTotalMonthly,
+      annualTotal: optTotalMonthly * 12,
+      monthlySaved: monthlySaved,
+      sttComparison: sttComparison,
+      ttsComparison: ttsComparison
+    };
+  }
+
+  // AI Image & Video Generation Studio Cost Calculator
+  var IMAGE_GEN_MODELS = [
+    { id: 'flux-1-schnell', name: 'FLUX.1 [schnell] (API)', provider: 'Black Forest Labs', perImg: 0.003, tier: 'Draft / Fast' },
+    { id: 'gpt-image-1-low', name: 'OpenAI GPT-Image-1 (Low)', provider: 'OpenAI', perImg: 0.011, tier: 'Fast Draft' },
+    { id: 'imagen-3-fast', name: 'Google Imagen 3 Fast', provider: 'Google', perImg: 0.020, tier: 'Fast Photoreal' },
+    { id: 'flux-1-dev', name: 'FLUX.1 [dev] (API)', provider: 'Black Forest Labs', perImg: 0.025, tier: 'Open Quality' },
+    { id: 'imagen-3', name: 'Google Imagen 3', provider: 'Google', perImg: 0.030, tier: 'Production' },
+    { id: 'flux-1-1-pro', name: 'FLUX 1.1 [pro]', provider: 'Black Forest Labs', perImg: 0.040, tier: 'Commercial Pro' },
+    { id: 'gpt-image-1-med', name: 'OpenAI GPT-Image-1 (Medium)', provider: 'OpenAI', perImg: 0.042, tier: 'Text + Layout' },
+    { id: 'flux-1-1-pro-ultra', name: 'FLUX 1.1 [pro] Ultra (2K)', provider: 'Black Forest Labs', perImg: 0.060, tier: '2K High-Res' },
+    { id: 'ideogram-3', name: 'Ideogram 3.0', provider: 'Ideogram', perImg: 0.060, tier: 'Typography' },
+    { id: 'gpt-image-1-high', name: 'OpenAI GPT-Image-1 (High)', provider: 'OpenAI', perImg: 0.167, tier: 'Hero Assets' }
+  ];
+
+  var VIDEO_GEN_MODELS = [
+    { id: 'runway-gen4-turbo', name: 'Runway Gen-4 Turbo', provider: 'Runway', perSec: 0.05, tier: 'Fast Commercial' },
+    { id: 'kling-1-6-pro', name: 'Kling 1.6 Pro (1080p)', provider: 'Kuaishou', perSec: 0.09, tier: 'Cinematic Value' },
+    { id: 'luma-ray-2', name: 'Luma Ray 2 (720p)', provider: 'Luma AI', perSec: 0.10, tier: 'Physics Motion' },
+    { id: 'sora-api-est', name: 'OpenAI Sora (720p/1080p)', provider: 'OpenAI', perSec: 0.25, tier: 'Flagship Video' },
+    { id: 'veo-2', name: 'Google Veo 2 (1080p)', provider: 'Google', perSec: 0.35, tier: 'Studio Realism' },
+    { id: 'veo-3-fast', name: 'Google Veo 3 Fast (Audio)', provider: 'Google', perSec: 0.40, tier: 'Native Audio+Video' }
+  ];
+
+  function calcMediaGenBudget(opts) {
+    var imgModel = IMAGE_GEN_MODELS.find(function (x) { return x.id === opts.imgModelId; }) || IMAGE_GEN_MODELS[5];
+    var vidModel = VIDEO_GEN_MODELS.find(function (x) { return x.id === opts.vidModelId; }) || VIDEO_GEN_MODELS[0];
+    var dailyPublishedImages = clamp(opts.dailyPublishedImages != null ? opts.dailyPublishedImages : 150, 0, 1000000);
+    var imgRetryFactor = clamp(opts.imgRetryFactor != null ? opts.imgRetryFactor : 2.5, 1, 12);
+    var dailyVideoClips = clamp(opts.dailyVideoClips != null ? opts.dailyVideoClips : 15, 0, 100000);
+    var avgClipSec = clamp(opts.avgClipSec != null ? opts.avgClipSec : 6, 1, 60);
+    var vidRetryFactor = clamp(opts.vidRetryFactor != null ? opts.vidRetryFactor : 3.0, 1, 12);
+    var useDraftCascade = Boolean(opts.useDraftCascade);
+
+    var totalImgGensDay = dailyPublishedImages * imgRetryFactor;
+    var rawImgMonthly = totalImgGensDay * 30 * imgModel.perImg;
+    // Draft cascade: run (retryFactor - 1) drafts on FLUX schnell ($0.003) and only final 1x on selected pro model
+    var cascadeImgMonthly = dailyPublishedImages * 30 * (imgModel.perImg + Math.max(0, imgRetryFactor - 1) * 0.003);
+    var effImgMonthly = useDraftCascade ? Math.min(rawImgMonthly, cascadeImgMonthly) : rawImgMonthly;
+
+    var totalVidSecsDay = dailyVideoClips * avgClipSec * vidRetryFactor;
+    var vidMonthly = totalVidSecsDay * 30 * vidModel.perSec;
+
+    var totalMonthly = effImgMonthly + vidMonthly;
+    var draftSavingsMonthly = Math.max(0, rawImgMonthly - cascadeImgMonthly);
+    var costPerPublishedImg = dailyPublishedImages > 0 ? (effImgMonthly / (dailyPublishedImages * 30)) : 0;
+    var costPerPublishedClip = dailyVideoClips > 0 ? (vidMonthly / (dailyVideoClips * 30)) : 0;
+
+    return {
+      imgModel: imgModel,
+      vidModel: vidModel,
+      totalImgGensDay: totalImgGensDay,
+      totalVidSecsDay: totalVidSecsDay,
+      rawImgMonthly: rawImgMonthly,
+      effImgMonthly: effImgMonthly,
+      vidMonthly: vidMonthly,
+      totalMonthly: totalMonthly,
+      annualTotal: totalMonthly * 12,
+      draftSavingsMonthly: draftSavingsMonthly,
+      costPerPublishedImg: costPerPublishedImg,
+      costPerPublishedClip: costPerPublishedClip
+    };
+  }
+
   var CURRENCIES = {
     USD: { code: 'USD', symbol: '$', rate: 1, decimals: 2 },
     EUR: { code: 'EUR', symbol: '€', rate: 0.92, decimals: 2 },
@@ -846,6 +980,10 @@
     VRAM_MODELS: VRAM_MODELS,
     QUANT_BITS: QUANT_BITS,
     MULTIMODAL_RATES: MULTIMODAL_RATES,
+    AUDIO_STT_MODELS: AUDIO_STT_MODELS,
+    AUDIO_TTS_MODELS: AUDIO_TTS_MODELS,
+    IMAGE_GEN_MODELS: IMAGE_GEN_MODELS,
+    VIDEO_GEN_MODELS: VIDEO_GEN_MODELS,
     CURRENCIES: CURRENCIES,
     getModel: getModel,
     getEmbedding: getEmbedding,
@@ -867,6 +1005,8 @@
     calcRateLimitPlan: calcRateLimitPlan,
     calcGpuVram: calcGpuVram,
     calcHybridWaterfall: calcHybridWaterfall,
+    calcAudioPipeline: calcAudioPipeline,
+    calcMediaGenBudget: calcMediaGenBudget,
     formatUsd: formatUsd,
     formatInt: formatInt
   };

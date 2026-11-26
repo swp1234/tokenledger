@@ -1,11 +1,11 @@
 {
   "name": "tokenledger",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "private": true,
   "bin": {
     "tokenledger": "./bin/tokenledger.js"
   },
-  "description": "100% browser-private AI & LLM FinOps Studio: 14 workspaces across 24 models, GPU VRAM & KV-Cache calculator, Agent Burn, MCP Tax, SaaS Margin, RAG TCO, CFO Waterfall & open pricing JSON.",
+  "description": "100% browser-private AI & LLM FinOps Studio: 16 workspaces (100 pages) across 24 LLMs, 15 STT/TTS audio engines, 16 image/video models, GPU VRAM, Agent Burn, SaaS Margin, RAG TCO & open pricing JSON.",
   "scripts": {
     "build": "node scripts/build-site.js",
     "test": "node scripts/verify-tokenledger.js"

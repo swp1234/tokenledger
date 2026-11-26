@@ -90,6 +90,10 @@ function runUnitTests() {
   assert(Math.abs(vrFp8.kvCacheGB - vr.kvCacheGB * 0.5) < 0.01, 'FP8 KV cache must halve KV memory');
   const hy = ENGINE.calcHybridWaterfall({ frontierId: 'claude-sonnet-4', miniId: 'gemini-2.5-flash', inputTokens: 3500, outputTokens: 700, dailyRequests: 10000, miniPct: 55, batchPct: 25, cacheHitRate: 70 });
   assert(hy.savedPct > 60 && hy.optimizedMonthly < hy.baselineMonthly);
+  const au = ENGINE.calcAudioPipeline({ sttId: 'deepgram-nova-3', ttsId: 'openai-tts-1', dailyAudioMins: 1200, vadSilenceTrimPct: 30, needDiarization: false, dailyTtsChars: 250000, ttsCacheHitPct: 25 });
+  assert(au.optTotalMonthly < au.rawTotalMonthly && au.sttComparison.length === 7 && au.ttsComparison.length === 8);
+  const mv = ENGINE.calcMediaGenBudget({ imgModelId: 'flux-1-1-pro', vidModelId: 'runway-gen4-turbo', dailyPublishedImages: 150, imgRetryFactor: 2.5, dailyVideoClips: 15, avgClipSec: 6, vidRetryFactor: 3.0, useDraftCascade: true });
+  assert(mv.effImgMonthly < mv.rawImgMonthly && mv.draftSavingsMonthly > 0 && mv.totalMonthly > 0);
 
   // OG PNG check
   const ogBuf = fs.readFileSync(path.join(ROOT, 'og-image.png'));
@@ -117,7 +121,7 @@ function startServer() {
 async function runBrowserTests() {
   const sm = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
   const paths = [...sm.matchAll(/<loc>https:\/\/tokenledger-8x7\.pages\.dev([^<]+)<\/loc>/g)].map(m => m[1]);
-  assert(paths.length === 80, `Expected 80 sitemap URLs, got ${paths.length}`);
+  assert(paths.length === 100, `Expected 100 sitemap URLs, got ${paths.length}`);
 
   const { srv, origin } = await startServer();
   const browser = await chromium.launch({ headless: true });
@@ -212,15 +216,23 @@ async function runBrowserTests() {
     await page.goto(`${origin}/tools/batch-vs-realtime-router.html`, { waitUntil: 'domcontentloaded' });
     assert((await page.locator('#hyWaterfallBody tr').count()) === 6);
     assert((await page.textContent('#kpiHySaveYr')).includes('/yr'));
+    await page.goto(`${origin}/tools/audio-transcription-cost.html`, { waitUntil: 'domcontentloaded' });
+    assert((await page.locator('#auSttTableBody tr').count()) === 7);
+    assert((await page.locator('#auTtsTableBody tr').count()) === 8);
+    assert((await page.textContent('#kpiAuTotal')).includes('/mo'));
+    await page.goto(`${origin}/tools/image-video-gen-budget.html`, { waitUntil: 'domcontentloaded' });
+    assert((await page.locator('#mvImgTableBody tr').count()) === 10);
+    assert((await page.locator('#mvVidTableBody tr').count()) === 6);
+    assert((await page.textContent('#kpiMvTotal')).includes('/mo'));
     await page.click('#tlCmdOpen');
-    await page.fill('#tlCmdInput', 'vram');
+    await page.fill('#tlCmdInput', 'whisper');
     assert((await page.locator('#tlCmdList .tl-cmd-item').count()) === 1, 'Command palette search failed');
     await page.keyboard.press('Escape');
     await page.goto(`${origin}/?embed=1`, { waitUntil: 'domcontentloaded' });
     assert(await page.evaluate(() => document.documentElement.classList.contains('tl-embed-mode')));
 
     assert.strictEqual(errors.length, 0, `Uncaught page errors: ${errors.join(' | ')}`);
-    console.log('[PASS] Interactive E2E tests passed across all 14 workspaces + Ctrl+K Command Palette + 5-currency switcher');
+    console.log('[PASS] Interactive E2E tests passed across all 16 workspaces + Ctrl+K Command Palette + 5-currency switcher');
   } finally {
     await browser.close();
     await new Promise(r => srv.close(r));

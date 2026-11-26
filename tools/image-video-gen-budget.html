@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="SaGeXV5HO2lva9I9zv9PY--mkPvtS7n29UgDVj5rM9I">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <title>AI Image &amp; Video Generation API Cost Calculator — FLUX, GPT-Image-1, Imagen 3, Veo, Runway, Sora | TokenLedger</title>
+  <meta name="description" content="Model agency &amp; SaaS creative API budgets across FLUX 1.1 Pro, OpenAI GPT-Image-1, Google Imagen 3, Veo 2/3, Runway Gen-4 Turbo, Kling, and Sora with realistic retry multipliers and draft cascades.">
+  <meta name="dateModified" content="2026-11-26">
+  <link rel="canonical" href="https://tokenledger-8x7.pages.dev/tools/image-video-gen-budget.html">
+
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="AI Image &amp; Video Generation API Cost Calculator — FLUX, GPT-Image-1, Imagen 3, Veo, Runway, Sora | TokenLedger">
+  <meta property="og:description" content="Model agency &amp; SaaS creative API budgets across FLUX 1.1 Pro, OpenAI GPT-Image-1, Google Imagen 3, Veo 2/3, Runway Gen-4 Turbo, Kling, and Sora with realistic retry multipliers and draft cascades.">
+  <meta property="og:url" content="https://tokenledger-8x7.pages.dev/tools/image-video-gen-budget.html">
+  <meta property="og:image" content="https://tokenledger-8x7.pages.dev/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AI Image &amp; Video Generation API Cost Calculator — FLUX, GPT-Image-1, Imagen 3, Veo, Runway, Sora | TokenLedger">
+  <meta name="twitter:description" content="Model agency &amp; SaaS creative API budgets across FLUX 1.1 Pro, OpenAI GPT-Image-1, Google Imagen 3, Veo 2/3, Runway Gen-4 Turbo, Kling, and Sora with realistic retry multipliers and draft cascades.">
+  <meta name="twitter:image" content="https://tokenledger-8x7.pages.dev/og-image.png">
+
+  <link rel="stylesheet" href="/css/tokenledger.css">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "TokenLedger AI Image & Video Generation Budget Calculator",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "url": "https://tokenledger-8x7.pages.dev/tools/image-video-gen-budget.html",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How does a FLUX schnell draft cascade reduce AI image generation costs?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Instead of paying $0.04–$0.167 for every rejected draft, teams generate composition drafts on FLUX.1 schnell ($0.003/image) and invoke the hero model only for the final approved asset, cutting monthly spend by 50–70%."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <header class="tl-header">
+    <div class="tl-nav-inner">
+      <a href="/" class="tl-brand"><span class="tl-logo" aria-hidden="true">TL</span><span>TokenLedger</span></a>
+      <nav class="tl-nav-links" aria-label="Primary">
+        <a href="/">Estimator</a>
+        <a href="/tools/agent-budget.html">Agent Burn</a>
+        <a href="/tools/mcp-schema-auditor.html">MCP Tax</a>
+        <a href="/tools/saas-margin.html">SaaS Margin</a>
+        <a href="/tools/rag-calculator.html">RAG TCO</a>
+        <a href="/tools/self-host-vs-api.html">GPU vs API</a>
+        <a href="/tools/multimodal-budget.html" class="active">Voice & Vision</a>
+        <a href="/tools/token-inspector.html">Inspector</a>
+      </nav>
+      <div class="tl-nav-actions">
+        <button type="button" id="tlCmdOpen" class="tl-icon-btn" title="Quick Search (Ctrl+K)" aria-label="Quick Search">⌘K</button>
+        <select id="tlCurrencySelect" class="tl-icon-btn" aria-label="Display Currency" style="padding:0 6px;cursor:pointer">
+          <option value="USD">USD $</option>
+          <option value="EUR">EUR €</option>
+          <option value="GBP">GBP £</option>
+          <option value="JPY">JPY ¥</option>
+          <option value="KRW">KRW ₩</option>
+        </select>
+        <button type="button" id="tlThemeToggle" class="tl-icon-btn" aria-label="Toggle Light or Dark Theme">Light</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="tl-wrap">
+  <section class="tl-hero">
+    <div class="tl-kicker">CREATIVE AI FINOPS &bull; IMAGE + VIDEO + RETRY MULTIPLIERS</div>
+    <h1>AI Image &amp; Video Generation Studio Budget Calculator</h1>
+    <p>Calculate real unit economics per published creative asset across FLUX, GPT-Image-1, Imagen 3, Veo, Runway Gen-4, Kling, and Sora — including realistic discard/retry rates and draft-cascade savings.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">Total Studio API Spend</div><div class="kpi-val accent" id="kpiMvTotal">$0/mo</div><div class="kpi-sub" id="kpiMvTotalSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Image Generation</div><div class="kpi-val" id="kpiMvImg">$0/mo</div><div class="kpi-sub" id="kpiMvImgSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Video Generation</div><div class="kpi-val warn" id="kpiMvVid">$0/mo</div><div class="kpi-sub" id="kpiMvVidSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Draft Cascade Savings</div><div class="kpi-val accent" id="kpiMvSave">$0/mo</div><div class="kpi-sub" id="kpiMvSaveSub">-</div></div>
+  </section>
+
+  <section class="tl-grid-2">
+    <div class="tl-panel">
+      <h2>1. Image Generation Pipeline</h2>
+      <div class="tl-field"><label for="mvImgModel">Production Image Model</label><select id="mvImgModel" class="tl-select"></select></div>
+      <div class="tl-field"><label for="mvDailyImgs">Published Final Images / Day</label><input id="mvDailyImgs" class="tl-input num" type="number" min="0" step="25" value="150"></div>
+      <div class="tl-field"><label for="mvImgRetry">Generations per Published Image (Retries) <strong id="mvImgRetryVal">2.5x</strong></label><input id="mvImgRetry" class="tl-range" type="range" min="1" max="8" step="0.5" value="2.5"></div>
+      <label class="tl-check-row"><input id="mvDraftCascade" type="checkbox" checked><span>Enable FLUX.1 schnell ($0.003) Draft Cascade for Exploration Retries</span></label>
+    </div>
+
+    <div class="tl-panel">
+      <h2>2. Video Generation Pipeline</h2>
+      <div class="tl-field"><label for="mvVidModel">Production Video Model</label><select id="mvVidModel" class="tl-select"></select></div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="mvDailyClips">Published Clips / Day</label><input id="mvDailyClips" class="tl-input num" type="number" min="0" step="5" value="15"></div>
+        <div class="tl-field"><label for="mvClipSec">Avg Clip Length (sec)</label><input id="mvClipSec" class="tl-input num" type="number" min="1" max="60" step="1" value="6"></div>
+      </div>
+      <div class="tl-field"><label for="mvVidRetry">Renders per Published Clip (Retries) <strong id="mvVidRetryVal">3.0x</strong></label><input id="mvVidRetry" class="tl-range" type="range" min="1" max="8" step="0.5" value="3.0"></div>
+      <div class="tl-btn-bar"><button type="button" id="btnMvCopyMd" class="tl-btn tl-btn-primary">Copy Studio Budget Markdown</button></div>
+    </div>
+  </section>
+
+  <section class="tl-grid-2">
+    <div class="tl-panel">
+      <h2>10 Image Models Cost Matrix</h2>
+      <div class="tl-table-wrap"><table class="tl-table" style="min-width:440px"><thead><tr><th>Image Model</th><th>Per Img</th><th>Monthly</th><th>Annual</th></tr></thead><tbody id="mvImgTableBody"></tbody></table></div>
+    </div>
+    <div class="tl-panel">
+      <h2>6 Video Models Cost Matrix</h2>
+      <div class="tl-table-wrap"><table class="tl-table" style="min-width:440px"><thead><tr><th>Video Model</th><th>Per Sec</th><th>Monthly</th><th>Annual</th></tr></thead><tbody id="mvVidTableBody"></tbody></table></div>
+    </div>
+  </section>
+  <section class="tl-resources" aria-label="Recommended AI Engineering and FinOps Books">
+    <h2>Recommended AI Engineering &amp; Cloud FinOps Books</h2>
+    <div class="tl-res-grid">
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098166302?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>AI Engineering</strong>
+        <span>Chip Huyen (O’Reilly) • Production architecture for foundation models, evaluation, RAG, and latency/cost budgets.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098150724?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>Cloud FinOps (2nd Ed.)</strong>
+        <span>J.R. Storment &amp; Mike Fuller (O’Reilly) • Collaborative cloud &amp; AI unit-economics governance for engineering teams.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098161769?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>Building LLMs for Production</strong>
+        <span>Louis-François Bouchard &amp; Louie Peters • Practical prompting, caching, RAG, and cost-aware inference routing.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+    </div>
+    <p class="tl-disclosure">Editorial note: Curated technical books for AI engineers and FinOps teams. Amazon links include affiliate tag dopabrain-20 (no extra cost to you) and help keep TokenLedger 100% free and ad-free. Interested in sponsoring TokenLedger? <a href="https://github.com/swp1234/tokenledger" target="_blank" rel="noopener" style="color:var(--accent)">Open a Sponsor / Partnership thread on GitHub ↗</a>.</p>
+  </section>
+  </main>
+
+  <footer class="tl-footer">
+    <div class="tl-footer-inner">
+      <div><strong>TokenLedger</strong> &bull; 100% Browser-Private AI &amp; LLM FinOps Studio &bull; Pricing snapshot: 2026-11-26</div>
+      <div>
+        <a href="/about.html">Methodology</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/api/pricing.json">Pricing JSON</a>
+        <a href="https://github.com/swp1234/tokenledger" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+  </footer>
+  <script src="/js/pricing-engine.js"></script>
+  <script src="/js/ui-shell.js"></script>
+  <script src="/js/image-video-gen-budget.js" defer></script>
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"5b25f3b3091241dfbaf9f4ff2f1f6cdb"}'></script>
+</body>
+</html>

@@ -167,7 +167,19 @@ const COMPARISONS = [
   { slug: 'gpt-5-mini-vs-deepseek-v3', a: 'gpt-5-mini', b: 'deepseek-v3', title: 'GPT-5 mini vs DeepSeek-V3 High-Throughput API Cost Comparison (2026)', summary: 'Benchmark OpenAI GPT-5 mini ($0.25/$2) against DeepSeek-V3 ($0.27/$1.10) across support bots and RAG pipelines.' },
   { slug: 'mistral-small-vs-gemini-2-5-flash-lite', a: 'mistral-small-3', b: 'gemini-2.5-flash-lite', title: 'Mistral Small 3 vs Gemini 2.5 Flash-Lite Ultra-Low-Cost API Comparison', summary: 'Head-to-head cost breakdown of EU-friendly Mistral Small 3 and Google Gemini 2.5 Flash-Lite at 100K+ daily requests.' },
   { slug: 'grok-3-mini-vs-deepseek-r1', a: 'grok-3-mini', b: 'deepseek-r1', title: 'xAI Grok 3 Mini vs DeepSeek-R1 Budget Reasoning API Comparison', summary: 'Compare affordable reasoning economics between xAI Grok 3 Mini ($0.30/$0.50) and DeepSeek-R1 ($0.55/$2.19).' },
-  { slug: 'openai-o3-vs-claude-opus-4', a: 'o3', b: 'claude-opus-4', title: 'OpenAI o3 vs Claude Opus 4 Frontier Reasoning API Cost Analysis (2026)', summary: 'Quantify exact monthly and annual cost spreads for deep architectural reasoning between OpenAI o3 and Claude Opus 4.' }
+  { slug: 'openai-o3-vs-claude-opus-4', a: 'o3', b: 'claude-opus-4', title: 'OpenAI o3 vs Claude Opus 4 Frontier Reasoning API Cost Analysis (2026)', summary: 'Quantify exact monthly and annual cost spreads for deep architectural reasoning between OpenAI o3 and Claude Opus 4.' },
+  { slug: 'openai-whisper-vs-deepgram-nova-3', a: 'gpt-4.1-mini', b: 'gemini-2.5-flash', title: 'OpenAI Whisper vs Deepgram Nova-3 & Groq STT Audio API Pricing (2026)', summary: 'Compare per-minute speech-to-text costs ($0.006/min vs $0.0043/min vs $0.00067/min) plus VAD silence trimming savings for voice pipelines.' },
+  { slug: 'elevenlabs-vs-openai-tts-cost', a: 'gpt-5-mini', b: 'gemini-2.5-flash', title: 'ElevenLabs vs OpenAI TTS-1 & Cartesia Voice Synthesis Cost Breakdown (2026)', summary: 'Calculate monthly character-based TTS spend comparing ElevenLabs ($90–$180/1M chars), Cartesia Sonic ($45/1M), and OpenAI TTS-1 ($15/1M).' },
+  { slug: 'flux-pro-vs-gpt-image-1-vs-imagen-3', a: 'gpt-5', b: 'gemini-2.5-pro', title: 'FLUX 1.1 Pro vs OpenAI GPT-Image-1 vs Google Imagen 3 API Cost Guide (2026)', summary: 'Benchmark per-asset creative generation unit economics with retry multipliers and FLUX schnell draft-cascade optimization.' },
+  { slug: 'google-veo-vs-runway-gen4-video-cost', a: 'gemini-2.5-pro', b: 'gpt-5', title: 'Google Veo 2/3 vs Runway Gen-4 Turbo & Sora Video Generation API Cost (2026)', summary: 'Model per-second video generation API costs ($0.05/s to $0.40/s) across agency production retry rates and clip lengths.' },
+  { slug: 'groq-vs-together-ai-vs-fireworks-pricing', a: 'llama-4-maverick', b: 'deepseek-v3', title: 'Groq vs Together AI vs Fireworks AI Open-Weight Inference API Pricing (2026)', summary: 'Compare serverless open-weight token pricing, latency, and throughput across Llama 4, DeepSeek-V3, and Qwen 2.5 providers.' },
+  { slug: 'openrouter-vs-direct-llm-api-cost', a: 'claude-sonnet-4', b: 'gpt-5', title: 'OpenRouter vs Direct OpenAI & Anthropic API Pricing & Margin Impact (2026)', summary: 'Evaluate unified multi-provider gateway fees and failover reliability versus direct vendor prompt caching and batch discounts.' },
+  { slug: 'anthropic-claude-code-api-vs-max-plan', a: 'claude-sonnet-4', b: 'claude-opus-4', title: 'Claude Code Pay-As-You-Go API vs Flat-Rate Max Plan Cost Break-Even (2026)', summary: 'Calculate daily coding-agent token burn with 85% prompt caching to find the exact developer break-even between API billing and seat plans.' },
+  { slug: 'cursor-pro-vs-byok-llm-api-cost', a: 'claude-sonnet-4', b: 'gpt-4.1', title: 'Cursor Pro / Ultra Seat vs Bring-Your-Own-Key (BYOK) LLM API Cost Analysis', summary: 'Compare flat monthly AI IDE seat fees against direct BYOK Anthropic & OpenAI API token spend across heavy engineering workflows.' },
+  { slug: 'pinecone-vs-qdrant-vs-pgvector-rag-cost', a: 'gemini-2.5-flash', b: 'gpt-4.1-mini', title: 'Pinecone vs Qdrant vs pgvector RAG Storage & Query TCO Comparison (2026)', summary: 'Model HNSW memory footprints, monthly vector hosting costs, and top-K synthesis token budgets across 1M–50M embeddings.' },
+  { slug: 'openai-embeddings-vs-voyage-3-vs-cohere', a: 'gpt-4.1-mini', b: 'gemini-2.5-flash-lite', title: 'OpenAI text-embedding-3 vs Voyage 3 Large vs Cohere Embed v3 Cost Guide', summary: 'Compare initial corpus ingestion, monthly churn re-indexing, and vector dimensionality RAM impact for enterprise RAG.' },
+  { slug: 'cloudflare-workers-ai-vs-openai-mini', a: 'llama-4-scout', b: 'gpt-5-mini', title: 'Cloudflare Workers AI vs OpenAI GPT-5 mini Edge Inference Cost Comparison', summary: 'Benchmark edge-hosted open-weight inference pricing against OpenAI GPT-5 mini for high-volume classification and extraction.' },
+  { slug: 'deepseek-v3-vs-llama-4-maverick-cost', a: 'deepseek-v3', b: 'llama-4-maverick', title: 'DeepSeek-V3 vs Llama 4 Maverick (1M Context) API Cost & Speed Comparison', summary: 'Head-to-head open-weight API pricing comparing DeepSeek-V3 ($0.27/$1.10) and hosted Llama 4 Maverick ($0.27/$0.85, 1M context).' }
 ];
 
 const GUIDES = [
@@ -338,6 +350,66 @@ const GUIDES = [
       { h2: '2. When Managed Open-Weight Endpoints Beat Dedicated Clusters', p: 'Until sustained traffic utilizes >35% of an 8-GPU node around the clock, serverless APIs remain 5x–10x cheaper than dedicated bare-metal GPUs.' }
     ],
     ctaHref: '/tools/gpu-vram-calculator.html', ctaLabel: 'Size MoE VRAM & Monthly Cost →'
+  },
+  {
+    slug: 'stt-tts-voice-pipeline-cost-optimization',
+    title: 'Voice AI & Audio Pipeline FinOps: Cutting STT + TTS API Bills 40–75%',
+    desc: 'Engineering playbook covering client-side VAD silence trimming, Groq/Deepgram vs Whisper routing, and TTS audio caching for common prompts.',
+    sections: [
+      { h2: '1. Strip Silence Before Calling STT APIs (25–40% Instant Savings)', p: 'Unedited customer support calls and meeting recordings contain 28% to 42% dead air. Running lightweight Silero VAD on-device or on edge workers strips silence before hitting Whisper or Deepgram, slashing billed minutes immediately.' },
+      { h2: '2. Cache Repetitive TTS Phrases & Tier Expressive Voices', p: 'Greetings, confirmations, and IVR prompts account for 20–45% of spoken characters in production voice bots. Hashing static phrases to object storage and reserving ElevenLabs for high-value dialogue saves thousands monthly.' }
+    ],
+    ctaHref: '/tools/audio-transcription-cost.html', ctaLabel: 'Open STT & TTS Cost Calculator →'
+  },
+  {
+    slug: 'ai-image-video-generation-agency-unit-economics',
+    title: 'AI Image & Video Generation Unit Economics: Mastering Retry Multipliers & Draft Cascades',
+    desc: 'Why published creative assets cost 2.5x–4x list API rates and how FLUX schnell draft-to-pro cascades cut image budgets by 60%+.',
+    sections: [
+      { h2: '1. The Hidden Cost Multiplier: Retries & Discarded Renders', p: 'Marketing teams and creative apps rarely publish the first generated image or video clip. Accounting for a realistic 2.5x–3.5x generation retry ratio prevents painful budget surprises on GPT-Image-1 High or Google Veo.' },
+      { h2: '2. Two-Stage Draft Cascades (FLUX schnell -> Pro Final)', p: 'Generate 3–4 layout explorations on FLUX.1 schnell ($0.003/img) and invoke FLUX 1.1 Pro ($0.04) or GPT-Image-1 High ($0.167) only once the user approves the composition—cutting total studio image spend by up to 70%.' }
+    ],
+    ctaHref: '/tools/image-video-gen-budget.html', ctaLabel: 'Model Image & Video Studio Budget →'
+  },
+  {
+    slug: 'vector-database-tco-pinecone-qdrant-pgvector',
+    title: 'Vector Database TCO in 2026: Pinecone vs. Qdrant vs. pgvector Memory & Query Economics',
+    desc: 'How embedding dimensions (1536 vs 3072), scalar/binary quantization, and HNSW RAM overhead govern your true monthly RAG infrastructure cost.',
+    sections: [
+      { h2: '1. Dimensionality Multiplies RAM Linearly', p: 'Storing 10M float32 vectors at 3072 dimensions consumes ~120 GB of raw vectors plus 40–60% HNSW graph overhead (~180 GB RAM). Applying Matryoshka truncation (1024 dims) or int8 scalar quantization shrinks memory footprint 4x–8x.' },
+      { h2: '2. When pgvector Beats Dedicated Vector Clouds', p: 'Under 5M vectors with moderate QPS, co-locating pgvector (HNSW + halfvec) inside your existing PostgreSQL database eliminates cross-service latency and saves $200–$1,200/month in idle vector pods.' }
+    ],
+    ctaHref: '/tools/rag-calculator.html', ctaLabel: 'Calculate RAG & Vector DB TCO →'
+  },
+  {
+    slug: 'llm-observability-evaluation-cost-budget',
+    title: 'LLM-as-a-Judge & Eval Suite Cost Control: Avoiding Hidden QA Token Bills',
+    desc: 'How to size continuous eval pipelines, use mini/flash judges for 90% of rubric checks, and run nightly regression suites on 50% Batch APIs.',
+    sections: [
+      { h2: '1. Why Naive Frontier Judges Double Production Spend', p: 'Running GPT-5 or Claude Opus as an online judge on 100% of production traces immediately doubles your API bill. Sample 5–10% of low-risk traces and run deterministic assertions (JSON schema, regex, latency) before invoking any LLM judge.' },
+      { h2: '2. Shift Nightly Golden-Set Evals to 50% Batch APIs', p: 'CI/CD regression evals across 2,000 test cases rarely need synchronous 1-second streaming. Submitting nightly eval sets via OpenAI or Anthropic Batch APIs cuts QA token budgets by 50% flat.' }
+    ],
+    ctaHref: '/tools/batch-vs-realtime-router.html', ctaLabel: 'Model Batch & Cascade Savings →'
+  },
+  {
+    slug: 'ai-coding-agent-seat-vs-api-tco',
+    title: 'AI Coding Agent TCO: Flat-Rate Developer Seats vs. BYOK API Token Spend',
+    desc: 'Quantitative comparison for engineering VPs evaluating Claude Code, Cursor, and custom internal coding agents across 10–200 developers.',
+    sections: [
+      { h2: '1. Why Coding Agents Have Extreme Input-to-Output Ratios (20:1)', p: 'Autonomous coding agents repeatedly read repository trees, diffs, and test logs—making prompt caching (80–90% prefix hit rate) the single biggest factor keeping per-developer API bills under $80–$150/month.' },
+      { h2: '2. Hybrid Seat + API Budgeting by Engineer Persona', p: 'Power users running multi-hour autonomous refactors save money on capped subscription tiers, while occasional users and CI bot runners are far cheaper on pay-as-you-go cached API keys.' }
+    ],
+    ctaHref: '/tools/agent-budget.html', ctaLabel: 'Simulate Coding Agent Token Burn →'
+  },
+  {
+    slug: 'multi-provider-llm-failover-cost-architecture',
+    title: 'Multi-Provider LLM Failover & AI Gateway Cost Architecture (2026)',
+    desc: 'Designing zero-downtime OpenAI -> Anthropic -> Gemini fallback lanes without blowing up prompt cache warmness or blowing margins.',
+    sections: [
+      { h2: '1. Primary Sticky Routing Preserves Prompt Caches', p: 'Round-robin load balancing across two LLM providers destroys prefix cache hit rates. Route 100% of healthy traffic to a primary provider and trigger fallback lanes only on HTTP 429/529 circuit-breaker trips.' },
+      { h2: '2. Aligning Fallback Model Cost Tiers', p: 'Never fail over a $0.25/1M mini workload onto a $15/1M frontier model during an outage—map every tier to a same-cost cross-vendor peer (e.g., GPT-5 mini <-> Gemini 2.5 Flash).' }
+    ],
+    ctaHref: '/tools/llm-rate-limit-planner.html', ctaLabel: 'Generate Failover Rate-Limit Policy →'
   }
 ];
 
@@ -506,6 +578,8 @@ registerPage('/', 'index.html', renderShell({
       <a class="tl-link-card" href="/tools/llm-rate-limit-planner.html"><strong>LLM Rate-Limit (RPM/TPM) Planner</strong><span>Calculate peak TPM, Little’s Law concurrency, vendor tier needed, and export rate-limiter JSON.</span><em>Plan Capacity →</em></a>
       <a class="tl-link-card" href="/tools/gpu-vram-calculator.html"><strong>GPU VRAM &amp; KV-Cache Quantization</strong><span>Size FP16/FP8/Q4_K_M weights + GQA KV-cache for Llama 70B, Qwen 32B &amp; DeepSeek-R1 + hardware cost.</span><em>Size GPU VRAM →</em></a>
       <a class="tl-link-card" href="/tools/batch-vs-realtime-router.html"><strong>CFO Hybrid FinOps Waterfall Simulator</strong><span>Stack Prompt Caching + Mini Cascade + 50% Async Batch lanes and export an executive memo.</span><em>Model Savings →</em></a>
+      <a class="tl-link-card" href="/tools/audio-transcription-cost.html"><strong>STT &amp; TTS Audio API Cost Calculator</strong><span>Compare Whisper, Deepgram Nova-3, Groq, ElevenLabs &amp; Cartesia with VAD silence trimming.</span><em>Price Audio Pipeline →</em></a>
+      <a class="tl-link-card" href="/tools/image-video-gen-budget.html"><strong>AI Image &amp; Video Gen Studio Budget</strong><span>Estimate FLUX, GPT-Image-1, Imagen 3, Veo, Runway &amp; Sora with retry &amp; draft-cascade math.</span><em>Size Creative Budget →</em></a>
       <a class="tl-link-card" href="/tools/token-inspector.html"><strong>Context &amp; JSON Minifier Inspector</strong><span>Inspect OpenAI/Claude/Gemini tokens and minify tool JSON schemas for instant savings.</span><em>Open Inspector →</em></a>
     </div>
     <div class="tl-pills" style="margin-top:14px">
@@ -1315,6 +1389,124 @@ registerPage('/tools/batch-vs-realtime-router.html', 'tools/batch-vs-realtime-ro
   </section>`
 }), '0.9');
 
+// --- PAGE 15: SPEECH-TO-TEXT (STT) & TEXT-TO-SPEECH (TTS) AUDIO API COST CALCULATOR ---
+registerPage('/tools/audio-transcription-cost.html', 'tools/audio-transcription-cost.html', renderShell({
+  path: '/tools/audio-transcription-cost.html',
+  active: 'multimodal',
+  title: 'Speech-to-Text (STT) & TTS Audio API Cost Calculator — Whisper, Deepgram, Groq, ElevenLabs',
+  description: 'Compare monthly & annual audio API pricing across OpenAI Whisper, Deepgram Nova-3, AssemblyAI, Groq Whisper, Gemini Audio, OpenAI TTS, Cartesia Sonic, and ElevenLabs with VAD silence trimming.',
+  scripts: ['/js/audio-transcription-cost.js'],
+  schemaGraph: [
+    { '@type': 'SoftwareApplication', name: 'TokenLedger STT & TTS Audio API Cost Calculator', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}/tools/audio-transcription-cost.html`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+    { '@type': 'FAQPage', mainEntity: [
+      { '@type': 'Question', name: 'How much does VAD silence trimming save on Whisper or Deepgram bills?', acceptedAnswer: { '@type': 'Answer', text: 'Real-world phone calls and meetings contain 25% to 40% silence. Running lightweight Voice Activity Detection (VAD) before transcription trims dead air and reduces billed STT minutes proportionally.' } }
+    ] }
+  ],
+  body: `  <section class="tl-hero">
+    <div class="tl-kicker">VOICE &amp; AUDIO FINOPS &bull; STT + TTS + VAD SILENCE TRIMMING</div>
+    <h1>Speech-to-Text (STT) &amp; TTS Audio API Cost Calculator</h1>
+    <p>Benchmark Whisper, Deepgram Nova-3, Groq Whisper Turbo, AssemblyAI, ElevenLabs, Cartesia, and OpenAI TTS side by side — including VAD silence trimming and phrase caching savings.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">Combined Monthly</div><div class="kpi-val accent" id="kpiAuTotal">$0/mo</div><div class="kpi-sub" id="kpiAuTotalSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">STT Transcription</div><div class="kpi-val" id="kpiAuStt">$0/mo</div><div class="kpi-sub" id="kpiAuSttSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">TTS Synthesis</div><div class="kpi-val" id="kpiAuTts">$0/mo</div><div class="kpi-sub" id="kpiAuTtsSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">VAD + Cache Saved</div><div class="kpi-val accent" id="kpiAuSave">$0/mo</div><div class="kpi-sub" id="kpiAuSaveSub">-</div></div>
+  </section>
+
+  <section class="tl-grid-2">
+    <div class="tl-panel">
+      <h2>1. Speech-to-Text (Transcription)</h2>
+      <div class="tl-field"><label for="auSttModel">STT Provider &amp; Model</label><select id="auSttModel" class="tl-select"></select></div>
+      <div class="tl-field"><label for="auDailyMins">Raw Audio Minutes / Day</label><input id="auDailyMins" class="tl-input num" type="number" min="0" step="100" value="1200"></div>
+      <div class="tl-field"><label for="auVadTrim">Client/Edge VAD Silence Trimming <strong id="auVadVal">30%</strong></label><input id="auVadTrim" class="tl-range" type="range" min="0" max="70" step="5" value="30"></div>
+      <label class="tl-check-row"><input id="auDiarization" type="checkbox"><span>Include Speaker Diarization Add-On (where billed separately)</span></label>
+    </div>
+
+    <div class="tl-panel">
+      <h2>2. Text-to-Speech (Voice Synthesis)</h2>
+      <div class="tl-field"><label for="auTtsModel">TTS Voice Engine</label><select id="auTtsModel" class="tl-select"></select></div>
+      <div class="tl-field"><label for="auTtsChars">Spoken Characters / Day</label><input id="auTtsChars" class="tl-input num" type="number" min="0" step="25000" value="250000"></div>
+      <div class="tl-field"><label for="auTtsCache">Static Greeting / Phrase Cache Hit <strong id="auTtsCacheVal">25%</strong></label><input id="auTtsCache" class="tl-range" type="range" min="0" max="90" step="5" value="25"></div>
+      <div class="tl-btn-bar">
+        <button type="button" id="btnAuCopyMd" class="tl-btn tl-btn-primary">Copy Audio FinOps Markdown</button>
+        <button type="button" id="btnAuExportCsv" class="tl-btn">Export Full CSV</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="tl-grid-2">
+    <div class="tl-panel">
+      <h2>All 7 STT Engines Comparison</h2>
+      <div class="tl-table-wrap"><table class="tl-table" style="min-width:440px"><thead><tr><th>STT Model</th><th>Rate</th><th>Monthly</th><th>Annual</th></tr></thead><tbody id="auSttTableBody"></tbody></table></div>
+    </div>
+    <div class="tl-panel">
+      <h2>All 8 TTS Voice Engines Comparison</h2>
+      <div class="tl-table-wrap"><table class="tl-table" style="min-width:440px"><thead><tr><th>TTS Engine</th><th>Rate</th><th>Monthly</th><th>Annual</th></tr></thead><tbody id="auTtsTableBody"></tbody></table></div>
+    </div>
+  </section>`
+}), '0.9');
+
+// --- PAGE 16: AI IMAGE & VIDEO GENERATION STUDIO BUDGET CALCULATOR ---
+registerPage('/tools/image-video-gen-budget.html', 'tools/image-video-gen-budget.html', renderShell({
+  path: '/tools/image-video-gen-budget.html',
+  active: 'multimodal',
+  title: 'AI Image & Video Generation API Cost Calculator — FLUX, GPT-Image-1, Imagen 3, Veo, Runway, Sora',
+  description: 'Model agency & SaaS creative API budgets across FLUX 1.1 Pro, OpenAI GPT-Image-1, Google Imagen 3, Veo 2/3, Runway Gen-4 Turbo, Kling, and Sora with realistic retry multipliers and draft cascades.',
+  scripts: ['/js/image-video-gen-budget.js'],
+  schemaGraph: [
+    { '@type': 'SoftwareApplication', name: 'TokenLedger AI Image & Video Generation Budget Calculator', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}/tools/image-video-gen-budget.html`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+    { '@type': 'FAQPage', mainEntity: [
+      { '@type': 'Question', name: 'How does a FLUX schnell draft cascade reduce AI image generation costs?', acceptedAnswer: { '@type': 'Answer', text: 'Instead of paying $0.04–$0.167 for every rejected draft, teams generate composition drafts on FLUX.1 schnell ($0.003/image) and invoke the hero model only for the final approved asset, cutting monthly spend by 50–70%.' } }
+    ] }
+  ],
+  body: `  <section class="tl-hero">
+    <div class="tl-kicker">CREATIVE AI FINOPS &bull; IMAGE + VIDEO + RETRY MULTIPLIERS</div>
+    <h1>AI Image &amp; Video Generation Studio Budget Calculator</h1>
+    <p>Calculate real unit economics per published creative asset across FLUX, GPT-Image-1, Imagen 3, Veo, Runway Gen-4, Kling, and Sora — including realistic discard/retry rates and draft-cascade savings.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">Total Studio API Spend</div><div class="kpi-val accent" id="kpiMvTotal">$0/mo</div><div class="kpi-sub" id="kpiMvTotalSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Image Generation</div><div class="kpi-val" id="kpiMvImg">$0/mo</div><div class="kpi-sub" id="kpiMvImgSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Video Generation</div><div class="kpi-val warn" id="kpiMvVid">$0/mo</div><div class="kpi-sub" id="kpiMvVidSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Draft Cascade Savings</div><div class="kpi-val accent" id="kpiMvSave">$0/mo</div><div class="kpi-sub" id="kpiMvSaveSub">-</div></div>
+  </section>
+
+  <section class="tl-grid-2">
+    <div class="tl-panel">
+      <h2>1. Image Generation Pipeline</h2>
+      <div class="tl-field"><label for="mvImgModel">Production Image Model</label><select id="mvImgModel" class="tl-select"></select></div>
+      <div class="tl-field"><label for="mvDailyImgs">Published Final Images / Day</label><input id="mvDailyImgs" class="tl-input num" type="number" min="0" step="25" value="150"></div>
+      <div class="tl-field"><label for="mvImgRetry">Generations per Published Image (Retries) <strong id="mvImgRetryVal">2.5x</strong></label><input id="mvImgRetry" class="tl-range" type="range" min="1" max="8" step="0.5" value="2.5"></div>
+      <label class="tl-check-row"><input id="mvDraftCascade" type="checkbox" checked><span>Enable FLUX.1 schnell ($0.003) Draft Cascade for Exploration Retries</span></label>
+    </div>
+
+    <div class="tl-panel">
+      <h2>2. Video Generation Pipeline</h2>
+      <div class="tl-field"><label for="mvVidModel">Production Video Model</label><select id="mvVidModel" class="tl-select"></select></div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="mvDailyClips">Published Clips / Day</label><input id="mvDailyClips" class="tl-input num" type="number" min="0" step="5" value="15"></div>
+        <div class="tl-field"><label for="mvClipSec">Avg Clip Length (sec)</label><input id="mvClipSec" class="tl-input num" type="number" min="1" max="60" step="1" value="6"></div>
+      </div>
+      <div class="tl-field"><label for="mvVidRetry">Renders per Published Clip (Retries) <strong id="mvVidRetryVal">3.0x</strong></label><input id="mvVidRetry" class="tl-range" type="range" min="1" max="8" step="0.5" value="3.0"></div>
+      <div class="tl-btn-bar"><button type="button" id="btnMvCopyMd" class="tl-btn tl-btn-primary">Copy Studio Budget Markdown</button></div>
+    </div>
+  </section>
+
+  <section class="tl-grid-2">
+    <div class="tl-panel">
+      <h2>10 Image Models Cost Matrix</h2>
+      <div class="tl-table-wrap"><table class="tl-table" style="min-width:440px"><thead><tr><th>Image Model</th><th>Per Img</th><th>Monthly</th><th>Annual</th></tr></thead><tbody id="mvImgTableBody"></tbody></table></div>
+    </div>
+    <div class="tl-panel">
+      <h2>6 Video Models Cost Matrix</h2>
+      <div class="tl-table-wrap"><table class="tl-table" style="min-width:440px"><thead><tr><th>Video Model</th><th>Per Sec</th><th>Monthly</th><th>Annual</th></tr></thead><tbody id="mvVidTableBody"></tbody></table></div>
+    </div>
+  </section>`
+}), '0.9');
+
 // --- PAGES 6–13: 8 PROGRAMMATIC MODEL COMPARISON PAGES ---
 for (const c of COMPARISONS) {
   const mA = ENGINE.getModel(c.a);
@@ -1701,6 +1893,8 @@ const llmsTxt = `# TokenLedger — AI & LLM API FinOps Studio
 - [LLM Rate-Limit (RPM/TPM/Concurrency) Capacity Planner](${ORIGIN}/tools/llm-rate-limit-planner.html): Peak TPM, Little's Law concurrency sizing, vendor tier guidance, and rate-limiter JSON policy export.
 - [LLM GPU VRAM & KV-Cache Quantization Calculator](${ORIGIN}/tools/gpu-vram-calculator.html): Exact weights + GQA KV-cache VRAM across FP16/FP8/Q4_K_M for Llama 70B, Qwen & DeepSeek-R1.
 - [Enterprise LLM Savings Waterfall (Cache + Cascade + Batch)](${ORIGIN}/tools/batch-vs-realtime-router.html): Stacked FinOps savings waterfall & CFO executive memo export.
+- [Speech-to-Text (STT) & TTS Audio API Cost Calculator](${ORIGIN}/tools/audio-transcription-cost.html): Compare Whisper, Deepgram Nova-3, Groq, AssemblyAI, ElevenLabs & Cartesia with VAD silence trimming.
+- [AI Image & Video Generation Studio Budget Calculator](${ORIGIN}/tools/image-video-gen-budget.html): Unit economics for FLUX, GPT-Image-1, Imagen 3, Veo, Runway Gen-4 & Sora with retry multipliers and draft cascades.
 - [Context Window & JSON Minifier Inspector](${ORIGIN}/tools/token-inspector.html): OpenAI/Claude/Gemini token estimates and one-click JSON tool schema minification.
 
 ## International Hubs

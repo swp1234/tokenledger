@@ -217,6 +217,8 @@
       <a class="tl-link-card" href="/tools/llm-rate-limit-planner.html"><strong>LLM Rate-Limit (RPM/TPM) Planner</strong><span>Calculate peak TPM, Little’s Law concurrency, vendor tier needed, and export rate-limiter JSON.</span><em>Plan Capacity →</em></a>
       <a class="tl-link-card" href="/tools/gpu-vram-calculator.html"><strong>GPU VRAM &amp; KV-Cache Quantization</strong><span>Size FP16/FP8/Q4_K_M weights + GQA KV-cache for Llama 70B, Qwen 32B &amp; DeepSeek-R1 + hardware cost.</span><em>Size GPU VRAM →</em></a>
       <a class="tl-link-card" href="/tools/batch-vs-realtime-router.html"><strong>CFO Hybrid FinOps Waterfall Simulator</strong><span>Stack Prompt Caching + Mini Cascade + 50% Async Batch lanes and export an executive memo.</span><em>Model Savings →</em></a>
+      <a class="tl-link-card" href="/tools/audio-transcription-cost.html"><strong>STT &amp; TTS Audio API Cost Calculator</strong><span>Compare Whisper, Deepgram Nova-3, Groq, ElevenLabs &amp; Cartesia with VAD silence trimming.</span><em>Price Audio Pipeline →</em></a>
+      <a class="tl-link-card" href="/tools/image-video-gen-budget.html"><strong>AI Image &amp; Video Gen Studio Budget</strong><span>Estimate FLUX, GPT-Image-1, Imagen 3, Veo, Runway &amp; Sora with retry &amp; draft-cascade math.</span><em>Size Creative Budget →</em></a>
       <a class="tl-link-card" href="/tools/token-inspector.html"><strong>Context &amp; JSON Minifier Inspector</strong><span>Inspect OpenAI/Claude/Gemini tokens and minify tool JSON schemas for instant savings.</span><em>Open Inspector →</em></a>
     </div>
     <div class="tl-pills" style="margin-top:14px">
@@ -426,6 +428,66 @@
         <span>Quantify exact monthly and annual cost spreads for deep architectural reasoning between OpenAI o3 and Claude Opus 4.</span>
         <em>Open Comparison →</em>
       </a>
+      <a class="tl-link-card" href="/compare/openai-whisper-vs-deepgram-nova-3.html">
+        <strong>OpenAI Whisper vs Deepgram Nova-3 &amp; Groq STT Audio API Pricing</strong>
+        <span>Compare per-minute speech-to-text costs ($0.006/min vs $0.0043/min vs $0.00067/min) plus VAD silence trimming savings for voice pipelines.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/elevenlabs-vs-openai-tts-cost.html">
+        <strong>ElevenLabs vs OpenAI TTS-1 &amp; Cartesia Voice Synthesis Cost Breakdown</strong>
+        <span>Calculate monthly character-based TTS spend comparing ElevenLabs ($90–$180/1M chars), Cartesia Sonic ($45/1M), and OpenAI TTS-1 ($15/1M).</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/flux-pro-vs-gpt-image-1-vs-imagen-3.html">
+        <strong>FLUX 1.1 Pro vs OpenAI GPT-Image-1 vs Google Imagen 3 API Cost Guide</strong>
+        <span>Benchmark per-asset creative generation unit economics with retry multipliers and FLUX schnell draft-cascade optimization.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/google-veo-vs-runway-gen4-video-cost.html">
+        <strong>Google Veo 2/3 vs Runway Gen-4 Turbo &amp; Sora Video Generation API Cost</strong>
+        <span>Model per-second video generation API costs ($0.05/s to $0.40/s) across agency production retry rates and clip lengths.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/groq-vs-together-ai-vs-fireworks-pricing.html">
+        <strong>Groq vs Together AI vs Fireworks AI Open-Weight Inference API Pricing</strong>
+        <span>Compare serverless open-weight token pricing, latency, and throughput across Llama 4, DeepSeek-V3, and Qwen 2.5 providers.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/openrouter-vs-direct-llm-api-cost.html">
+        <strong>OpenRouter vs Direct OpenAI &amp; Anthropic API Pricing &amp; Margin Impact</strong>
+        <span>Evaluate unified multi-provider gateway fees and failover reliability versus direct vendor prompt caching and batch discounts.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/anthropic-claude-code-api-vs-max-plan.html">
+        <strong>Claude Code Pay-As-You-Go API vs Flat-Rate Max Plan Cost Break-Even</strong>
+        <span>Calculate daily coding-agent token burn with 85% prompt caching to find the exact developer break-even between API billing and seat plans.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/cursor-pro-vs-byok-llm-api-cost.html">
+        <strong>Cursor Pro / Ultra Seat vs Bring-Your-Own-Key (BYOK) LLM API Cost Analysis</strong>
+        <span>Compare flat monthly AI IDE seat fees against direct BYOK Anthropic &amp; OpenAI API token spend across heavy engineering workflows.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/pinecone-vs-qdrant-vs-pgvector-rag-cost.html">
+        <strong>Pinecone vs Qdrant vs pgvector RAG Storage &amp; Query TCO Comparison</strong>
+        <span>Model HNSW memory footprints, monthly vector hosting costs, and top-K synthesis token budgets across 1M–50M embeddings.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/openai-embeddings-vs-voyage-3-vs-cohere.html">
+        <strong>OpenAI text-embedding-3 vs Voyage 3 Large vs Cohere Embed v3 Cost Guide</strong>
+        <span>Compare initial corpus ingestion, monthly churn re-indexing, and vector dimensionality RAM impact for enterprise RAG.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/cloudflare-workers-ai-vs-openai-mini.html">
+        <strong>Cloudflare Workers AI vs OpenAI GPT-5 mini Edge Inference Cost Comparison</strong>
+        <span>Benchmark edge-hosted open-weight inference pricing against OpenAI GPT-5 mini for high-volume classification and extraction.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/deepseek-v3-vs-llama-4-maverick-cost.html">
+        <strong>DeepSeek-V3 vs Llama 4 Maverick (1M Context) API Cost &amp; Speed Comparison</strong>
+        <span>Head-to-head open-weight API pricing comparing DeepSeek-V3 ($0.27/$1.10) and hosted Llama 4 Maverick ($0.27/$0.85, 1M context).</span>
+        <em>Open Comparison →</em>
+      </a>
     </div>
   </section>
 
@@ -510,6 +572,36 @@
       <a class="tl-link-card" href="/guides/open-weight-moe-hosting-tco-guide.html">
         <strong>Hosting Open-Weight MoE Models (Llama 4 &amp; DeepSeek-R1) vs. Managed APIs: 2026 TCO</strong>
         <span>Understanding why Mixture-of-Experts models run fast per token yet demand huge total VRAM—and where the real cloud vs GPU break-even sits.</span>
+        <em>Read Playbook →</em>
+      </a>
+      <a class="tl-link-card" href="/guides/stt-tts-voice-pipeline-cost-optimization.html">
+        <strong>Voice AI &amp; Audio Pipeline FinOps: Cutting STT + TTS API Bills 40–75%</strong>
+        <span>Engineering playbook covering client-side VAD silence trimming, Groq/Deepgram vs Whisper routing, and TTS audio caching for common prompts.</span>
+        <em>Read Playbook →</em>
+      </a>
+      <a class="tl-link-card" href="/guides/ai-image-video-generation-agency-unit-economics.html">
+        <strong>AI Image &amp; Video Generation Unit Economics: Mastering Retry Multipliers &amp; Draft Cascades</strong>
+        <span>Why published creative assets cost 2.5x–4x list API rates and how FLUX schnell draft-to-pro cascades cut image budgets by 60%+.</span>
+        <em>Read Playbook →</em>
+      </a>
+      <a class="tl-link-card" href="/guides/vector-database-tco-pinecone-qdrant-pgvector.html">
+        <strong>Vector Database TCO in 2026: Pinecone vs. Qdrant vs. pgvector Memory &amp; Query Economics</strong>
+        <span>How embedding dimensions (1536 vs 3072), scalar/binary quantization, and HNSW RAM overhead govern your true monthly RAG infrastructure cost.</span>
+        <em>Read Playbook →</em>
+      </a>
+      <a class="tl-link-card" href="/guides/llm-observability-evaluation-cost-budget.html">
+        <strong>LLM-as-a-Judge &amp; Eval Suite Cost Control: Avoiding Hidden QA Token Bills</strong>
+        <span>How to size continuous eval pipelines, use mini/flash judges for 90% of rubric checks, and run nightly regression suites on 50% Batch APIs.</span>
+        <em>Read Playbook →</em>
+      </a>
+      <a class="tl-link-card" href="/guides/ai-coding-agent-seat-vs-api-tco.html">
+        <strong>AI Coding Agent TCO: Flat-Rate Developer Seats vs. BYOK API Token Spend</strong>
+        <span>Quantitative comparison for engineering VPs evaluating Claude Code, Cursor, and custom internal coding agents across 10–200 developers.</span>
+        <em>Read Playbook →</em>
+      </a>
+      <a class="tl-link-card" href="/guides/multi-provider-llm-failover-cost-architecture.html">
+        <strong>Multi-Provider LLM Failover &amp; AI Gateway Cost Architecture (2026)</strong>
+        <span>Designing zero-downtime OpenAI -&gt; Anthropic -&gt; Gemini fallback lanes without blowing up prompt cache warmness or blowing margins.</span>
         <em>Read Playbook →</em>
       </a>
     </div>
