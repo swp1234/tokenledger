@@ -6,7 +6,7 @@
   <meta name="robots" content="index, follow, max-image-preview:large">
   <title>AI &amp; LLM API Cost Calculator (24 Models) — Prompt Caching, Batch &amp; FinOps Studio | TokenLedger</title>
   <meta name="description" content="Free, 100% browser-private AI &amp; LLM API cost calculator comparing 24 models (GPT-5, Claude 4, Gemini 2.5, DeepSeek, Llama 4, Grok 3) with prompt caching, cascade routing, and CSV/PDF export.">
-  <meta name="dateModified" content="2026-11-24">
+  <meta name="dateModified" content="2026-11-26">
   <link rel="canonical" href="https://tokenledger-8x7.pages.dev/">
   <link rel="alternate" hreflang="en" href="https://tokenledger-8x7.pages.dev/">
   <link rel="alternate" hreflang="ko" href="https://tokenledger-8x7.pages.dev/ko/">
@@ -91,6 +91,13 @@
         <a href="/tools/token-inspector.html">Inspector</a>
       </nav>
       <div class="tl-nav-actions">
+        <select id="tlCurrencySelect" class="tl-icon-btn" aria-label="Display Currency" style="padding:0 8px;cursor:pointer">
+          <option value="USD">USD $</option>
+          <option value="EUR">EUR €</option>
+          <option value="GBP">GBP £</option>
+          <option value="JPY">JPY ¥</option>
+          <option value="KRW">KRW ₩</option>
+        </select>
         <a href="/api/pricing.json" class="tl-icon-btn" title="Public JSON Pricing Feed">JSON API</a>
         <button type="button" id="tlThemeToggle" class="tl-icon-btn" aria-label="Toggle Light or Dark Theme">Light</button>
       </div>
@@ -204,7 +211,9 @@
       <a class="tl-link-card" href="/tools/self-host-vs-api.html"><strong>Self-Hosted GPU vs Cloud API</strong><span>Calculate exact daily request break-even for H100/A100/L40S/4090 vLLM vs cloud APIs.</span><em>Compare GPU vs API →</em></a>
       <a class="tl-link-card" href="/tools/multimodal-budget.html"><strong>Voice, Vision &amp; Image Cost Studio</strong><span>Estimate PDF/image vision tokens, OpenAI Realtime vs Gemini Live voice, and Imagen/Flux.</span><em>Open Studio →</em></a>
       <a class="tl-link-card" href="/tools/ai-runway.html"><strong>AI Startup Burn &amp; Runway Planner</strong><span>Model LLM spend scaling with MRR, cloud infra, payroll, and exact Default-Alive month.</span><em>Model Runway →</em></a>
-      <a class="tl-link-card" href="/tools/prompt-diff.html"><strong>Prompt A/B Compression Cost Diff</strong><span>Compare before vs. after system prompts and copy PR-ready annual USD savings tables.</span><em>Run Prompt Diff →</em></a>
+      <a class="tl-link-card" href="/tools/prompt-diff.html"><strong>Prompt A/B Compression Cost Diff</strong><span>Compare before vs. after system prompts and copy PR-ready annual USD savings tables + CI Action.</span><em>Run Prompt Diff →</em></a>
+      <a class="tl-link-card" href="/tools/fine-tune-vs-rag.html"><strong>Fine-Tuning vs. RAG vs. Caching TCO</strong><span>Compare 12-month LoRA training refreshes, vector DB RAG, and long-context caching + ADR export.</span><em>Compare Architectures →</em></a>
+      <a class="tl-link-card" href="/tools/llm-rate-limit-planner.html"><strong>LLM Rate-Limit (RPM/TPM) Planner</strong><span>Calculate peak TPM, Little’s Law concurrency, vendor tier needed, and export rate-limiter JSON.</span><em>Plan Capacity →</em></a>
       <a class="tl-link-card" href="/tools/token-inspector.html"><strong>Context &amp; JSON Minifier Inspector</strong><span>Inspect OpenAI/Claude/Gemini tokens and minify tool JSON schemas for instant savings.</span><em>Open Inspector →</em></a>
     </div>
     <div class="tl-pills" style="margin-top:14px">
@@ -334,6 +343,46 @@
         <span>Side-by-side FinOps analysis comparing Anthropic Claude 3.5 Haiku ($0.80/$4) and OpenAI GPT-4.1 mini ($0.40/$1.60).</span>
         <em>Open Comparison →</em>
       </a>
+      <a class="tl-link-card" href="/compare/aws-bedrock-vs-direct-anthropic-api.html">
+        <strong>AWS Bedrock vs Direct Anthropic API Pricing &amp; Enterprise FinOps Guide</strong>
+        <span>Compare AWS Bedrock on-demand, cross-region inference, and Provisioned Throughput against direct Anthropic API prompt caching and 50% batch discounts.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/google-vertex-ai-vs-gemini-api.html">
+        <strong>Google Vertex AI vs Gemini Developer API Pricing &amp; Enterprise TCO</strong>
+        <span>Evaluate Google Cloud Vertex AI IAM/VPC compliance and context caching economics alongside direct Gemini 2.5 Pro &amp; Flash API rates.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/azure-openai-vs-openai-direct-api.html">
+        <strong>Azure OpenAI Service vs OpenAI Direct API Pricing &amp; PTU Comparison</strong>
+        <span>Compare Azure OpenAI Standard PayGo and Provisioned Throughput Units (PTU) against direct OpenAI API caching and Batch endpoints.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/fine-tuning-vs-rag-cost.html">
+        <strong>LLM Fine-Tuning vs RAG vs Prompt Caching: 12-Month Cost Comparison</strong>
+        <span>Quantitative 12-month TCO comparison of LoRA fine-tuning retrains, vector DB RAG synthesis, and long-context prompt caching.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/claude-sonnet-4-vs-openai-o3.html">
+        <strong>Claude Sonnet 4 vs OpenAI o3 Coding &amp; Reasoning API Cost Comparison</strong>
+        <span>Benchmark multi-step coding and deep reasoning token spend between Anthropic Claude Sonnet 4 ($3/$15) and OpenAI o3 ($2/$8).</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/gemini-2-5-flash-vs-deepseek-v3.html">
+        <strong>Gemini 2.5 Flash vs DeepSeek-V3 High-Volume API Cost Comparison</strong>
+        <span>Compare two ultra-efficient production models ($0.30/$2.50 vs $0.27/$1.10) across 1M-context RAG and structured JSON pipelines.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/openai-batch-api-vs-anthropic-batch-api.html">
+        <strong>OpenAI Batch API vs Anthropic Message Batches (50% Off) Cost Guide</strong>
+        <span>Compare 24-hour async 50%-off batch pricing, prompt caching stacking, and throughput limits for nightly LLM pipelines.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/vllm-vs-ollama-production-tco.html">
+        <strong>vLLM vs Ollama Production GPU Hosting TCO &amp; Throughput Comparison</strong>
+        <span>Compare continuous-batching vLLM throughput per H100/L40S GPU against local Ollama deployments and pay-per-token open-weight APIs.</span>
+        <em>Open Comparison →</em>
+      </a>
     </div>
   </section>
 
@@ -380,6 +429,26 @@
         <span>How to route routine traffic to Gemini 2.5 Flash or GPT-5 mini while reserving Claude Sonnet/Opus and GPT-5 for complex tasks.</span>
         <em>Read Playbook →</em>
       </a>
+      <a class="tl-link-card" href="/guides/fine-tuning-vs-rag-cost-decision-matrix.html">
+        <strong>Fine-Tuning vs. RAG vs. Prompt Caching: The 12-Month AI FinOps Decision Matrix</strong>
+        <span>When does LoRA fine-tuning actually save money over RAG or long-context prompt caching? Break down training refreshes, inference multipliers, and vector DB RAM.</span>
+        <em>Read Playbook →</em>
+      </a>
+      <a class="tl-link-card" href="/guides/llm-rate-limits-tpm-rpm-architecture.html">
+        <strong>LLM Rate Limits (RPM &amp; TPM) in Production: Concurrency Math &amp; Multi-Provider Failover</strong>
+        <span>Prevent HTTP 429 outages at peak traffic using Little’s Law concurrency sizing, burst multipliers, token-bucket rate limiters, and multi-region failover.</span>
+        <em>Read Playbook →</em>
+      </a>
+      <a class="tl-link-card" href="/guides/enterprise-ai-gateway-bedrock-vertex-azure-pricing.html">
+        <strong>Enterprise AI Gateway Pricing: AWS Bedrock vs. Google Vertex AI vs. Azure OpenAI vs. Direct APIs</strong>
+        <span>Hidden enterprise cloud FinOps trade-offs: regional surcharges, Provisioned Throughput Units (PTU), prompt caching parity, and committed cloud-spend burn.</span>
+        <em>Read Playbook →</em>
+      </a>
+      <a class="tl-link-card" href="/guides/ci-cd-llm-token-budget-guardrails.html">
+        <strong>CI/CD LLM Token Budget Guardrails: Catching Prompt &amp; MCP Schema Bloat Before Merge</strong>
+        <span>How engineering teams run automated token-budget checks in GitHub Actions pull requests to stop silent $10,000/yr prompt regressions.</span>
+        <em>Read Playbook →</em>
+      </a>
     </div>
   </section>
 
@@ -415,7 +484,7 @@
 
   <footer class="tl-footer">
     <div class="tl-footer-inner">
-      <div><strong>TokenLedger</strong> &bull; 100% Browser-Private AI &amp; LLM FinOps Studio &bull; Pricing snapshot: 2026-11-24</div>
+      <div><strong>TokenLedger</strong> &bull; 100% Browser-Private AI &amp; LLM FinOps Studio &bull; Pricing snapshot: 2026-11-26</div>
       <div>
         <a href="/about.html">Methodology</a>
         <a href="/privacy.html">Privacy</a>

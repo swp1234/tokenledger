@@ -3,6 +3,29 @@
   'use strict';
 
   var THEME_KEY = 'tl_theme_v1';
+  var CUR_KEY = 'tl_currency_v1';
+
+  function initCurrency() {
+    var E = window.TokenLedgerEngine;
+    var sel = document.getElementById('tlCurrencySelect');
+    var saved = 'USD';
+    try { saved = localStorage.getItem(CUR_KEY) || 'USD'; } catch (_) {}
+    if (E && E.setCurrency) E.setCurrency(saved);
+    if (sel) {
+      sel.value = saved;
+      sel.addEventListener('change', function () {
+        var next = sel.value;
+        try { localStorage.setItem(CUR_KEY, next); } catch (_) {}
+        if (E && E.setCurrency) E.setCurrency(next);
+        window.dispatchEvent(new CustomEvent('tl:currency-change', { detail: { currency: next } }));
+        // Re-trigger inputs on current workspace so every calculator re-renders immediately
+        var firstInput = document.querySelector('main input, main select, main textarea');
+        if (firstInput) firstInput.dispatchEvent(new Event('input', { bubbles: true }));
+        if (firstInput) firstInput.dispatchEvent(new Event('change', { bubbles: true }));
+        showToast('Display currency switched to ' + next);
+      });
+    }
+  }
 
   function applyTheme(t) {
     document.documentElement.setAttribute('data-theme', t);
@@ -93,8 +116,9 @@
 
   initEmbedMode();
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initTheme, { once: true });
+    document.addEventListener('DOMContentLoaded', function () { initTheme(); initCurrency(); }, { once: true });
   } else {
     initTheme();
+    initCurrency();
   }
 })();

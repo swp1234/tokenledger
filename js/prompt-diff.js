@@ -63,6 +63,30 @@
        .concat(['', '_Generated via [TokenLedger Prompt Diff](https://tokenledger-8x7.pages.dev/tools/prompt-diff.html)_']).join('\n');
       UI.copyText(md, 'Copied PR Prompt Diff Markdown table!');
     });
+    var btnGh = document.getElementById('btnCopyGhAction');
+    if (btnGh) {
+      btnGh.addEventListener('click', function () {
+        var reqs = Number(document.getElementById('diffReqs').value) || 2000;
+        var cache = Number(document.getElementById('diffCache').value) || 50;
+        var estB = E.estimateTokens(document.getElementById('diffB').value).tokensOpenAI || 1200;
+        var yml = [
+          'name: TokenLedger Prompt Budget Guard',
+          'on: [pull_request]',
+          'jobs:',
+          '  budget-check:',
+          '    runs-on: ubuntu-latest',
+          '    steps:',
+          '      - uses: actions/checkout@v4',
+          '      - uses: actions/setup-node@v4',
+          '        with: { node-version: 20 }',
+          '      - name: Estimate LLM API Budget Impact',
+          '        run: |',
+          '          npx --yes github:swp1234/tokenledger --in ' + estB + ' --out 600 --req ' + reqs + ' --cache ' + cache + ' --format md > budget.md',
+          '          cat budget.md >> "$GITHUB_STEP_SUMMARY"'
+        ].join('\n');
+        UI.copyText(yml, 'Copied GitHub Action CI YAML!');
+      });
+    }
     render();
   }
 

@@ -69,11 +69,21 @@ function runUnitTests() {
   const mm = ENGINE.calcMultimodalBudget({ visionModel: 'gemini-2.5-flash-vision', voiceModel: 'gemini-live-flash', imageModel: 'imagen-3', dailyImages: 1500, visionOutTok: 250, dailyVoiceMins: 600, dailyGenImages: 200 });
   assert(mm.totalMonthly > 500 && mm.voiceMonthly > mm.visionMonthly);
 
-  // AI Runway & Prompt A/B Diff
+  // AI Runway, Prompt A/B Diff, Fine-Tune vs RAG, Rate-Limit Planner & Multi-Currency
   const rw = ENGINE.calcAiRunway({ cashOnHand: 250000, mrr: 8000, mrrGrowthPct: 12, monthlyAiSpend: 4500, monthlyCloudInfra: 1800, monthlyPayrollOps: 18000, aiScalesWithMrr: true });
   assert(rw.timeline.length === 24 && rw.runwayMonths > 0);
   const pd = ENGINE.calcPromptDiff('You are a very polite verbose helpful assistant that always writes long sentences.', 'Role: concise assistant.', 2000, 50);
   assert(pd.savedOpenAI > 0 && pd.compressionPct > 40);
+  const ft = ENGINE.calcFineTuneVsRag({ baseModelId: 'gpt-4.1-mini', kbTokens: 150000, dailyRequests: 4000 });
+  assert(ft.ftAnnual > 0 && ft.ragAnnual > 0 && ft.winner && ft.winner.annual <= ft.runnerUp.annual);
+  const rl = ENGINE.calcRateLimitPlan('claude-sonnet-4', { avgRpm: 120, burstMultiplier: 2.5, inputTokens: 2500, outputTokens: 600, avgLatencySec: 4.5 });
+  assert(rl.peakRpm === 300 && rl.peakTpm === 300 * 3100 && rl.peakConcurrency >= 22);
+  ENGINE.setCurrency('EUR');
+  assert(ENGINE.formatUsd(100).startsWith('€'));
+  ENGINE.setCurrency('JPY');
+  assert(ENGINE.formatUsd(100).startsWith('¥'));
+  ENGINE.setCurrency('USD');
+  assert(ENGINE.formatUsd(100) === '$100.00');
 
   // OG PNG check
   const ogBuf = fs.readFileSync(path.join(ROOT, 'og-image.png'));
@@ -101,7 +111,7 @@ function startServer() {
 async function runBrowserTests() {
   const sm = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
   const paths = [...sm.matchAll(/<loc>https:\/\/tokenledger-8x7\.pages\.dev([^<]+)<\/loc>/g)].map(m => m[1]);
-  assert(paths.length === 52, `Expected 52 sitemap URLs, got ${paths.length}`);
+  assert(paths.length === 66, `Expected 66 sitemap URLs, got ${paths.length}`);
 
   const { srv, origin } = await startServer();
   const browser = await chromium.launch({ headless: true });
@@ -138,6 +148,10 @@ async function runBrowserTests() {
     await page.click('#tlThemeToggle');
     const theme = await page.evaluate(() => document.documentElement.getAttribute('data-theme'));
     assert.strictEqual(theme, 'light', 'Theme toggle failed');
+    await page.selectOption('#tlCurrencySelect', 'EUR');
+    assert((await page.textContent('#kpiSonnet')).includes('€'), 'Currency switcher did not update KPI to EUR');
+    await page.selectOption('#tlCurrencySelect', 'USD');
+    assert((await page.textContent('#kpiSonnet')).includes('$'), 'Currency switcher did not restore USD');
 
     // Interactive E2E on Token Inspector (Load sample JSON -> Minify -> verify savings banner!)
     await page.goto(`${origin}/tools/token-inspector.html`, { waitUntil: 'domcontentloaded' });
@@ -172,11 +186,18 @@ async function runBrowserTests() {
     await page.goto(`${origin}/tools/prompt-diff.html`, { waitUntil: 'domcontentloaded' });
     await page.click('#btnDiffSample');
     assert((await page.textContent('#kpiDiffDelta')).startsWith('-'));
+    assert(await page.locator('#btnCopyGhAction').isVisible(), 'GitHub Action CI YAML button missing');
+    await page.goto(`${origin}/tools/fine-tune-vs-rag.html`, { waitUntil: 'domcontentloaded' });
+    assert((await page.locator('#ftBreakdownBody tr').count()) === 3);
+    assert((await page.textContent('#kpiFtAnnual')).includes('$'));
+    await page.goto(`${origin}/tools/llm-rate-limit-planner.html`, { waitUntil: 'domcontentloaded' });
+    assert((await page.textContent('#kpiRlPeakTpm')).includes('TPM'));
+    assert((await page.textContent('#rlConfigPreview')).includes('tokenBucket'));
     await page.goto(`${origin}/?embed=1`, { waitUntil: 'domcontentloaded' });
     assert(await page.evaluate(() => document.documentElement.classList.contains('tl-embed-mode')));
 
     assert.strictEqual(errors.length, 0, `Uncaught page errors: ${errors.join(' | ')}`);
-    console.log('[PASS] Interactive E2E tests passed across all 5 workspaces (presets, provider filter, theme, JSON minifier savings, agent chart, SaaS matrix, RAG TCO)');
+    console.log('[PASS] Interactive E2E tests passed across all 12 workspaces (presets, provider filter, theme, multi-currency, JSON minifier, agent chart, SaaS, RAG, GPU, MCP, multimodal, runway, prompt diff + CI YAML, fine-tune vs RAG, rate-limit planner, embed mode)');
   } finally {
     await browser.close();
     await new Promise(r => srv.close(r));

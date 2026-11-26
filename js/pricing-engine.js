@@ -590,16 +590,153 @@
     };
   }
 
+  // Fine-Tuning vs RAG vs Prompt Caching 12-Month TCO Calculator
+  function calcFineTuneVsRag(opts) {
+    var baseModel = getModel(opts.baseModelId || 'gpt-4.1-mini');
+    var kbTokens = clamp(opts.kbTokens || 150000, 1000, 20000000);
+    var dailyRequests = clamp(opts.dailyRequests || 4000, 1, 10000000);
+    var userPromptTokens = clamp(opts.userPromptTokens || 350, 20, 50000);
+    var outputTokens = clamp(opts.outputTokens || 450, 20, 32000);
+    var trainCostPer1M = clamp(opts.trainCostPer1M || 3.00, 0.1, 100);
+    var trainEpochs = clamp(opts.trainEpochs || 3, 1, 10);
+    var retrainsPerYear = clamp(opts.retrainsPerYear || 6, 1, 52);
+    var ftInferMultiplier = clamp(opts.ftInferMultiplier || 1.6, 1.0, 4.0);
+    var ragTopKTokens = clamp(opts.ragTopKTokens || 2400, 200, 40000);
+    var vectorDbMonthly = clamp(opts.vectorDbMonthly || 70, 0, 10000);
+    var cacheHitRate = clamp(opts.cacheHitRate || 85, 0, 95);
+
+    // 1. Fine-Tuning 12-month TCO
+    var oneTrainCost = (kbTokens / 1e6) * trainCostPer1M * trainEpochs;
+    var annualTrainCost = oneTrainCost * retrainsPerYear;
+    var ftInRate = baseModel.input * ftInferMultiplier;
+    var ftOutRate = baseModel.output * ftInferMultiplier;
+    var ftMonthlyInfer = dailyRequests * 30 * ((userPromptTokens / 1e6) * ftInRate + (outputTokens / 1e6) * ftOutRate);
+    var ftAnnual = annualTrainCost + ftMonthlyInfer * 12;
+
+    // 2. RAG + Vector DB 12-month TCO
+    var ragWork = calcModelWorkload(baseModel, {
+      inputTokens: userPromptTokens + ragTopKTokens,
+      outputTokens: outputTokens,
+      dailyRequests: dailyRequests,
+      cacheHitRate: 30,
+      useBatch: false
+    });
+    var ragEmbedAnnual = ((kbTokens * retrainsPerYear + dailyRequests * 365 * 40) / 1e6) * 0.02;
+    var ragAnnual = (ragWork.monthly + vectorDbMonthly) * 12 + ragEmbedAnnual;
+
+    // 3. Long-Context Prompt Caching 12-month TCO (fits if kbTokens <= 1M)
+    var cacheFits = kbTokens <= 900000;
+    var cacheWork = calcModelWorkload(baseModel, {
+      inputTokens: Math.min(kbTokens, 900000) + userPromptTokens,
+      outputTokens: outputTokens,
+      dailyRequests: dailyRequests,
+      cacheHitRate: cacheHitRate,
+      useBatch: false
+    });
+    var cacheAnnual = cacheFits ? cacheWork.monthly * 12 : null;
+
+    var candidates = [
+      { id: 'fine-tuning', label: 'Fine-Tuning (LoRA/SFT)', annual: ftAnnual, monthly: ftAnnual / 12 },
+      { id: 'rag', label: 'RAG + Vector DB', annual: ragAnnual, monthly: ragAnnual / 12 }
+    ];
+    if (cacheFits) {
+      candidates.push({ id: 'prompt-caching', label: 'Long-Context Prompt Caching', annual: cacheAnnual, monthly: cacheAnnual / 12 });
+    }
+    candidates.sort(function (a, b) { return a.annual - b.annual; });
+
+    return {
+      model: baseModel,
+      oneTrainCost: oneTrainCost,
+      annualTrainCost: annualTrainCost,
+      ftMonthly: ftAnnual / 12,
+      ftAnnual: ftAnnual,
+      ragMonthly: ragAnnual / 12,
+      ragAnnual: ragAnnual,
+      cacheFits: cacheFits,
+      cacheMonthly: cacheFits ? cacheAnnual / 12 : null,
+      cacheAnnual: cacheAnnual,
+      winner: candidates[0],
+      runnerUp: candidates[1],
+      annualSavingsVsRunnerUp: candidates[1].annual - candidates[0].annual
+    };
+  }
+
+  // LLM Rate-Limit (RPM / TPM / Concurrency) & Tier Capacity Planner
+  function calcRateLimitPlan(modelId, opts) {
+    var m = getModel(modelId);
+    var avgRpm = clamp(opts.avgRpm || 120, 1, 500000);
+    var burstMultiplier = clamp(opts.burstMultiplier || 2.5, 1, 10);
+    var inputTokens = clamp(opts.inputTokens || 2500, 50, 500000);
+    var outputTokens = clamp(opts.outputTokens || 600, 20, 64000);
+    var avgLatencySec = clamp(opts.avgLatencySec || 4.5, 0.2, 120);
+    var cacheHitRate = clamp(opts.cacheHitRate || 50, 0, 95);
+
+    var peakRpm = Math.ceil(avgRpm * burstMultiplier);
+    var totalTokPerReq = inputTokens + outputTokens;
+    var peakTpm = peakRpm * totalTokPerReq;
+    var peakOutputTpm = peakRpm * outputTokens;
+    // Little's Law: L = lambda * W
+    var peakConcurrency = Math.ceil((peakRpm / 60) * avgLatencySec);
+    var recommendedTier = peakTpm <= 200000 ? 'Tier 1–2 (Standard Pay-As-You-Go)'
+      : peakTpm <= 2000000 ? 'Tier 3–4 (Scale API + Exponential Backoff)'
+        : peakTpm <= 10000000 ? 'Tier 5 + Multi-Region Failover Router'
+          : 'Provisioned Throughput / Enterprise PTU';
+
+    var dailyReqsAtAvg = Math.round(avgRpm * 60 * 14); // 14 active-equivalent hours/day
+    var monthlyWork = calcModelWorkload(m, {
+      inputTokens: inputTokens,
+      outputTokens: outputTokens,
+      dailyRequests: dailyReqsAtAvg,
+      cacheHitRate: cacheHitRate,
+      useBatch: false
+    });
+
+    return {
+      model: m,
+      avgRpm: avgRpm,
+      peakRpm: peakRpm,
+      peakTpm: peakTpm,
+      peakOutputTpm: peakOutputTpm,
+      peakConcurrency: peakConcurrency,
+      recommendedTier: recommendedTier,
+      estMonthlyCost: monthlyWork.monthly,
+      backupProvidersNeeded: peakTpm > 2000000 ? 2 : 1
+    };
+  }
+
+  var CURRENCIES = {
+    USD: { code: 'USD', symbol: '$', rate: 1, decimals: 2 },
+    EUR: { code: 'EUR', symbol: '€', rate: 0.92, decimals: 2 },
+    GBP: { code: 'GBP', symbol: '£', rate: 0.79, decimals: 2 },
+    JPY: { code: 'JPY', symbol: '¥', rate: 154, decimals: 0 },
+    KRW: { code: 'KRW', symbol: '₩', rate: 1390, decimals: 0 }
+  };
+  var activeCurrency = 'USD';
+
+  function setCurrency(code) {
+    if (CURRENCIES[code]) activeCurrency = code;
+    return activeCurrency;
+  }
+
+  function getCurrency() {
+    return CURRENCIES[activeCurrency] || CURRENCIES.USD;
+  }
+
   function formatUsd(n) {
-    var x = Number(n);
-    if (!isFinite(x)) return '$0.00';
+    var cur = getCurrency();
+    var x = Number(n) * cur.rate;
+    if (!isFinite(x)) return cur.symbol + (cur.decimals === 0 ? '0' : '0.00');
     var abs = Math.abs(x);
     var sign = x < 0 ? '-' : '';
-    if (abs === 0) return '$0.00';
-    if (abs < 0.0001) return sign + '$' + abs.toFixed(6);
-    if (abs < 0.01) return sign + '$' + abs.toFixed(4);
-    if (abs < 1000) return sign + '$' + abs.toFixed(2);
-    return sign + '$' + abs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    if (abs === 0) return cur.symbol + (cur.decimals === 0 ? '0' : '0.00');
+    if (cur.decimals === 0) {
+      if (abs < 1) return sign + cur.symbol + abs.toFixed(2);
+      return sign + cur.symbol + Math.round(abs).toLocaleString('en-US');
+    }
+    if (abs < 0.0001) return sign + cur.symbol + abs.toFixed(6);
+    if (abs < 0.01) return sign + cur.symbol + abs.toFixed(4);
+    if (abs < 1000) return sign + cur.symbol + abs.toFixed(2);
+    return sign + cur.symbol + abs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
   function formatInt(n) {
@@ -611,8 +748,11 @@
     EMBEDDINGS: EMBEDDINGS,
     GPU_PRESETS: GPU_PRESETS,
     MULTIMODAL_RATES: MULTIMODAL_RATES,
+    CURRENCIES: CURRENCIES,
     getModel: getModel,
     getEmbedding: getEmbedding,
+    setCurrency: setCurrency,
+    getCurrency: getCurrency,
     estimateTokens: estimateTokens,
     calcModelWorkload: calcModelWorkload,
     calcCascadeSavings: calcCascadeSavings,
@@ -625,6 +765,8 @@
     calcMultimodalBudget: calcMultimodalBudget,
     calcAiRunway: calcAiRunway,
     calcPromptDiff: calcPromptDiff,
+    calcFineTuneVsRag: calcFineTuneVsRag,
+    calcRateLimitPlan: calcRateLimitPlan,
     formatUsd: formatUsd,
     formatInt: formatInt
   };

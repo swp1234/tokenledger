@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <title>Enterprise AI Gateway Pricing: AWS Bedrock vs. Google Vertex AI vs. Azure OpenAI vs. Direct APIs | TokenLedger</title>
+  <meta name="description" content="Hidden enterprise cloud FinOps trade-offs: regional surcharges, Provisioned Throughput Units (PTU), prompt caching parity, and committed cloud-spend burn.">
+  <meta name="dateModified" content="2026-11-26">
+  <link rel="canonical" href="https://tokenledger-8x7.pages.dev/guides/enterprise-ai-gateway-bedrock-vertex-azure-pricing.html">
+
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Enterprise AI Gateway Pricing: AWS Bedrock vs. Google Vertex AI vs. Azure OpenAI vs. Direct APIs | TokenLedger">
+  <meta property="og:description" content="Hidden enterprise cloud FinOps trade-offs: regional surcharges, Provisioned Throughput Units (PTU), prompt caching parity, and committed cloud-spend burn.">
+  <meta property="og:url" content="https://tokenledger-8x7.pages.dev/guides/enterprise-ai-gateway-bedrock-vertex-azure-pricing.html">
+  <meta property="og:image" content="https://tokenledger-8x7.pages.dev/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Enterprise AI Gateway Pricing: AWS Bedrock vs. Google Vertex AI vs. Azure OpenAI vs. Direct APIs | TokenLedger">
+  <meta name="twitter:description" content="Hidden enterprise cloud FinOps trade-offs: regional surcharges, Provisioned Throughput Units (PTU), prompt caching parity, and committed cloud-spend burn.">
+  <meta name="twitter:image" content="https://tokenledger-8x7.pages.dev/og-image.png">
+
+  <link rel="stylesheet" href="/css/tokenledger.css">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "Enterprise AI Gateway Pricing: AWS Bedrock vs. Google Vertex AI vs. Azure OpenAI vs. Direct APIs",
+      "description": "Hidden enterprise cloud FinOps trade-offs: regional surcharges, Provisioned Throughput Units (PTU), prompt caching parity, and committed cloud-spend burn.",
+      "datePublished": "2026-11-26",
+      "dateModified": "2026-11-26",
+      "author": {
+        "@type": "Organization",
+        "name": "TokenLedger"
+      },
+      "mainEntityOfPage": "https://tokenledger-8x7.pages.dev/guides/enterprise-ai-gateway-bedrock-vertex-azure-pricing.html",
+      "image": "https://tokenledger-8x7.pages.dev/og-image.png"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "TokenLedger",
+          "item": "https://tokenledger-8x7.pages.dev/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Enterprise AI Gateway Pricing: AWS Bedrock vs. Google Vertex AI vs. Azure OpenAI vs. Direct APIs",
+          "item": "https://tokenledger-8x7.pages.dev/guides/enterprise-ai-gateway-bedrock-vertex-azure-pricing.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <header class="tl-header">
+    <div class="tl-nav-inner">
+      <a href="/" class="tl-brand"><span class="tl-logo" aria-hidden="true">TL</span><span>TokenLedger</span></a>
+      <nav class="tl-nav-links" aria-label="Primary">
+        <a href="/">Estimator</a>
+        <a href="/tools/agent-budget.html">Agent Burn</a>
+        <a href="/tools/mcp-schema-auditor.html">MCP Tax</a>
+        <a href="/tools/saas-margin.html">SaaS Margin</a>
+        <a href="/tools/rag-calculator.html">RAG TCO</a>
+        <a href="/tools/self-host-vs-api.html">GPU vs API</a>
+        <a href="/tools/multimodal-budget.html">Voice & Vision</a>
+        <a href="/tools/token-inspector.html">Inspector</a>
+      </nav>
+      <div class="tl-nav-actions">
+        <select id="tlCurrencySelect" class="tl-icon-btn" aria-label="Display Currency" style="padding:0 8px;cursor:pointer">
+          <option value="USD">USD $</option>
+          <option value="EUR">EUR €</option>
+          <option value="GBP">GBP £</option>
+          <option value="JPY">JPY ¥</option>
+          <option value="KRW">KRW ₩</option>
+        </select>
+        <a href="/api/pricing.json" class="tl-icon-btn" title="Public JSON Pricing Feed">JSON API</a>
+        <button type="button" id="tlThemeToggle" class="tl-icon-btn" aria-label="Toggle Light or Dark Theme">Light</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="tl-wrap">
+  <section class="tl-hero">
+    <div class="tl-kicker">AI FINOPS ENGINEERING PLAYBOOK</div>
+    <h1>Enterprise AI Gateway Pricing: AWS Bedrock vs. Google Vertex AI vs. Azure OpenAI vs. Direct APIs</h1>
+    <p>Hidden enterprise cloud FinOps trade-offs: regional surcharges, Provisioned Throughput Units (PTU), prompt caching parity, and committed cloud-spend burn.</p>
+    <div class="tl-btn-bar"><a class="tl-btn tl-btn-primary" href="/tools/self-host-vs-api.html">Model Dedicated vs PayGo Break-Even →</a></div>
+  </section>
+  <article class="tl-panel tl-prose">
+    <h2>1. On-Demand List Parity vs. Hidden Regional &amp; Cross-Region Premiums</h2>
+    <p>While headline per-1M token list rates on AWS Bedrock, Google Vertex AI, and Azure OpenAI frequently match direct vendor APIs, regional endpoints (EU/APAC) and data-residency routing can add 10% premiums. Always verify whether prompt caching and 50% batch discounts are enabled in your target region.</p>
+    <h2>2. When Provisioned Throughput (PTU / GSU) Pays Off</h2>
+    <p>Reserved throughput eliminates noisy-neighbor 429 errors and guarantees p99 latency, yet under-utilized PTUs burn 24/7 fixed spend. Hybrid routing—sending steady base load to PTU and spilling peak bursts to PayGo—preserves both SLA and gross margin.</p>
+    <div class="tl-btn-bar" style="margin-top:24px"><a class="tl-btn tl-btn-primary" href="/tools/self-host-vs-api.html">Model Dedicated vs PayGo Break-Even →</a><a class="tl-btn" href="/">All 24 Models Estimator</a></div>
+  </article>
+  <section class="tl-resources" aria-label="Recommended AI Engineering and FinOps Books">
+    <h2>Recommended AI Engineering &amp; Cloud FinOps Books</h2>
+    <div class="tl-res-grid">
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098166302?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>AI Engineering</strong>
+        <span>Chip Huyen (O’Reilly) • Production architecture for foundation models, evaluation, RAG, and latency/cost budgets.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098150724?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>Cloud FinOps (2nd Ed.)</strong>
+        <span>J.R. Storment &amp; Mike Fuller (O’Reilly) • Collaborative cloud &amp; AI unit-economics governance for engineering teams.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098161769?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>Building LLMs for Production</strong>
+        <span>Louis-François Bouchard &amp; Louie Peters • Practical prompting, caching, RAG, and cost-aware inference routing.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+    </div>
+    <p class="tl-disclosure">Editorial note: Curated technical books for AI engineers and FinOps teams. Amazon links include affiliate tag dopabrain-20 (no extra cost to you) and help keep TokenLedger 100% free and ad-free. Interested in sponsoring TokenLedger? <a href="https://github.com/swp1234/tokenledger" target="_blank" rel="noopener" style="color:var(--accent)">Open a Sponsor / Partnership thread on GitHub ↗</a>.</p>
+  </section>
+  </main>
+
+  <footer class="tl-footer">
+    <div class="tl-footer-inner">
+      <div><strong>TokenLedger</strong> &bull; 100% Browser-Private AI &amp; LLM FinOps Studio &bull; Pricing snapshot: 2026-11-26</div>
+      <div>
+        <a href="/about.html">Methodology</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/api/pricing.json">Pricing JSON</a>
+        <a href="https://github.com/swp1234/tokenledger" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+  </footer>
+  <script src="/js/pricing-engine.js"></script>
+  <script src="/js/ui-shell.js"></script>
+
+</body>
+</html>

@@ -6,7 +6,7 @@
   <meta name="robots" content="index, follow, max-image-preview:large">
   <title>Prompt Compression A/B Token &amp; Annual USD Savings Diff Tool | TokenLedger</title>
   <meta name="description" content="Paste Prompt A (before) vs Prompt B (after) locally to calculate exact token savings, compression %, and annual USD saved across GPT-5, Claude 4, and Gemini 2.5.">
-  <meta name="dateModified" content="2026-11-24">
+  <meta name="dateModified" content="2026-11-26">
   <link rel="canonical" href="https://tokenledger-8x7.pages.dev/tools/prompt-diff.html">
 
 
@@ -58,6 +58,13 @@
         <a href="/tools/token-inspector.html" class="active">Inspector</a>
       </nav>
       <div class="tl-nav-actions">
+        <select id="tlCurrencySelect" class="tl-icon-btn" aria-label="Display Currency" style="padding:0 8px;cursor:pointer">
+          <option value="USD">USD $</option>
+          <option value="EUR">EUR €</option>
+          <option value="GBP">GBP £</option>
+          <option value="JPY">JPY ¥</option>
+          <option value="KRW">KRW ₩</option>
+        </select>
         <a href="/api/pricing.json" class="tl-icon-btn" title="Public JSON Pricing Feed">JSON API</a>
         <button type="button" id="tlThemeToggle" class="tl-icon-btn" aria-label="Toggle Light or Dark Theme">Light</button>
       </div>
@@ -97,6 +104,7 @@
     <div class="tl-btn-bar" style="margin-bottom:16px">
       <button type="button" id="btnDiffSample" class="tl-btn">Load Sample A/B Prompts</button>
       <button type="button" id="btnDiffMd" class="tl-btn tl-btn-primary">Copy PR Diff Markdown Table</button>
+      <button type="button" id="btnCopyGhAction" class="tl-btn">Copy GitHub Action CI YAML</button>
     </div>
     <div class="tl-table-wrap">
       <table class="tl-table" style="min-width:440px">
@@ -130,7 +138,7 @@
 
   <footer class="tl-footer">
     <div class="tl-footer-inner">
-      <div><strong>TokenLedger</strong> &bull; 100% Browser-Private AI &amp; LLM FinOps Studio &bull; Pricing snapshot: 2026-11-24</div>
+      <div><strong>TokenLedger</strong> &bull; 100% Browser-Private AI &amp; LLM FinOps Studio &bull; Pricing snapshot: 2026-11-26</div>
       <div>
         <a href="/about.html">Methodology</a>
         <a href="/privacy.html">Privacy</a>

@@ -7,7 +7,7 @@ const ROOT = path.resolve(__dirname, '..');
 const ENGINE = require(path.join(ROOT, 'js', 'pricing-engine.js'));
 const ORIGIN = 'https://tokenledger-8x7.pages.dev';
 const REPO_URL = 'https://github.com/swp1234/tokenledger';
-const TODAY = '2026-11-24';
+const TODAY = '2026-11-26';
 
 function esc(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -90,6 +90,13 @@ ${jsonLd}
 ${navHtml}
       </nav>
       <div class="tl-nav-actions">
+        <select id="tlCurrencySelect" class="tl-icon-btn" aria-label="Display Currency" style="padding:0 8px;cursor:pointer">
+          <option value="USD">USD $</option>
+          <option value="EUR">EUR €</option>
+          <option value="GBP">GBP £</option>
+          <option value="JPY">JPY ¥</option>
+          <option value="KRW">KRW ₩</option>
+        </select>
         <a href="/api/pricing.json" class="tl-icon-btn" title="Public JSON Pricing Feed">JSON API</a>
         <button type="button" id="tlThemeToggle" class="tl-icon-btn" aria-label="Toggle Light or Dark Theme">Light</button>
       </div>
@@ -142,7 +149,15 @@ const COMPARISONS = [
   { slug: 'qwen-2-5-vs-deepseek-v3', a: 'qwen-2.5-72b', b: 'deepseek-v3', title: 'Qwen 2.5 72B vs DeepSeek-V3 Hosted Open-Weight API Cost Comparison', summary: 'Compare multilingual Qwen 2.5 72B ($0.35/$0.40) against DeepSeek-V3 ($0.27/$1.10) on output-heavy workloads.' },
   { slug: 'gpt-5-nano-vs-gemini-2-5-flash-lite', a: 'gpt-5-nano', b: 'gemini-2.5-flash-lite', title: 'GPT-5 nano vs Gemini 2.5 Flash-Lite Ultra-Budget API Comparison', summary: 'Benchmark the two cheapest production API models ($0.05/$0.40 vs $0.10/$0.40) at 100K+ daily requests.' },
   { slug: 'o4-mini-vs-grok-3-mini', a: 'o4-mini', b: 'grok-3-mini', title: 'OpenAI o4-mini vs xAI Grok 3 Mini Fast Reasoning Cost Comparison', summary: 'Compare fast reasoning API economics between OpenAI o4-mini ($1.10/$4.40) and xAI Grok 3 Mini ($0.30/$0.50).' },
-  { slug: 'claude-haiku-vs-gpt-4-1-mini', a: 'claude-3.5-haiku', b: 'gpt-4.1-mini', title: 'Claude 3.5 Haiku vs GPT-4.1 mini Low-Latency API Cost Breakdown', summary: 'Side-by-side FinOps analysis comparing Anthropic Claude 3.5 Haiku ($0.80/$4) and OpenAI GPT-4.1 mini ($0.40/$1.60).' }
+  { slug: 'claude-haiku-vs-gpt-4-1-mini', a: 'claude-3.5-haiku', b: 'gpt-4.1-mini', title: 'Claude 3.5 Haiku vs GPT-4.1 mini Low-Latency API Cost Breakdown', summary: 'Side-by-side FinOps analysis comparing Anthropic Claude 3.5 Haiku ($0.80/$4) and OpenAI GPT-4.1 mini ($0.40/$1.60).' },
+  { slug: 'aws-bedrock-vs-direct-anthropic-api', a: 'claude-sonnet-4', b: 'claude-3.5-haiku', title: 'AWS Bedrock vs Direct Anthropic API Pricing & Enterprise FinOps Guide (2026)', summary: 'Compare AWS Bedrock on-demand, cross-region inference, and Provisioned Throughput against direct Anthropic API prompt caching and 50% batch discounts.' },
+  { slug: 'google-vertex-ai-vs-gemini-api', a: 'gemini-2.5-pro', b: 'gemini-2.5-flash', title: 'Google Vertex AI vs Gemini Developer API Pricing & Enterprise TCO (2026)', summary: 'Evaluate Google Cloud Vertex AI IAM/VPC compliance and context caching economics alongside direct Gemini 2.5 Pro & Flash API rates.' },
+  { slug: 'azure-openai-vs-openai-direct-api', a: 'gpt-5', b: 'gpt-4.1', title: 'Azure OpenAI Service vs OpenAI Direct API Pricing & PTU Comparison (2026)', summary: 'Compare Azure OpenAI Standard PayGo and Provisioned Throughput Units (PTU) against direct OpenAI API caching and Batch endpoints.' },
+  { slug: 'fine-tuning-vs-rag-cost', a: 'gpt-4.1-mini', b: 'gpt-4.1', title: 'LLM Fine-Tuning vs RAG vs Prompt Caching: 12-Month Cost Comparison (2026)', summary: 'Quantitative 12-month TCO comparison of LoRA fine-tuning retrains, vector DB RAG synthesis, and long-context prompt caching.' },
+  { slug: 'claude-sonnet-4-vs-openai-o3', a: 'claude-sonnet-4', b: 'o3', title: 'Claude Sonnet 4 vs OpenAI o3 Coding & Reasoning API Cost Comparison', summary: 'Benchmark multi-step coding and deep reasoning token spend between Anthropic Claude Sonnet 4 ($3/$15) and OpenAI o3 ($2/$8).' },
+  { slug: 'gemini-2-5-flash-vs-deepseek-v3', a: 'gemini-2.5-flash', b: 'deepseek-v3', title: 'Gemini 2.5 Flash vs DeepSeek-V3 High-Volume API Cost Comparison (2026)', summary: 'Compare two ultra-efficient production models ($0.30/$2.50 vs $0.27/$1.10) across 1M-context RAG and structured JSON pipelines.' },
+  { slug: 'openai-batch-api-vs-anthropic-batch-api', a: 'gpt-5', b: 'claude-sonnet-4', title: 'OpenAI Batch API vs Anthropic Message Batches (50% Off) Cost Guide', summary: 'Compare 24-hour async 50%-off batch pricing, prompt caching stacking, and throughput limits for nightly LLM pipelines.' },
+  { slug: 'vllm-vs-ollama-production-tco', a: 'llama-4-maverick', b: 'qwen-2.5-72b', title: 'vLLM vs Ollama Production GPU Hosting TCO & Throughput Comparison (2026)', summary: 'Compare continuous-batching vLLM throughput per H100/L40S GPU against local Ollama deployments and pay-per-token open-weight APIs.' }
 ];
 
 const GUIDES = [
@@ -231,6 +246,48 @@ const GUIDES = [
       { h2: 'Confidence-Gated Escalation', p: 'Start with a lightweight rubric or structured JSON confidence score on the fast tier; escalate to the frontier tier only when multi-file reasoning, ambiguous edge cases, or low-confidence flags trigger.' }
     ],
     ctaHref: '/?frontier=claude-sonnet-4&mini=gemini-2.5-flash&offload=75', ctaLabel: 'Simulate 75/25 Cascade Savings →'
+  },
+  {
+    slug: 'fine-tuning-vs-rag-cost-decision-matrix',
+    title: 'Fine-Tuning vs. RAG vs. Prompt Caching: The 12-Month AI FinOps Decision Matrix',
+    desc: 'When does LoRA fine-tuning actually save money over RAG or long-context prompt caching? Break down training refreshes, inference multipliers, and vector DB RAM.',
+    sections: [
+      { h2: '1. Why Fine-Tuning Rarely Beats RAG for Frequently Changing Knowledge', p: 'Every time product docs, prices, or policies change, a fine-tuned model requires dataset curation, training runs, eval regressions, and redeployment—plus many cloud vendors charge 1.5x–2x higher inference rates on custom fine-tuned weights. RAG updates knowledge in seconds for pennies of embedding cost.' },
+      { h2: '2. When Fine-Tuning Wins Decisively on Unit Economics', p: 'If you run 20,000+ daily requests with a massive 6,000-token style guide or complex extraction rubric, distilling that behavior into a fine-tuned small model (e.g., GPT-4.1 mini or Llama 4) eliminates thousands of repeated input tokens per call and pays back training costs within weeks.' },
+      { h2: '3. The Third Contender: Long-Context Prompt Caching Under 200K Tokens', p: 'If your entire domain knowledge fits under 100K–200K tokens and traffic is steady enough to keep caches warm, 90%-discounted prompt caching often delivers higher accuracy than RAG with zero vector database maintenance.' }
+    ],
+    ctaHref: '/tools/fine-tune-vs-rag.html', ctaLabel: 'Run 12-Month Fine-Tune vs RAG TCO →'
+  },
+  {
+    slug: 'llm-rate-limits-tpm-rpm-architecture',
+    title: 'LLM Rate Limits (RPM & TPM) in Production: Concurrency Math & Multi-Provider Failover',
+    desc: 'Prevent HTTP 429 outages at peak traffic using Little’s Law concurrency sizing, burst multipliers, token-bucket rate limiters, and multi-region failover.',
+    sections: [
+      { h2: '1. Why Peak TPM — Not Daily Average — Breaks Production AI Apps', p: 'SaaS traffic is never evenly spread across 24 hours. A morning standup burst or batch webhook can spike RPM 2.5x–4x above average, instantly exhausting Anthropic or OpenAI Tokens-Per-Minute (TPM) ceilings and triggering cascading 429 retries.' },
+      { h2: '2. Sizing Concurrent Streams with Little’s Law', p: 'Required concurrent open connections equal (Peak RPM ÷ 60) × Average Latency in seconds. A 300-RPM burst with 6-second streaming responses holds 30 concurrent workers open—meaning slow frontier reasoning models amplify connection-pool pressure.' },
+      { h2: '3. Designing Graceful 429/529 Failover Policies', p: 'Combine jittered exponential backoff with cross-region endpoints (e.g., US + EU Bedrock/Vertex) or an automated secondary provider fallback so users never see hard timeouts during provider congestion.' }
+    ],
+    ctaHref: '/tools/llm-rate-limit-planner.html', ctaLabel: 'Calculate Peak TPM & Tier Capacity →'
+  },
+  {
+    slug: 'enterprise-ai-gateway-bedrock-vertex-azure-pricing',
+    title: 'Enterprise AI Gateway Pricing: AWS Bedrock vs. Google Vertex AI vs. Azure OpenAI vs. Direct APIs',
+    desc: 'Hidden enterprise cloud FinOps trade-offs: regional surcharges, Provisioned Throughput Units (PTU), prompt caching parity, and committed cloud-spend burn.',
+    sections: [
+      { h2: '1. On-Demand List Parity vs. Hidden Regional & Cross-Region Premiums', p: 'While headline per-1M token list rates on AWS Bedrock, Google Vertex AI, and Azure OpenAI frequently match direct vendor APIs, regional endpoints (EU/APAC) and data-residency routing can add 10% premiums. Always verify whether prompt caching and 50% batch discounts are enabled in your target region.' },
+      { h2: '2. When Provisioned Throughput (PTU / GSU) Pays Off', p: 'Reserved throughput eliminates noisy-neighbor 429 errors and guarantees p99 latency, yet under-utilized PTUs burn 24/7 fixed spend. Hybrid routing—sending steady base load to PTU and spilling peak bursts to PayGo—preserves both SLA and gross margin.' }
+    ],
+    ctaHref: '/tools/self-host-vs-api.html', ctaLabel: 'Model Dedicated vs PayGo Break-Even →'
+  },
+  {
+    slug: 'ci-cd-llm-token-budget-guardrails',
+    title: 'CI/CD LLM Token Budget Guardrails: Catching Prompt & MCP Schema Bloat Before Merge',
+    desc: 'How engineering teams run automated token-budget checks in GitHub Actions pull requests to stop silent $10,000/yr prompt regressions.',
+    sections: [
+      { h2: '1. Why One Unreviewed PR Can Add $12,000/Year in Silent Token Spend', p: 'Adding 400 tokens of verbose few-shot examples or two unminified MCP JSON schemas to a high-volume system prompt looks harmless in code review—until 10,000 daily requests multiply that diff into a five-figure annual bill.' },
+      { h2: '2. Automating Token Diffs in GitHub Actions', p: 'Run a zero-dependency CLI token budget check inside every pull request touching prompts/ or tools/ directories, posting exact monthly & annual cost impact directly into the GitHub Step Summary before merge.' }
+    ],
+    ctaHref: '/tools/prompt-diff.html', ctaLabel: 'Generate GitHub Action Budget Guard →'
   }
 ];
 
@@ -394,7 +451,9 @@ registerPage('/', 'index.html', renderShell({
       <a class="tl-link-card" href="/tools/self-host-vs-api.html"><strong>Self-Hosted GPU vs Cloud API</strong><span>Calculate exact daily request break-even for H100/A100/L40S/4090 vLLM vs cloud APIs.</span><em>Compare GPU vs API →</em></a>
       <a class="tl-link-card" href="/tools/multimodal-budget.html"><strong>Voice, Vision &amp; Image Cost Studio</strong><span>Estimate PDF/image vision tokens, OpenAI Realtime vs Gemini Live voice, and Imagen/Flux.</span><em>Open Studio →</em></a>
       <a class="tl-link-card" href="/tools/ai-runway.html"><strong>AI Startup Burn &amp; Runway Planner</strong><span>Model LLM spend scaling with MRR, cloud infra, payroll, and exact Default-Alive month.</span><em>Model Runway →</em></a>
-      <a class="tl-link-card" href="/tools/prompt-diff.html"><strong>Prompt A/B Compression Cost Diff</strong><span>Compare before vs. after system prompts and copy PR-ready annual USD savings tables.</span><em>Run Prompt Diff →</em></a>
+      <a class="tl-link-card" href="/tools/prompt-diff.html"><strong>Prompt A/B Compression Cost Diff</strong><span>Compare before vs. after system prompts and copy PR-ready annual USD savings tables + CI Action.</span><em>Run Prompt Diff →</em></a>
+      <a class="tl-link-card" href="/tools/fine-tune-vs-rag.html"><strong>Fine-Tuning vs. RAG vs. Caching TCO</strong><span>Compare 12-month LoRA training refreshes, vector DB RAG, and long-context caching + ADR export.</span><em>Compare Architectures →</em></a>
+      <a class="tl-link-card" href="/tools/llm-rate-limit-planner.html"><strong>LLM Rate-Limit (RPM/TPM) Planner</strong><span>Calculate peak TPM, Little’s Law concurrency, vendor tier needed, and export rate-limiter JSON.</span><em>Plan Capacity →</em></a>
       <a class="tl-link-card" href="/tools/token-inspector.html"><strong>Context &amp; JSON Minifier Inspector</strong><span>Inspect OpenAI/Claude/Gemini tokens and minify tool JSON schemas for instant savings.</span><em>Open Inspector →</em></a>
     </div>
     <div class="tl-pills" style="margin-top:14px">
@@ -962,12 +1021,136 @@ registerPage('/tools/prompt-diff.html', 'tools/prompt-diff.html', renderShell({
     <div class="tl-btn-bar" style="margin-bottom:16px">
       <button type="button" id="btnDiffSample" class="tl-btn">Load Sample A/B Prompts</button>
       <button type="button" id="btnDiffMd" class="tl-btn tl-btn-primary">Copy PR Diff Markdown Table</button>
+      <button type="button" id="btnCopyGhAction" class="tl-btn">Copy GitHub Action CI YAML</button>
     </div>
     <div class="tl-table-wrap">
       <table class="tl-table" style="min-width:440px">
         <thead><tr><th>Model</th><th>Provider</th><th>Monthly Delta</th><th>Annual Savings</th></tr></thead>
         <tbody id="diffTableBody"></tbody>
       </table>
+    </div>
+  </section>`
+}), '0.9');
+
+// --- PAGE 11: FINE-TUNING VS RAG VS PROMPT CACHING 12-MONTH TCO ---
+registerPage('/tools/fine-tune-vs-rag.html', 'tools/fine-tune-vs-rag.html', renderShell({
+  path: '/tools/fine-tune-vs-rag.html',
+  active: 'rag',
+  title: 'Fine-Tuning vs RAG vs Prompt Caching 12-Month TCO Calculator (2026)',
+  description: 'Compare 12-month total cost of ownership across LoRA/SFT fine-tuning retrains, RAG + Vector DB synthesis, and long-context prompt caching — with one-click ADR Markdown export.',
+  scripts: ['/js/fine-tune-vs-rag.js'],
+  schemaGraph: [
+    { '@type': 'SoftwareApplication', name: 'TokenLedger Fine-Tuning vs RAG TCO Calculator', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}/tools/fine-tune-vs-rag.html`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+    { '@type': 'FAQPage', mainEntity: [
+      { '@type': 'Question', name: 'When is Fine-Tuning cheaper than RAG?', acceptedAnswer: { '@type': 'Answer', text: 'Fine-tuning typically beats RAG when request volume is very high (15,000+ req/day), knowledge changes infrequently, and distilling a long 3,000+ token rubric into fine-tuned weights eliminates heavy per-request input tokens.' } }
+    ] }
+  ],
+  body: `  <section class="tl-hero">
+    <div class="tl-kicker">ARCHITECTURE FINOPS &bull; 12-MONTH TCO &bull; ADR EXPORT</div>
+    <h1>Fine-Tuning vs. RAG vs. Prompt Caching 12-Month TCO</h1>
+    <p>Model training costs, periodic knowledge retrains, fine-tuned inference multipliers, vector DB monthly hosting, and long-context prompt caching side by side to choose the highest-margin AI architecture.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">Lowest 12-Month TCO</div><div class="kpi-val accent" id="kpiFtWinner">-</div><div class="kpi-sub" id="kpiFtWinnerSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Fine-Tuning (12m)</div><div class="kpi-val" id="kpiFtAnnual">$0/yr</div><div class="kpi-sub" id="kpiFtAnnualSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">RAG + Vector DB (12m)</div><div class="kpi-val" id="kpiRagAnnual">$0/yr</div><div class="kpi-sub" id="kpiRagAnnualSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Long-Context Caching</div><div class="kpi-val" id="kpiCacheAnnual">$0/yr</div><div class="kpi-sub" id="kpiCacheAnnualSub">-</div></div>
+  </section>
+
+  <section class="tl-grid-2">
+    <div class="tl-panel">
+      <h2>1. Workload &amp; Knowledge Base</h2>
+      <div class="tl-field"><label for="ftModel">Base Model</label><select id="ftModel" class="tl-select"></select></div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="ftKbTokens">Knowledge Base Size (Tokens)</label><input id="ftKbTokens" class="tl-input num" type="number" min="1000" step="10000" value="150000"></div>
+        <div class="tl-field"><label for="ftDailyReqs">Daily Requests</label><input id="ftDailyReqs" class="tl-input num" type="number" min="1" step="500" value="4000"></div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="ftUserTok">User Query Tokens / Req</label><input id="ftUserTok" class="tl-input num" type="number" min="20" step="50" value="350"></div>
+        <div class="tl-field"><label for="ftOutTok">Output Tokens / Req</label><input id="ftOutTok" class="tl-input num" type="number" min="20" step="50" value="450"></div>
+      </div>
+      <div class="tl-field"><label for="ftCacheHit">Long-Context Cache Hit Rate <strong id="ftCacheVal">85%</strong></label><input id="ftCacheHit" class="tl-range" type="range" min="0" max="95" step="5" value="85"></div>
+    </div>
+
+    <div class="tl-panel">
+      <h2>2. Fine-Tuning &amp; RAG Parameters</h2>
+      <div class="tl-row">
+        <div class="tl-field"><label for="ftTrainRate">Training Rate ($/1M tok)</label><input id="ftTrainRate" class="tl-input num" type="number" min="0.1" step="0.5" value="3.00"></div>
+        <div class="tl-field"><label for="ftEpochs">Training Epochs</label><input id="ftEpochs" class="tl-input num" type="number" min="1" max="10" value="3"></div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="ftRetrains">Retrains / Year (Knowledge Updates)</label><input id="ftRetrains" class="tl-input num" type="number" min="1" max="52" value="6"></div>
+        <div class="tl-field"><label for="ftInferMult">Fine-Tuned Inference Multiplier</label><input id="ftInferMult" class="tl-input num" type="number" min="1.0" max="4.0" step="0.1" value="1.6"></div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="ftRagTopK">RAG Retrieved Tokens / Req</label><input id="ftRagTopK" class="tl-input num" type="number" min="200" step="200" value="2400"></div>
+        <div class="tl-field"><label for="ftVectorDb">Managed Vector DB ($/mo)</label><input id="ftVectorDb" class="tl-input num" type="number" min="0" step="10" value="70"></div>
+      </div>
+      <div class="tl-btn-bar"><button type="button" id="btnFtCopyAdr" class="tl-btn tl-btn-primary">Copy Architecture Decision Record (Markdown)</button></div>
+    </div>
+  </section>
+
+  <section class="tl-panel">
+    <h2>12-Month Architecture Comparison Matrix</h2>
+    <div class="tl-table-wrap">
+      <table class="tl-table" style="min-width:500px">
+        <thead><tr><th>Architecture</th><th>Monthly Avg</th><th>12-Month TCO</th><th>Key Cost Driver</th></tr></thead>
+        <tbody id="ftBreakdownBody"></tbody>
+      </table>
+    </div>
+  </section>`
+}), '0.9');
+
+// --- PAGE 12: LLM RATE-LIMIT (RPM / TPM / CONCURRENCY) CAPACITY PLANNER ---
+registerPage('/tools/llm-rate-limit-planner.html', 'tools/llm-rate-limit-planner.html', renderShell({
+  path: '/tools/llm-rate-limit-planner.html',
+  active: 'selfhost',
+  title: 'LLM Rate-Limit (RPM, TPM & Concurrency) & Multi-Provider Failover Planner',
+  description: 'Calculate exact peak Tokens-Per-Minute (TPM), Little’s Law concurrent streams, required OpenAI/Anthropic/Gemini tier, and export a ready-to-use token-bucket rate-limiter policy JSON.',
+  scripts: ['/js/llm-rate-limit-planner.js'],
+  schemaGraph: [
+    { '@type': 'SoftwareApplication', name: 'TokenLedger LLM Rate-Limit Capacity Planner', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}/tools/llm-rate-limit-planner.html`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+    { '@type': 'FAQPage', mainEntity: [
+      { '@type': 'Question', name: 'How do you calculate required LLM concurrency from RPM and latency?', acceptedAnswer: { '@type': 'Answer', text: 'By Little’s Law (L = λ × W), required concurrent streams equal (Peak RPM ÷ 60) × Average Response Latency in seconds.' } }
+    ] }
+  ],
+  body: `  <section class="tl-hero">
+    <div class="tl-kicker">PRODUCTION RELIABILITY &bull; RPM / TPM / LITTLE'S LAW</div>
+    <h1>LLM Rate-Limit (RPM / TPM) &amp; Failover Capacity Planner</h1>
+    <p>Prevent HTTP 429 production outages before launch. Compute exact burst TPM, concurrent streaming workers via Little’s Law, recommended API tier, and export a ready-to-paste token-bucket policy JSON.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">Peak Required TPM</div><div class="kpi-val warn" id="kpiRlPeakTpm">0 TPM</div><div class="kpi-sub" id="kpiRlPeakTpmSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Peak Concurrency</div><div class="kpi-val accent" id="kpiRlConc">0 workers</div><div class="kpi-sub" id="kpiRlConcSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Vendor Tier Needed</div><div class="kpi-val" id="kpiRlTier">-</div><div class="kpi-sub" id="kpiRlTierSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Est. Monthly Spend</div><div class="kpi-val" id="kpiRlCost">$0/mo</div><div class="kpi-sub" id="kpiRlCostSub">-</div></div>
+  </section>
+
+  <section class="tl-grid-2">
+    <div class="tl-panel">
+      <h2>1. Traffic &amp; Latency Profile</h2>
+      <div class="tl-field"><label for="rlModel">Primary LLM Endpoint</label><select id="rlModel" class="tl-select"></select></div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="rlAvgRpm">Sustained Requests / Min (RPM)</label><input id="rlAvgRpm" class="tl-input num" type="number" min="1" step="10" value="120"></div>
+        <div class="tl-field"><label for="rlLatency">Avg End-to-End Latency (sec)</label><input id="rlLatency" class="tl-input num" type="number" min="0.2" step="0.5" value="4.5"></div>
+      </div>
+      <div class="tl-field"><label for="rlBurst">Peak Burst Multiplier <strong id="rlBurstVal">2.5x</strong></label><input id="rlBurst" class="tl-range" type="range" min="1" max="8" step="0.5" value="2.5"></div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="rlInTok">Avg Input Tokens / Req</label><input id="rlInTok" class="tl-input num" type="number" min="50" step="100" value="2500"></div>
+        <div class="tl-field"><label for="rlOutTok">Avg Output Tokens / Req</label><input id="rlOutTok" class="tl-input num" type="number" min="20" step="50" value="600"></div>
+      </div>
+      <div class="tl-field"><label for="rlCache">Prompt Cache Hit Rate <strong id="rlCacheVal">50%</strong></label><input id="rlCache" class="tl-range" type="range" min="0" max="95" step="5" value="50"></div>
+    </div>
+
+    <div class="tl-panel">
+      <h2>2. Generated Token-Bucket &amp; Failover Policy</h2>
+      <pre id="rlConfigPreview" style="margin:0 0 12px;padding:14px;border-radius:10px;background:rgba(15,23,42,0.7);border:1px solid var(--border);overflow-x:auto;font-size:0.82rem;line-height:1.5;color:var(--text)"></pre>
+      <div class="tl-btn-bar">
+        <button type="button" id="btnRlCopyJson" class="tl-btn tl-btn-primary">Copy Rate-Limiter JSON</button>
+        <button type="button" id="btnRlDownload" class="tl-btn">Download Policy File</button>
+      </div>
     </div>
   </section>`
 }), '0.9');
@@ -1330,7 +1513,6 @@ writeFile('robots.txt', `User-agent: *\nAllow: /\nSitemap: ${ORIGIN}/sitemap.xml
 
 writeFile('_headers', `/*
   X-Content-Type-Options: nosniff
-  X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
 
@@ -1351,6 +1533,10 @@ const llmsTxt = `# TokenLedger — AI & LLM API FinOps Studio
 - [RAG & Vector DB TCO Planner](${ORIGIN}/tools/rag-calculator.html): Embedding ingestion, HNSW RAM footprint, re-index churn, and Top-K synthesis spend.
 - [Self-Hosted GPU vs Cloud API Break-Even Calculator](${ORIGIN}/tools/self-host-vs-api.html): H100/A100/L40S/4090 vLLM hourly + DevOps break-even vs cloud LLM APIs.
 - [Voice, Vision & Multimodal Cost Studio](${ORIGIN}/tools/multimodal-budget.html): PDF/image vision tokens, OpenAI Realtime vs Gemini Live voice, and image generation.
+- [AI Startup Burn & Runway Planner](${ORIGIN}/tools/ai-runway.html): 24-month cash trajectory, MRR-scaled LLM burn, and Default-Alive month calculator.
+- [Prompt A/B Compression Cost Diff & CI Guard](${ORIGIN}/tools/prompt-diff.html): Before/after prompt token savings across 6 flagship models + GitHub Action YAML generator.
+- [Fine-Tuning vs. RAG vs. Prompt Caching 12-Month TCO](${ORIGIN}/tools/fine-tune-vs-rag.html): Compare LoRA retrains, vector DB synthesis, and long-context prompt caching with ADR export.
+- [LLM Rate-Limit (RPM/TPM/Concurrency) Capacity Planner](${ORIGIN}/tools/llm-rate-limit-planner.html): Peak TPM, Little's Law concurrency sizing, vendor tier guidance, and rate-limiter JSON policy export.
 - [Context Window & JSON Minifier Inspector](${ORIGIN}/tools/token-inspector.html): OpenAI/Claude/Gemini token estimates and one-click JSON tool schema minification.
 
 ## International Hubs
