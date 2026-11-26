@@ -84,6 +84,12 @@ function runUnitTests() {
   assert(ENGINE.formatUsd(100).startsWith('¥'));
   ENGINE.setCurrency('USD');
   assert(ENGINE.formatUsd(100) === '$100.00');
+  const vr = ENGINE.calcGpuVram({ modelId: 'llama-3.3-70b', quant: 'q4km', contextLen: 8192, batchSize: 4, kvFp8: false });
+  assert(vr.weightsGB > 35 && vr.weightsGB < 45 && vr.totalVramGB > vr.weightsGB);
+  const vrFp8 = ENGINE.calcGpuVram({ modelId: 'llama-3.3-70b', quant: 'q4km', contextLen: 8192, batchSize: 4, kvFp8: true });
+  assert(Math.abs(vrFp8.kvCacheGB - vr.kvCacheGB * 0.5) < 0.01, 'FP8 KV cache must halve KV memory');
+  const hy = ENGINE.calcHybridWaterfall({ frontierId: 'claude-sonnet-4', miniId: 'gemini-2.5-flash', inputTokens: 3500, outputTokens: 700, dailyRequests: 10000, miniPct: 55, batchPct: 25, cacheHitRate: 70 });
+  assert(hy.savedPct > 60 && hy.optimizedMonthly < hy.baselineMonthly);
 
   // OG PNG check
   const ogBuf = fs.readFileSync(path.join(ROOT, 'og-image.png'));
@@ -111,7 +117,7 @@ function startServer() {
 async function runBrowserTests() {
   const sm = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
   const paths = [...sm.matchAll(/<loc>https:\/\/tokenledger-8x7\.pages\.dev([^<]+)<\/loc>/g)].map(m => m[1]);
-  assert(paths.length === 66, `Expected 66 sitemap URLs, got ${paths.length}`);
+  assert(paths.length === 80, `Expected 80 sitemap URLs, got ${paths.length}`);
 
   const { srv, origin } = await startServer();
   const browser = await chromium.launch({ headless: true });
@@ -193,11 +199,21 @@ async function runBrowserTests() {
     await page.goto(`${origin}/tools/llm-rate-limit-planner.html`, { waitUntil: 'domcontentloaded' });
     assert((await page.textContent('#kpiRlPeakTpm')).includes('TPM'));
     assert((await page.textContent('#rlConfigPreview')).includes('tokenBucket'));
+    await page.goto(`${origin}/tools/gpu-vram-calculator.html`, { waitUntil: 'domcontentloaded' });
+    assert((await page.locator('#vrMatrixBody tr').count()) === 5);
+    assert((await page.textContent('#kpiVrTotal')).includes('GB'));
+    await page.goto(`${origin}/tools/batch-vs-realtime-router.html`, { waitUntil: 'domcontentloaded' });
+    assert((await page.locator('#hyWaterfallBody tr').count()) === 6);
+    assert((await page.textContent('#kpiHySaveYr')).includes('/yr'));
+    await page.click('#tlCmdOpen');
+    await page.fill('#tlCmdInput', 'vram');
+    assert((await page.locator('#tlCmdList .tl-cmd-item').count()) === 1, 'Command palette search failed');
+    await page.keyboard.press('Escape');
     await page.goto(`${origin}/?embed=1`, { waitUntil: 'domcontentloaded' });
     assert(await page.evaluate(() => document.documentElement.classList.contains('tl-embed-mode')));
 
     assert.strictEqual(errors.length, 0, `Uncaught page errors: ${errors.join(' | ')}`);
-    console.log('[PASS] Interactive E2E tests passed across all 12 workspaces (presets, provider filter, theme, multi-currency, JSON minifier, agent chart, SaaS, RAG, GPU, MCP, multimodal, runway, prompt diff + CI YAML, fine-tune vs RAG, rate-limit planner, embed mode)');
+    console.log('[PASS] Interactive E2E tests passed across all 14 workspaces + Ctrl+K Command Palette + 5-currency switcher');
   } finally {
     await browser.close();
     await new Promise(r => srv.close(r));

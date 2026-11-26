@@ -71,14 +71,14 @@
         <a href="/tools/token-inspector.html" class="active">Inspector</a>
       </nav>
       <div class="tl-nav-actions">
-        <select id="tlCurrencySelect" class="tl-icon-btn" aria-label="Display Currency" style="padding:0 8px;cursor:pointer">
+        <button type="button" id="tlCmdOpen" class="tl-icon-btn" title="Quick Search (Ctrl+K)" aria-label="Quick Search">⌘K</button>
+        <select id="tlCurrencySelect" class="tl-icon-btn" aria-label="Display Currency" style="padding:0 6px;cursor:pointer">
           <option value="USD">USD $</option>
           <option value="EUR">EUR €</option>
           <option value="GBP">GBP £</option>
           <option value="JPY">JPY ¥</option>
           <option value="KRW">KRW ₩</option>
         </select>
-        <a href="/api/pricing.json" class="tl-icon-btn" title="Public JSON Pricing Feed">JSON API</a>
         <button type="button" id="tlThemeToggle" class="tl-icon-btn" aria-label="Toggle Light or Dark Theme">Light</button>
       </div>
     </div>

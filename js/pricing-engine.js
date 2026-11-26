@@ -704,6 +704,102 @@
     };
   }
 
+  // LLM GPU VRAM & KV-Cache Quantization Calculator
+  var VRAM_MODELS = [
+    { id: 'llama-3.1-8b', name: 'Llama 3.1 / 3.3 8B', paramsB: 8, layers: 32, kvHeads: 8, headDim: 128 },
+    { id: 'qwen-2.5-14b', name: 'Qwen 2.5 / 3 14B', paramsB: 14.8, layers: 48, kvHeads: 8, headDim: 128 },
+    { id: 'gemma-3-27b', name: 'Gemma 3 27B', paramsB: 27, layers: 62, kvHeads: 16, headDim: 128 },
+    { id: 'qwen-2.5-32b', name: 'Qwen 2.5 / QwQ 32B', paramsB: 32.5, layers: 64, kvHeads: 8, headDim: 128 },
+    { id: 'llama-3.3-70b', name: 'Llama 3.3 70B', paramsB: 70.6, layers: 80, kvHeads: 8, headDim: 128 },
+    { id: 'qwen-2.5-72b', name: 'Qwen 2.5 72B', paramsB: 72.7, layers: 80, kvHeads: 8, headDim: 128 },
+    { id: 'llama-4-scout-109b', name: 'Llama 4 Scout (109B MoE)', paramsB: 109, layers: 48, kvHeads: 8, headDim: 128 },
+    { id: 'llama-4-maverick-400b', name: 'Llama 4 Maverick (400B MoE)', paramsB: 400, layers: 48, kvHeads: 8, headDim: 128 },
+    { id: 'deepseek-r1-671b', name: 'DeepSeek-V3 / R1 (671B MoE)', paramsB: 671, layers: 61, kvHeads: 8, headDim: 128 }
+  ];
+
+  var QUANT_BITS = {
+    fp16: { label: 'FP16 / BF16 (16-bit)', bytesPerParam: 2.0 },
+    fp8: { label: 'FP8 / INT8 (8-bit)', bytesPerParam: 1.05 },
+    q6k: { label: 'GGUF Q6_K (~6.6-bit)', bytesPerParam: 0.83 },
+    q4km: { label: 'GGUF Q4_K_M / AWQ 4-bit', bytesPerParam: 0.58 },
+    q3km: { label: 'GGUF Q3_K_M (~3.9-bit)', bytesPerParam: 0.49 }
+  };
+
+  function calcGpuVram(opts) {
+    var preset = VRAM_MODELS.find(function (x) { return x.id === opts.modelId; }) || VRAM_MODELS[4];
+    var paramsB = clamp(opts.paramsB || preset.paramsB, 0.5, 2000);
+    var quant = QUANT_BITS[opts.quant] || QUANT_BITS.q4km;
+    var contextLen = clamp(opts.contextLen || 8192, 512, 1000000);
+    var batchSize = Math.round(clamp(opts.batchSize || 4, 1, 256));
+    var kvQuantBytes = opts.kvFp8 ? 1 : 2; // FP8 KV cache vs FP16 KV cache
+    var layers = clamp(opts.layers || preset.layers, 8, 200);
+    var kvHeads = clamp(opts.kvHeads || preset.kvHeads, 1, 128);
+    var headDim = clamp(opts.headDim || preset.headDim, 32, 256);
+
+    var weightsGB = (paramsB * 1e9 * quant.bytesPerParam) / (1024 * 1024 * 1024);
+    // KV cache bytes = 2 (K+V) * layers * kvHeads * headDim * contextLen * batchSize * kvQuantBytes
+    var kvCacheGB = (2 * layers * kvHeads * headDim * contextLen * batchSize * kvQuantBytes) / (1024 * 1024 * 1024);
+    var overheadGB = Math.max(1.2, (weightsGB + kvCacheGB) * 0.12);
+    var totalVramGB = weightsGB + kvCacheGB + overheadGB;
+
+    var hw = totalVramGB <= 22 ? { name: '1x RTX 4090 / 3090 (24GB)', hourly: 0.45, vram: 24 }
+      : totalVramGB <= 44 ? { name: '1x NVIDIA L40S / A6000 (48GB)', hourly: 1.15, vram: 48 }
+        : totalVramGB <= 74 ? { name: '1x NVIDIA A100 / H100 (80GB)', hourly: 1.65, vram: 80 }
+          : totalVramGB <= 150 ? { name: '2x NVIDIA H100 (160GB) or Mac Studio 192GB', hourly: 5.70, vram: 160 }
+            : totalVramGB <= 300 ? { name: '4x NVIDIA H100 Node (320GB)', hourly: 11.20, vram: 320 }
+              : totalVramGB <= 600 ? { name: '8x NVIDIA H100 Cluster (640GB)', hourly: 21.90, vram: 640 }
+                : { name: 'Multi-Node 2x8 H100 / H200 Cluster (1.1TB+)', hourly: 43.80, vram: 1128 };
+
+    return {
+      preset: preset,
+      quantLabel: quant.label,
+      weightsGB: weightsGB,
+      kvCacheGB: kvCacheGB,
+      overheadGB: overheadGB,
+      totalVramGB: totalVramGB,
+      recommendedHw: hw,
+      estCloudMonthly: hw.hourly * 24 * 30
+    };
+  }
+
+  // Enterprise Hybrid Traffic Waterfall (Realtime Frontier + Fast/Mini Cascade + 50% Async Batch + Prompt Caching)
+  function calcHybridWaterfall(opts) {
+    var frontier = getModel(opts.frontierId || 'claude-sonnet-4');
+    var mini = getModel(opts.miniId || 'gemini-2.5-flash');
+    var inputTokens = clamp(opts.inputTokens || 3500, 50, 500000);
+    var outputTokens = clamp(opts.outputTokens || 700, 20, 64000);
+    var dailyRequests = clamp(opts.dailyRequests || 10000, 1, 100000000);
+    var miniPct = clamp(opts.miniPct || 55, 0, 95);
+    var batchPct = clamp(opts.batchPct || 25, 0, 100 - miniPct);
+    var frontierPct = Math.max(0, 100 - miniPct - batchPct);
+    var cacheHitRate = clamp(opts.cacheHitRate || 70, 0, 95);
+
+    var baseline = calcModelWorkload(frontier, { inputTokens: inputTokens, outputTokens: outputTokens, dailyRequests: dailyRequests, cacheHitRate: 0, useBatch: false });
+    var afterCacheOnly = calcModelWorkload(frontier, { inputTokens: inputTokens, outputTokens: outputTokens, dailyRequests: dailyRequests, cacheHitRate: cacheHitRate, useBatch: false });
+    var laneFrontier = calcModelWorkload(frontier, { inputTokens: inputTokens, outputTokens: outputTokens, dailyRequests: dailyRequests * (frontierPct / 100), cacheHitRate: cacheHitRate, useBatch: false });
+    var laneMini = calcModelWorkload(mini, { inputTokens: inputTokens, outputTokens: outputTokens, dailyRequests: dailyRequests * (miniPct / 100), cacheHitRate: cacheHitRate, useBatch: false });
+    var laneBatch = calcModelWorkload(frontier, { inputTokens: inputTokens, outputTokens: outputTokens, dailyRequests: dailyRequests * (batchPct / 100), cacheHitRate: cacheHitRate, useBatch: true });
+
+    var optimizedMonthly = laneFrontier.monthly + laneMini.monthly + laneBatch.monthly;
+    var monthlySaved = Math.max(0, baseline.monthly - optimizedMonthly);
+    var savedPct = baseline.monthly > 0 ? (monthlySaved / baseline.monthly) * 100 : 0;
+
+    return {
+      frontier: frontier,
+      mini: mini,
+      split: { frontierPct: frontierPct, miniPct: miniPct, batchPct: batchPct },
+      baselineMonthly: baseline.monthly,
+      afterCacheOnlyMonthly: afterCacheOnly.monthly,
+      laneFrontierMonthly: laneFrontier.monthly,
+      laneMiniMonthly: laneMini.monthly,
+      laneBatchMonthly: laneBatch.monthly,
+      optimizedMonthly: optimizedMonthly,
+      monthlySaved: monthlySaved,
+      annualSaved: monthlySaved * 12,
+      savedPct: savedPct
+    };
+  }
+
   var CURRENCIES = {
     USD: { code: 'USD', symbol: '$', rate: 1, decimals: 2 },
     EUR: { code: 'EUR', symbol: '€', rate: 0.92, decimals: 2 },
@@ -747,6 +843,8 @@
     MODELS: MODELS,
     EMBEDDINGS: EMBEDDINGS,
     GPU_PRESETS: GPU_PRESETS,
+    VRAM_MODELS: VRAM_MODELS,
+    QUANT_BITS: QUANT_BITS,
     MULTIMODAL_RATES: MULTIMODAL_RATES,
     CURRENCIES: CURRENCIES,
     getModel: getModel,
@@ -767,6 +865,8 @@
     calcPromptDiff: calcPromptDiff,
     calcFineTuneVsRag: calcFineTuneVsRag,
     calcRateLimitPlan: calcRateLimitPlan,
+    calcGpuVram: calcGpuVram,
+    calcHybridWaterfall: calcHybridWaterfall,
     formatUsd: formatUsd,
     formatInt: formatInt
   };

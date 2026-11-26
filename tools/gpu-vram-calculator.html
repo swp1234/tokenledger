@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <title>LLM GPU VRAM &amp; KV-Cache Quantization Calculator (Llama 70B, DeepSeek-R1, Qwen) | TokenLedger</title>
+  <meta name="description" content="Calculate exact GPU VRAM for open-weight LLMs across FP16, FP8, Q6_K, Q4_K_M, and Q3_K_M including GQA KV-Cache memory, concurrent batch size, and recommended H100/A100/L40S/4090 hardware.">
+  <meta name="dateModified" content="2026-11-26">
+  <link rel="canonical" href="https://tokenledger-8x7.pages.dev/tools/gpu-vram-calculator.html">
+
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="LLM GPU VRAM &amp; KV-Cache Quantization Calculator (Llama 70B, DeepSeek-R1, Qwen) | TokenLedger">
+  <meta property="og:description" content="Calculate exact GPU VRAM for open-weight LLMs across FP16, FP8, Q6_K, Q4_K_M, and Q3_K_M including GQA KV-Cache memory, concurrent batch size, and recommended H100/A100/L40S/4090 hardware.">
+  <meta property="og:url" content="https://tokenledger-8x7.pages.dev/tools/gpu-vram-calculator.html">
+  <meta property="og:image" content="https://tokenledger-8x7.pages.dev/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="LLM GPU VRAM &amp; KV-Cache Quantization Calculator (Llama 70B, DeepSeek-R1, Qwen) | TokenLedger">
+  <meta name="twitter:description" content="Calculate exact GPU VRAM for open-weight LLMs across FP16, FP8, Q6_K, Q4_K_M, and Q3_K_M including GQA KV-Cache memory, concurrent batch size, and recommended H100/A100/L40S/4090 hardware.">
+  <meta name="twitter:image" content="https://tokenledger-8x7.pages.dev/og-image.png">
+
+  <link rel="stylesheet" href="/css/tokenledger.css">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "TokenLedger GPU VRAM & KV-Cache Calculator",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "url": "https://tokenledger-8x7.pages.dev/tools/gpu-vram-calculator.html",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How much VRAM does Llama 3.3 70B Q4_K_M need?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Llama 3.3 70B in Q4_K_M requires roughly 41 GB for weights plus 3–12 GB for KV-cache and activation overhead depending on context length and batch size, fitting on 1x 48GB L40S for small batches or 1x 80GB A100/H100 for multi-user serving."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <header class="tl-header">
+    <div class="tl-nav-inner">
+      <a href="/" class="tl-brand"><span class="tl-logo" aria-hidden="true">TL</span><span>TokenLedger</span></a>
+      <nav class="tl-nav-links" aria-label="Primary">
+        <a href="/">Estimator</a>
+        <a href="/tools/agent-budget.html">Agent Burn</a>
+        <a href="/tools/mcp-schema-auditor.html">MCP Tax</a>
+        <a href="/tools/saas-margin.html">SaaS Margin</a>
+        <a href="/tools/rag-calculator.html">RAG TCO</a>
+        <a href="/tools/self-host-vs-api.html" class="active">GPU vs API</a>
+        <a href="/tools/multimodal-budget.html">Voice & Vision</a>
+        <a href="/tools/token-inspector.html">Inspector</a>
+      </nav>
+      <div class="tl-nav-actions">
+        <button type="button" id="tlCmdOpen" class="tl-icon-btn" title="Quick Search (Ctrl+K)" aria-label="Quick Search">⌘K</button>
+        <select id="tlCurrencySelect" class="tl-icon-btn" aria-label="Display Currency" style="padding:0 6px;cursor:pointer">
+          <option value="USD">USD $</option>
+          <option value="EUR">EUR €</option>
+          <option value="GBP">GBP £</option>
+          <option value="JPY">JPY ¥</option>
+          <option value="KRW">KRW ₩</option>
+        </select>
+        <button type="button" id="tlThemeToggle" class="tl-icon-btn" aria-label="Toggle Light or Dark Theme">Light</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="tl-wrap">
+  <section class="tl-hero">
+    <div class="tl-kicker">GPU INFRASTRUCTURE &bull; WEIGHTS + GQA KV-CACHE + QUANTIZATION</div>
+    <h1>LLM GPU VRAM &amp; KV-Cache Quantization Calculator</h1>
+    <p>Size exact GPU VRAM requirements for Llama 3.3/4, Qwen 2.5, Gemma 3, and DeepSeek-R1 across FP16, FP8, Q6_K, and Q4_K_M — including GQA KV-cache memory at your target context length and concurrent batch size.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">Total VRAM Needed</div><div class="kpi-val warn" id="kpiVrTotal">0 GB</div><div class="kpi-sub" id="kpiVrTotalSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Model Weights</div><div class="kpi-val" id="kpiVrWeights">0 GB</div><div class="kpi-sub" id="kpiVrWeightsSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">KV-Cache Memory</div><div class="kpi-val" id="kpiVrKv">0 GB</div><div class="kpi-sub" id="kpiVrKvSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Recommended GPU</div><div class="kpi-val accent" id="kpiVrHw">-</div><div class="kpi-sub" id="kpiVrHwSub">-</div></div>
+  </section>
+
+  <section class="tl-panel" style="margin-bottom:20px">
+    <h2>Model, Quantization &amp; Concurrency Parameters</h2>
+    <div class="tl-row">
+      <div class="tl-field"><label for="vrModel">Open-Weight Model Preset</label><select id="vrModel" class="tl-select"></select></div>
+      <div class="tl-field"><label for="vrQuant">Weight Quantization</label><select id="vrQuant" class="tl-select"><option value="fp16">FP16 / BF16 (16-bit)</option><option value="fp8">FP8 / INT8 (8-bit)</option><option value="q6k">GGUF Q6_K (~6.6-bit)</option><option value="q4km" selected>GGUF Q4_K_M / AWQ 4-bit</option><option value="q3km">GGUF Q3_K_M (~3.9-bit)</option></select></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-field"><label for="vrCtx">Context Length (Tokens)</label><input id="vrCtx" class="tl-input num" type="number" min="512" max="1000000" step="1024" value="8192"></div>
+      <div class="tl-field"><label for="vrBatch">Concurrent Batch Size (Users)</label><input id="vrBatch" class="tl-input num" type="number" min="1" max="256" step="1" value="4"></div>
+    </div>
+    <label class="tl-check-row"><input id="vrKvFp8" type="checkbox"><span>Enable FP8 KV-Cache Quantization (cuts KV-Cache VRAM by 50% in vLLM / TensorRT-LLM)</span></label>
+    <div class="tl-btn-bar"><button type="button" id="btnVrCopyMd" class="tl-btn tl-btn-primary">Copy Hardware Sizing Markdown</button></div>
+  </section>
+
+  <section class="tl-panel">
+    <h2>All Quantization Formats Comparison Matrix</h2>
+    <div class="tl-table-wrap">
+      <table class="tl-table" style="min-width:560px">
+        <thead><tr><th>Quantization</th><th>Weights</th><th>KV-Cache</th><th>Total VRAM</th><th>Recommended Hardware</th><th>Est. Cloud GPU</th></tr></thead>
+        <tbody id="vrMatrixBody"></tbody>
+      </table>
+    </div>
+  </section>
+  <section class="tl-resources" aria-label="Recommended AI Engineering and FinOps Books">
+    <h2>Recommended AI Engineering &amp; Cloud FinOps Books</h2>
+    <div class="tl-res-grid">
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098166302?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>AI Engineering</strong>
+        <span>Chip Huyen (O’Reilly) • Production architecture for foundation models, evaluation, RAG, and latency/cost budgets.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098150724?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>Cloud FinOps (2nd Ed.)</strong>
+        <span>J.R. Storment &amp; Mike Fuller (O’Reilly) • Collaborative cloud &amp; AI unit-economics governance for engineering teams.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+      <a class="tl-res-item" href="https://www.amazon.com/dp/1098161769?tag=dopabrain-20" target="_blank" rel="noopener noreferrer nofollow sponsored">
+        <strong>Building LLMs for Production</strong>
+        <span>Louis-François Bouchard &amp; Louie Peters • Practical prompting, caching, RAG, and cost-aware inference routing.</span>
+        <span class="tl-res-cta">View on Amazon ↗</span>
+      </a>
+    </div>
+    <p class="tl-disclosure">Editorial note: Curated technical books for AI engineers and FinOps teams. Amazon links include affiliate tag dopabrain-20 (no extra cost to you) and help keep TokenLedger 100% free and ad-free. Interested in sponsoring TokenLedger? <a href="https://github.com/swp1234/tokenledger" target="_blank" rel="noopener" style="color:var(--accent)">Open a Sponsor / Partnership thread on GitHub ↗</a>.</p>
+  </section>
+  </main>
+
+  <footer class="tl-footer">
+    <div class="tl-footer-inner">
+      <div><strong>TokenLedger</strong> &bull; 100% Browser-Private AI &amp; LLM FinOps Studio &bull; Pricing snapshot: 2026-11-26</div>
+      <div>
+        <a href="/about.html">Methodology</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/api/pricing.json">Pricing JSON</a>
+        <a href="https://github.com/swp1234/tokenledger" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+  </footer>
+  <script src="/js/pricing-engine.js"></script>
+  <script src="/js/ui-shell.js"></script>
+  <script src="/js/gpu-vram-calculator.js" defer></script>
+</body>
+</html>

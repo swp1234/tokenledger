@@ -90,14 +90,14 @@ ${jsonLd}
 ${navHtml}
       </nav>
       <div class="tl-nav-actions">
-        <select id="tlCurrencySelect" class="tl-icon-btn" aria-label="Display Currency" style="padding:0 8px;cursor:pointer">
+        <button type="button" id="tlCmdOpen" class="tl-icon-btn" title="Quick Search (Ctrl+K)" aria-label="Quick Search">⌘K</button>
+        <select id="tlCurrencySelect" class="tl-icon-btn" aria-label="Display Currency" style="padding:0 6px;cursor:pointer">
           <option value="USD">USD $</option>
           <option value="EUR">EUR €</option>
           <option value="GBP">GBP £</option>
           <option value="JPY">JPY ¥</option>
           <option value="KRW">KRW ₩</option>
         </select>
-        <a href="/api/pricing.json" class="tl-icon-btn" title="Public JSON Pricing Feed">JSON API</a>
         <button type="button" id="tlThemeToggle" class="tl-icon-btn" aria-label="Toggle Light or Dark Theme">Light</button>
       </div>
     </div>
@@ -157,7 +157,15 @@ const COMPARISONS = [
   { slug: 'claude-sonnet-4-vs-openai-o3', a: 'claude-sonnet-4', b: 'o3', title: 'Claude Sonnet 4 vs OpenAI o3 Coding & Reasoning API Cost Comparison', summary: 'Benchmark multi-step coding and deep reasoning token spend between Anthropic Claude Sonnet 4 ($3/$15) and OpenAI o3 ($2/$8).' },
   { slug: 'gemini-2-5-flash-vs-deepseek-v3', a: 'gemini-2.5-flash', b: 'deepseek-v3', title: 'Gemini 2.5 Flash vs DeepSeek-V3 High-Volume API Cost Comparison (2026)', summary: 'Compare two ultra-efficient production models ($0.30/$2.50 vs $0.27/$1.10) across 1M-context RAG and structured JSON pipelines.' },
   { slug: 'openai-batch-api-vs-anthropic-batch-api', a: 'gpt-5', b: 'claude-sonnet-4', title: 'OpenAI Batch API vs Anthropic Message Batches (50% Off) Cost Guide', summary: 'Compare 24-hour async 50%-off batch pricing, prompt caching stacking, and throughput limits for nightly LLM pipelines.' },
-  { slug: 'vllm-vs-ollama-production-tco', a: 'llama-4-maverick', b: 'qwen-2.5-72b', title: 'vLLM vs Ollama Production GPU Hosting TCO & Throughput Comparison (2026)', summary: 'Compare continuous-batching vLLM throughput per H100/L40S GPU against local Ollama deployments and pay-per-token open-weight APIs.' }
+  { slug: 'vllm-vs-ollama-production-tco', a: 'llama-4-maverick', b: 'qwen-2.5-72b', title: 'vLLM vs Ollama Production GPU Hosting TCO & Throughput Comparison (2026)', summary: 'Compare continuous-batching vLLM throughput per H100/L40S GPU against local Ollama deployments and pay-per-token open-weight APIs.' },
+  { slug: 'llama-3-3-70b-vram-vs-cloud-api', a: 'llama-4-maverick', b: 'gpt-4.1-mini', title: 'Llama 3.3 70B Self-Hosted VRAM Cost vs Cloud API Pricing (2026)', summary: 'Calculate exact Q4/FP8 GPU VRAM requirements for Llama 70B versus hosted open-weight and GPT-4.1 mini APIs.' },
+  { slug: 'deepseek-r1-671b-hosting-vs-api', a: 'deepseek-r1', b: 'o3', title: 'DeepSeek-R1 (671B MoE) Self-Hosting vs API Cost Breakdown (2026)', summary: 'Why self-hosting DeepSeek-R1 requires an 8x H100 cluster (~$15K/mo) and when API pricing ($0.55/$2.19) wins decisively.' },
+  { slug: 'qwen-2-5-32b-local-vs-gpt-5-mini', a: 'qwen-2.5-72b', b: 'gpt-5-mini', title: 'Qwen 2.5 / QwQ 32B Local GPU vs OpenAI GPT-5 mini Cost Comparison', summary: 'Compare single-GPU RTX 4090 / L40S Qwen hosting economics against pay-per-token GPT-5 mini API spend.' },
+  { slug: 'claude-opus-4-vs-gemini-2-5-pro', a: 'claude-opus-4', b: 'gemini-2.5-pro', title: 'Claude Opus 4 vs Gemini 2.5 Pro Flagship API Pricing & 1M Context Guide', summary: 'Compare Anthropic’s flagship Claude Opus 4 ($15/$75) against Google Gemini 2.5 Pro ($1.25/$10) with 80% prompt caching.' },
+  { slug: 'gpt-5-mini-vs-deepseek-v3', a: 'gpt-5-mini', b: 'deepseek-v3', title: 'GPT-5 mini vs DeepSeek-V3 High-Throughput API Cost Comparison (2026)', summary: 'Benchmark OpenAI GPT-5 mini ($0.25/$2) against DeepSeek-V3 ($0.27/$1.10) across support bots and RAG pipelines.' },
+  { slug: 'mistral-small-vs-gemini-2-5-flash-lite', a: 'mistral-small-3', b: 'gemini-2.5-flash-lite', title: 'Mistral Small 3 vs Gemini 2.5 Flash-Lite Ultra-Low-Cost API Comparison', summary: 'Head-to-head cost breakdown of EU-friendly Mistral Small 3 and Google Gemini 2.5 Flash-Lite at 100K+ daily requests.' },
+  { slug: 'grok-3-mini-vs-deepseek-r1', a: 'grok-3-mini', b: 'deepseek-r1', title: 'xAI Grok 3 Mini vs DeepSeek-R1 Budget Reasoning API Comparison', summary: 'Compare affordable reasoning economics between xAI Grok 3 Mini ($0.30/$0.50) and DeepSeek-R1 ($0.55/$2.19).' },
+  { slug: 'openai-o3-vs-claude-opus-4', a: 'o3', b: 'claude-opus-4', title: 'OpenAI o3 vs Claude Opus 4 Frontier Reasoning API Cost Analysis (2026)', summary: 'Quantify exact monthly and annual cost spreads for deep architectural reasoning between OpenAI o3 and Claude Opus 4.' }
 ];
 
 const GUIDES = [
@@ -288,6 +296,46 @@ const GUIDES = [
       { h2: '2. Automating Token Diffs in GitHub Actions', p: 'Run a zero-dependency CLI token budget check inside every pull request touching prompts/ or tools/ directories, posting exact monthly & annual cost impact directly into the GitHub Step Summary before merge.' }
     ],
     ctaHref: '/tools/prompt-diff.html', ctaLabel: 'Generate GitHub Action Budget Guard →'
+  },
+  {
+    slug: 'llm-gpu-vram-kv-cache-quantization-guide',
+    title: 'LLM GPU VRAM & KV-Cache Math: Sizing FP16, FP8 & Q4_K_M Without OOM Crashes',
+    desc: 'Exact formula for model weights + Grouped-Query Attention (GQA) KV-cache memory across concurrent batches so you rent the right GPU node.',
+    sections: [
+      { h2: '1. Why Model Weights Are Only Half the VRAM Story', p: 'A 70B model in Q4_K_M takes ~41 GB of weights, yet serving 16 concurrent 32K-context users in FP16 KV-cache adds 20+ GB of dynamic KV memory plus activation buffers—pushing a single 48 GB L40S straight into OOM.' },
+      { h2: '2. Cutting KV-Cache Footprint 50% with FP8 KV Quantization', p: 'Modern engines like vLLM and TensorRT-LLM support FP8 KV-cache quantization with negligible perplexity loss, immediately doubling concurrent batch capacity on the exact same GPU hardware.' }
+    ],
+    ctaHref: '/tools/gpu-vram-calculator.html', ctaLabel: 'Open GPU VRAM & KV-Cache Calculator →'
+  },
+  {
+    slug: 'cfo-ai-unit-economics-finops-reporting',
+    title: 'CFO Guide to AI Unit Economics: Turning LLM API Bills Into Predictable Gross Margins',
+    desc: 'How finance and engineering leaders track cost-per-active-seat, waterfall savings (cache + cascade + batch), and AI COGS % of ARR.',
+    sections: [
+      { h2: '1. The Three Metrics Every Board Asks About AI COGS', p: 'Track (a) Blended Cost per Active User/Month, (b) Top-5% Power-User Margin Floor, and (c) Total AI COGS as a % of Gross Revenue (target under 15–22% for SaaS valuation multiples).' },
+      { h2: '2. Stacking Caching, Cascade Routing & Async Batching', p: 'Combining 70% prompt caching + 55% mini-model routing + 25% async batch offloading routinely trims raw frontier API spend by 65–82% without degrading customer outcomes.' }
+    ],
+    ctaHref: '/tools/batch-vs-realtime-router.html', ctaLabel: 'Build CFO Savings Waterfall →'
+  },
+  {
+    slug: 'prompt-caching-ttl-optimization-guide',
+    title: 'Prompt Caching TTL & Hit-Rate Engineering: Keeping 85%+ Warm Caches in Production',
+    desc: 'Practical patterns for 5-minute vs 1-hour cache TTLs, tenant affinity routing, and avoiding silent cache-busting timestamps.',
+    sections: [
+      { h2: '1. Cache Write Premium vs. Read Discount Break-Even', p: 'Because cache writes cost a small premium (typically 1.25x input) while reads drop 75–90%, you break even after just 1–2 cache hits within the TTL window.' },
+      { h2: '2. Sticky Tenant Routing Multiplies Hit Rates', p: 'Routing requests for the same workspace or document corpus to shared prefixes keeps caches warm continuously during business hours.' }
+    ],
+    ctaHref: '/', ctaLabel: 'Simulate Cache Hit Savings Live →'
+  },
+  {
+    slug: 'open-weight-moe-hosting-tco-guide',
+    title: 'Hosting Open-Weight MoE Models (Llama 4 & DeepSeek-R1) vs. Managed APIs: 2026 TCO',
+    desc: 'Understanding why Mixture-of-Experts models run fast per token yet demand huge total VRAM—and where the real cloud vs GPU break-even sits.',
+    sections: [
+      { h2: '1. Active Parameters vs. Total VRAM Footprint', p: 'An MoE model like DeepSeek-R1 activates only ~37B parameters per token (fast inference), yet ALL 671B weights must reside in GPU VRAM simultaneously—requiring an 8x H100/H200 node even for a single user.' },
+      { h2: '2. When Managed Open-Weight Endpoints Beat Dedicated Clusters', p: 'Until sustained traffic utilizes >35% of an 8-GPU node around the clock, serverless APIs remain 5x–10x cheaper than dedicated bare-metal GPUs.' }
+    ],
+    ctaHref: '/tools/gpu-vram-calculator.html', ctaLabel: 'Size MoE VRAM & Monthly Cost →'
   }
 ];
 
@@ -454,6 +502,8 @@ registerPage('/', 'index.html', renderShell({
       <a class="tl-link-card" href="/tools/prompt-diff.html"><strong>Prompt A/B Compression Cost Diff</strong><span>Compare before vs. after system prompts and copy PR-ready annual USD savings tables + CI Action.</span><em>Run Prompt Diff →</em></a>
       <a class="tl-link-card" href="/tools/fine-tune-vs-rag.html"><strong>Fine-Tuning vs. RAG vs. Caching TCO</strong><span>Compare 12-month LoRA training refreshes, vector DB RAG, and long-context caching + ADR export.</span><em>Compare Architectures →</em></a>
       <a class="tl-link-card" href="/tools/llm-rate-limit-planner.html"><strong>LLM Rate-Limit (RPM/TPM) Planner</strong><span>Calculate peak TPM, Little’s Law concurrency, vendor tier needed, and export rate-limiter JSON.</span><em>Plan Capacity →</em></a>
+      <a class="tl-link-card" href="/tools/gpu-vram-calculator.html"><strong>GPU VRAM &amp; KV-Cache Quantization</strong><span>Size FP16/FP8/Q4_K_M weights + GQA KV-cache for Llama 70B, Qwen 32B &amp; DeepSeek-R1 + hardware cost.</span><em>Size GPU VRAM →</em></a>
+      <a class="tl-link-card" href="/tools/batch-vs-realtime-router.html"><strong>CFO Hybrid FinOps Waterfall Simulator</strong><span>Stack Prompt Caching + Mini Cascade + 50% Async Batch lanes and export an executive memo.</span><em>Model Savings →</em></a>
       <a class="tl-link-card" href="/tools/token-inspector.html"><strong>Context &amp; JSON Minifier Inspector</strong><span>Inspect OpenAI/Claude/Gemini tokens and minify tool JSON schemas for instant savings.</span><em>Open Inspector →</em></a>
     </div>
     <div class="tl-pills" style="margin-top:14px">
@@ -1155,6 +1205,114 @@ registerPage('/tools/llm-rate-limit-planner.html', 'tools/llm-rate-limit-planner
   </section>`
 }), '0.9');
 
+// --- PAGE 13: LLM GPU VRAM & KV-CACHE QUANTIZATION CALCULATOR ---
+registerPage('/tools/gpu-vram-calculator.html', 'tools/gpu-vram-calculator.html', renderShell({
+  path: '/tools/gpu-vram-calculator.html',
+  active: 'selfhost',
+  title: 'LLM GPU VRAM & KV-Cache Quantization Calculator (Llama 70B, DeepSeek-R1, Qwen)',
+  description: 'Calculate exact GPU VRAM for open-weight LLMs across FP16, FP8, Q6_K, Q4_K_M, and Q3_K_M including GQA KV-Cache memory, concurrent batch size, and recommended H100/A100/L40S/4090 hardware.',
+  scripts: ['/js/gpu-vram-calculator.js'],
+  schemaGraph: [
+    { '@type': 'SoftwareApplication', name: 'TokenLedger GPU VRAM & KV-Cache Calculator', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}/tools/gpu-vram-calculator.html`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+    { '@type': 'FAQPage', mainEntity: [
+      { '@type': 'Question', name: 'How much VRAM does Llama 3.3 70B Q4_K_M need?', acceptedAnswer: { '@type': 'Answer', text: 'Llama 3.3 70B in Q4_K_M requires roughly 41 GB for weights plus 3–12 GB for KV-cache and activation overhead depending on context length and batch size, fitting on 1x 48GB L40S for small batches or 1x 80GB A100/H100 for multi-user serving.' } }
+    ] }
+  ],
+  body: `  <section class="tl-hero">
+    <div class="tl-kicker">GPU INFRASTRUCTURE &bull; WEIGHTS + GQA KV-CACHE + QUANTIZATION</div>
+    <h1>LLM GPU VRAM &amp; KV-Cache Quantization Calculator</h1>
+    <p>Size exact GPU VRAM requirements for Llama 3.3/4, Qwen 2.5, Gemma 3, and DeepSeek-R1 across FP16, FP8, Q6_K, and Q4_K_M — including GQA KV-cache memory at your target context length and concurrent batch size.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">Total VRAM Needed</div><div class="kpi-val warn" id="kpiVrTotal">0 GB</div><div class="kpi-sub" id="kpiVrTotalSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Model Weights</div><div class="kpi-val" id="kpiVrWeights">0 GB</div><div class="kpi-sub" id="kpiVrWeightsSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">KV-Cache Memory</div><div class="kpi-val" id="kpiVrKv">0 GB</div><div class="kpi-sub" id="kpiVrKvSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Recommended GPU</div><div class="kpi-val accent" id="kpiVrHw">-</div><div class="kpi-sub" id="kpiVrHwSub">-</div></div>
+  </section>
+
+  <section class="tl-panel" style="margin-bottom:20px">
+    <h2>Model, Quantization &amp; Concurrency Parameters</h2>
+    <div class="tl-row">
+      <div class="tl-field"><label for="vrModel">Open-Weight Model Preset</label><select id="vrModel" class="tl-select"></select></div>
+      <div class="tl-field"><label for="vrQuant">Weight Quantization</label><select id="vrQuant" class="tl-select"><option value="fp16">FP16 / BF16 (16-bit)</option><option value="fp8">FP8 / INT8 (8-bit)</option><option value="q6k">GGUF Q6_K (~6.6-bit)</option><option value="q4km" selected>GGUF Q4_K_M / AWQ 4-bit</option><option value="q3km">GGUF Q3_K_M (~3.9-bit)</option></select></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-field"><label for="vrCtx">Context Length (Tokens)</label><input id="vrCtx" class="tl-input num" type="number" min="512" max="1000000" step="1024" value="8192"></div>
+      <div class="tl-field"><label for="vrBatch">Concurrent Batch Size (Users)</label><input id="vrBatch" class="tl-input num" type="number" min="1" max="256" step="1" value="4"></div>
+    </div>
+    <label class="tl-check-row"><input id="vrKvFp8" type="checkbox"><span>Enable FP8 KV-Cache Quantization (cuts KV-Cache VRAM by 50% in vLLM / TensorRT-LLM)</span></label>
+    <div class="tl-btn-bar"><button type="button" id="btnVrCopyMd" class="tl-btn tl-btn-primary">Copy Hardware Sizing Markdown</button></div>
+  </section>
+
+  <section class="tl-panel">
+    <h2>All Quantization Formats Comparison Matrix</h2>
+    <div class="tl-table-wrap">
+      <table class="tl-table" style="min-width:560px">
+        <thead><tr><th>Quantization</th><th>Weights</th><th>KV-Cache</th><th>Total VRAM</th><th>Recommended Hardware</th><th>Est. Cloud GPU</th></tr></thead>
+        <tbody id="vrMatrixBody"></tbody>
+      </table>
+    </div>
+  </section>`
+}), '0.9');
+
+// --- PAGE 14: CFO HYBRID CACHING + BATCH + CASCADE SAVINGS WATERFALL ---
+registerPage('/tools/batch-vs-realtime-router.html', 'tools/batch-vs-realtime-router.html', renderShell({
+  path: '/tools/batch-vs-realtime-router.html',
+  active: 'home',
+  title: 'Enterprise LLM Savings Waterfall: Prompt Caching + Cascade Router + 50% Batch Simulator',
+  description: 'Model stacked LLM cost reductions combining Prompt Caching, Fast/Mini Model Cascade routing, and 50% Async Batch APIs — and export a CFO-ready executive savings memo.',
+  scripts: ['/js/batch-vs-realtime-router.js'],
+  schemaGraph: [
+    { '@type': 'SoftwareApplication', name: 'TokenLedger Enterprise FinOps Waterfall Simulator', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}/tools/batch-vs-realtime-router.html`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } }
+  ],
+  body: `  <section class="tl-hero">
+    <div class="tl-kicker">CFO FINOPS WATERFALL &bull; CACHING + CASCADE + BATCH</div>
+    <h1>Enterprise LLM Savings Waterfall Simulator</h1>
+    <p>Quantify how much your engineering org saves when stacking all three proven FinOps levers together: Prompt Caching, Fast/Mini Cascade routing, and 50% Async Batch APIs.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">Unoptimized Baseline</div><div class="kpi-val danger" id="kpiHyBase">$0/mo</div><div class="kpi-sub" id="kpiHyBaseSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Optimized Blended</div><div class="kpi-val accent" id="kpiHyOpt">$0/mo</div><div class="kpi-sub" id="kpiHyOptSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Monthly Savings</div><div class="kpi-val accent" id="kpiHySaveMo">$0/mo</div><div class="kpi-sub" id="kpiHySaveMoSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Annual CFO Impact</div><div class="kpi-val accent" id="kpiHySaveYr">$0/yr</div><div class="kpi-sub" id="kpiHySaveYrSub">-</div></div>
+  </section>
+
+  <section class="tl-grid-2">
+    <div class="tl-panel">
+      <h2>1. Baseline Traffic &amp; Models</h2>
+      <div class="tl-row">
+        <div class="tl-field"><label for="hyFrontier">Frontier Model</label><select id="hyFrontier" class="tl-select"></select></div>
+        <div class="tl-field"><label for="hyMini">Fast / Mini Router Model</label><select id="hyMini" class="tl-select"></select></div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-field"><label for="hyInTok">Avg Input Tokens</label><input id="hyInTok" class="tl-input num" type="number" min="50" step="250" value="3500"></div>
+        <div class="tl-field"><label for="hyOutTok">Avg Output Tokens</label><input id="hyOutTok" class="tl-input num" type="number" min="20" step="50" value="700"></div>
+      </div>
+      <div class="tl-field"><label for="hyReqs">Total Daily Requests</label><input id="hyReqs" class="tl-input num" type="number" min="1" step="1000" value="10000"></div>
+    </div>
+
+    <div class="tl-panel">
+      <h2>2. Stacked FinOps Optimization Levers</h2>
+      <div class="tl-field"><label for="hyCache">Prompt Cache Hit Rate <strong id="hyCacheVal">70%</strong></label><input id="hyCache" class="tl-range" type="range" min="0" max="95" step="5" value="70"></div>
+      <div class="tl-field"><label for="hyMiniPct">Traffic Routed to Fast/Mini Model <strong id="hyMiniVal">55%</strong></label><input id="hyMiniPct" class="tl-range" type="range" min="0" max="90" step="5" value="55"></div>
+      <div class="tl-field"><label for="hyBatchPct">Traffic Moved to 50% Async Batch API <strong id="hyBatchVal">25%</strong></label><input id="hyBatchPct" class="tl-range" type="range" min="0" max="90" step="5" value="25"></div>
+      <div class="tl-btn-bar"><button type="button" id="btnHyMemo" class="tl-btn tl-btn-primary">Copy CFO Executive Savings Memo (Markdown)</button></div>
+    </div>
+  </section>
+
+  <section class="tl-panel">
+    <h2>Stacked Cost-Reduction Waterfall</h2>
+    <div class="tl-table-wrap">
+      <table class="tl-table" style="min-width:500px">
+        <thead><tr><th>Optimization Stage</th><th>Monthly</th><th>Annualized</th><th>% of Baseline</th></tr></thead>
+        <tbody id="hyWaterfallBody"></tbody>
+      </table>
+    </div>
+  </section>`
+}), '0.9');
+
 // --- PAGES 6–13: 8 PROGRAMMATIC MODEL COMPARISON PAGES ---
 for (const c of COMPARISONS) {
   const mA = ENGINE.getModel(c.a);
@@ -1537,6 +1695,8 @@ const llmsTxt = `# TokenLedger — AI & LLM API FinOps Studio
 - [Prompt A/B Compression Cost Diff & CI Guard](${ORIGIN}/tools/prompt-diff.html): Before/after prompt token savings across 6 flagship models + GitHub Action YAML generator.
 - [Fine-Tuning vs. RAG vs. Prompt Caching 12-Month TCO](${ORIGIN}/tools/fine-tune-vs-rag.html): Compare LoRA retrains, vector DB synthesis, and long-context prompt caching with ADR export.
 - [LLM Rate-Limit (RPM/TPM/Concurrency) Capacity Planner](${ORIGIN}/tools/llm-rate-limit-planner.html): Peak TPM, Little's Law concurrency sizing, vendor tier guidance, and rate-limiter JSON policy export.
+- [LLM GPU VRAM & KV-Cache Quantization Calculator](${ORIGIN}/tools/gpu-vram-calculator.html): Exact weights + GQA KV-cache VRAM across FP16/FP8/Q4_K_M for Llama 70B, Qwen & DeepSeek-R1.
+- [Enterprise LLM Savings Waterfall (Cache + Cascade + Batch)](${ORIGIN}/tools/batch-vs-realtime-router.html): Stacked FinOps savings waterfall & CFO executive memo export.
 - [Context Window & JSON Minifier Inspector](${ORIGIN}/tools/token-inspector.html): OpenAI/Claude/Gemini token estimates and one-click JSON tool schema minification.
 
 ## International Hubs
