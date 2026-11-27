@@ -1,9 +1,11 @@
 # TokenLedger — AI & LLM API FinOps Studio
 
-> Browser-private AI & LLM API cost calculator, multi-turn agent burn simulator, SaaS gross margin calculator, Vector DB comparator, AI coding seat vs BYOK planner, and public JSON pricing feed covering 36 flagship models across 20 interactive workspaces.
+> Browser-private AI & LLM API cost calculator, multi-turn agent burn simulator, SaaS gross margin calculator, Prompt Caching TTL ROI planner, LLM-as-a-Judge eval budgeter, Vector DB comparator, AI coding seat vs BYOK planner, and public JSON pricing feed covering 40 flagship models across 22 interactive workspaces.
 
 ## Core Interactive Tools
-- [36-Model LLM API Cost Estimator](https://tokenledger-8x7.pages.dev/): Live prompt token counter, prompt caching, 50% batch discounts, model cascade savings, CSV/JSON/PDF export.
+- [40-Model LLM API Cost Estimator](https://tokenledger-8x7.pages.dev/): Live prompt token counter, prompt caching, 50% batch discounts, model cascade savings, CSV/JSON/PDF export.
+- [LLM Prompt Caching TTL & Write-Premium ROI Calculator](https://tokenledger-8x7.pages.dev/tools/llm-context-caching-roi.html): Compare 5-min ephemeral (1.25x write) vs 1-hour extended (2.0x write) vs explicit storage TTL caching break-even hits.
+- [LLM-as-a-Judge & CI Evaluation Budget Calculator](https://tokenledger-8x7.pages.dev/tools/ai-eval-judge-budget.html): Size monthly CI regression eval suites and prod trace sampling across 6 judge models with 50% Batch discounts.
 - [AI Agent Loop Burn Calculator](https://tokenledger-8x7.pages.dev/tools/agent-budget.html): Quadratic O(N²) turn-by-turn token snowballing vs. caching and sliding-window summarization.
 - [MCP & Tool Schema Bloat Auditor](https://tokenledger-8x7.pages.dev/tools/mcp-schema-auditor.html): Upfront MCP server schema token tax, lazy tool deferral savings, and raw JSON tool ranker.
 - [AI SaaS Gross Margin Simulator](https://tokenledger-8x7.pages.dev/tools/saas-margin.html): Per-seat LLM COGS, payment fees, gross margin %, and power-user break-even caps.
@@ -28,7 +30,7 @@
 - [Korean (한국어)](https://tokenledger-8x7.pages.dev/ko/) · [Japanese (日本語)](https://tokenledger-8x7.pages.dev/ja/) · [German (Deutsch)](https://tokenledger-8x7.pages.dev/de/) · [French (Français)](https://tokenledger-8x7.pages.dev/fr/) · [Spanish (Español)](https://tokenledger-8x7.pages.dev/es/) · [Portuguese (Português)](https://tokenledger-8x7.pages.dev/pt/)
 
 ## Public Pricing Data API
-- [Machine-Readable JSON Pricing Feed](https://tokenledger-8x7.pages.dev/api/pricing.json): 36 LLM models + 6 embedding models (2026-11-28).
+- [Machine-Readable JSON Pricing Feed](https://tokenledger-8x7.pages.dev/api/pricing.json): 40 LLM models + 6 embedding models (2026-11-28).
 
 ## Model Comparisons & Playbooks
 - [Claude Sonnet 4 vs GPT-4.1 API Cost & Context Comparison (2026)](https://tokenledger-8x7.pages.dev/compare/claude-sonnet-vs-gpt-4-1.html): Compare per-request, monthly, prompt-cached, and batch API pricing between Anthropic Claude Sonnet 4 and OpenAI GPT-4.1 across real production workloads.
@@ -99,6 +101,12 @@
 - [Amazon Nova Lite vs OpenAI GPT-5 nano Ultra-Budget API Pricing (2026)](https://tokenledger-8x7.pages.dev/compare/amazon-nova-lite-vs-gpt-5-nano.html): Benchmark ultra-cheap extraction and routing costs between AWS Amazon Nova Lite ($0.06/$0.24) and OpenAI GPT-5 nano ($0.05/$0.40).
 - [Gemini 2.5 Pro Deep Think vs OpenAI o3 Reasoning API Cost Breakdown (2026)](https://tokenledger-8x7.pages.dev/compare/gemini-2-5-pro-think-vs-o3.html): Calculate long-context reasoning budgets comparing Gemini 2.5 Pro Deep Think ($2.50/$15, 1M ctx) against OpenAI o3 ($2/$8).
 - [Claude 4.5 Opus vs Claude 4.5 Sonnet Cost & Agent Cascade Guide (2026)](https://tokenledger-8x7.pages.dev/compare/claude-opus-4-5-vs-claude-sonnet-4-5.html): Quantify the 5x cost gap between Claude 4.5 Opus and Sonnet and size a hybrid architect-plus-implementer coding workflow.
+- [Claude 3.7 Sonnet vs Claude 4.5 Sonnet API Cost & Migration Guide (2026)](https://tokenledger-8x7.pages.dev/compare/claude-3-7-sonnet-vs-claude-sonnet-4-5.html): Compare identical $3/$15 list rates, 90% prompt caching economics, and token efficiency when migrating production agents from Claude 3.7 Sonnet to 4.5 Sonnet.
+- [Gemini 2.0 Flash vs Gemini 2.5 Flash API Pricing & Throughput Comparison (2026)](https://tokenledger-8x7.pages.dev/compare/gemini-2-0-flash-vs-gemini-2-5-flash.html): Compare Google Gemini 2.0 Flash ($0.10/$0.40) against Gemini 2.5 Flash ($0.30/$2.50) across 1M-context extraction, classification, and RAG pipelines.
+- [Llama 3.3 70B vs Llama 4 Maverick Hosted API Pricing Comparison (2026)](https://tokenledger-8x7.pages.dev/compare/llama-3-3-70b-vs-llama-4-maverick.html): Benchmark open-weight hosted pricing comparing Meta Llama 3.3 70B ($0.59/$0.79) against 1M-context Llama 4 Maverick ($0.27/$0.85).
+- [DeepSeek-V3-0324 vs OpenAI GPT-4.1 mini Coding & Production Cost Guide (2026)](https://tokenledger-8x7.pages.dev/compare/deepseek-v3-0324-vs-gpt-4-1-mini.html): Side-by-side unit economics comparing DeepSeek-V3-0324 ($0.27/$1.10) against OpenAI GPT-4.1 mini ($0.40/$1.60, 1M context).
+- [Anthropic 5-Min vs 1-Hour Extended Prompt Caching Write-Premium ROI (2026)](https://tokenledger-8x7.pages.dev/compare/anthropic-5min-vs-1hour-prompt-cache.html): Exact break-even hits per hour comparing 1.25x 5-minute ephemeral caching versus 2.0x 1-hour extended prompt caching across Claude 4.5 models.
+- [LLM-as-a-Judge Cost Comparison: GPT-5 mini vs Claude 4.5 Sonnet CI Evals (2026)](https://tokenledger-8x7.pages.dev/compare/llm-as-a-judge-gpt-5-mini-vs-claude-sonnet.html): Calculate monthly CI regression and production trace sampling evaluation spend comparing GPT-5 mini ($0.25/$2) against Claude 4.5 Sonnet ($3/$15) with 50% Batch.
 - [LLM Cost Optimization Playbook: Cut API Spend 60–85% Without Losing Quality](https://tokenledger-8x7.pages.dev/guides/llm-cost-optimization-playbook.html): Field-tested AI FinOps playbook covering prompt caching, frontier-to-mini cascade routing, JSON schema minification, and async batch APIs.
 - [Fixing the AI Agent Token Snowball: Why a 15-Turn Agent Costs 12x More Than Expected](https://tokenledger-8x7.pages.dev/guides/ai-agent-token-snowball-fix.html): Mathematical breakdown of quadratic context accumulation in multi-turn tool-calling agents and how prefix caching + sliding windows cap burn.
 - [AI SaaS Gross Margin Benchmarks: Pricing Seats Without Getting Crushed by Power Users](https://tokenledger-8x7.pages.dev/guides/saas-ai-gross-margin-benchmarks.html): How to model AI COGS, Stripe fees, gross margin targets (>=75%), and break-even usage caps for flat-rate AI subscriptions.
@@ -129,8 +137,10 @@
 - [Qwen 3 235B MoE & DeepSeek-V3.1: Open-Weight Economics for High-Volume Global Apps](https://tokenledger-8x7.pages.dev/guides/qwen-3-open-weight-moe-finops-guide.html): Why sparse Mixture-of-Experts open weights deliver near-frontier quality under $0.30/1M input tokens for multilingual SaaS products.
 - [Scalar (INT8) & Binary Quantization in Vector Databases: Cutting RAG RAM Bills 4x–32x](https://tokenledger-8x7.pages.dev/guides/vector-quantization-int8-binary-rag-savings.html): Engineering breakdown of how FP32 vs INT8 vs Binary vector compression lowers Pinecone, Qdrant, Weaviate, and pgvector hosting bills while keeping high recall.
 - [VP Engineering Guide: Budgeting AI Coding Seats (Cursor, Copilot, Windsurf) vs. BYOK API Keys](https://tokenledger-8x7.pages.dev/guides/enterprise-ai-coding-budget-cursor-copilot-byok.html): How engineering leaders model developer seat spend vs. cached BYOK Anthropic/OpenAI API keys across 10–500 engineers without surprise overages.
+- [Prompt Caching Write-Premium & TTL Math: When 5-Min Beats 1-Hour Extended Caching](https://tokenledger-8x7.pages.dev/guides/llm-prompt-caching-ttl-write-premium-roi.html): Exact break-even formulas for 1.25x 5-minute ephemeral writes, 2.0x 1-hour extended writes, and explicit storage TTL caches across real traffic cadences.
+- [LLM-as-a-Judge Evaluation Budgets: Sizing CI Regression Suites & Prod Trace Sampling](https://tokenledger-8x7.pages.dev/guides/llm-as-a-judge-ci-eval-budget-architecture.html): How AI engineering teams run 500-case PR eval gates and continuous 5% production trace judging without letting evaluation API bills rival production spend.
 
-## Supported Models (36)
+## Supported Models (40)
 - GPT-5 (OpenAI): $1.25/1M in, $0.125/1M cached, $10/1M out, 400000 ctx
 - GPT-5 mini (OpenAI): $0.25/1M in, $0.025/1M cached, $2/1M out, 400000 ctx
 - GPT-5 nano (OpenAI): $0.05/1M in, $0.005/1M cached, $0.4/1M out, 400000 ctx
@@ -167,3 +177,7 @@
 - Mistral Medium 3 (Mistral): $0.4/1M in, $0.4/1M cached, $2/1M out, 128000 ctx
 - Cohere Command A (Cohere): $2.5/1M in, $1.25/1M cached, $10/1M out, 256000 ctx
 - Amazon Nova Lite (Bedrock) (AWS): $0.06/1M in, $0.015/1M cached, $0.24/1M out, 300000 ctx
+- Claude 3.7 Sonnet (Anthropic): $3/1M in, $0.3/1M cached, $15/1M out, 200000 ctx
+- Gemini 2.0 Flash (Google): $0.1/1M in, $0.025/1M cached, $0.4/1M out, 1048576 ctx
+- Llama 3.3 70B (Hosted) (Meta): $0.59/1M in, $0.295/1M cached, $0.79/1M out, 131072 ctx
+- DeepSeek-V3-0324 (DeepSeek): $0.27/1M in, $0.07/1M cached, $1.1/1M out, 128000 ctx

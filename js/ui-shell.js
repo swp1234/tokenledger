@@ -115,7 +115,9 @@
   };
 
   var CMD_ITEMS = [
-    { t: '36-Model Live Cost Estimator', u: '/', k: 'home pricing gpt-5 claude 4.5 opus gemini deepseek qwen 3 nova mistral cohere' },
+    { t: '40-Model Live Cost Estimator', u: '/', k: 'home pricing gpt-5 claude 4.5 opus 3.7 sonnet gemini 2.5 2.0 deepseek qwen 3 nova mistral cohere llama 3.3' },
+    { t: 'LLM Prompt Caching TTL & Write-Premium ROI', u: '/tools/llm-context-caching-roi.html', k: 'prompt caching ttl 5 min 1 hour write premium break-even anthropic gemini openai storage roi' },
+    { t: 'LLM-as-a-Judge & CI Evaluation Budget', u: '/tools/ai-eval-judge-budget.html', k: 'evals llm as a judge ci cd regression rubric trace sampling promptfoo braintrust langsmith' },
     { t: 'Vector Database Cloud Cost Comparator', u: '/tools/vector-db-cost-calculator.html', k: 'vector db pinecone qdrant pgvector supabase weaviate turbopuffer embeddings rag hnsw' },
     { t: 'AI Coding Seat vs. BYOK API Calculator', u: '/tools/ai-coding-seat-vs-api.html', k: 'cursor copilot windsurf claude code max seat byok developer coding budget' },
     { t: 'LLM Latency, TTFT & Streaming UX Calculator', u: '/tools/llm-latency-ttft-calculator.html', k: 'latency ttft speed tok/s cerebras groq fireworks sla streaming' },

@@ -44,7 +44,11 @@
     { id: 'gemini-2.5-pro-think', name: 'Gemini 2.5 Pro Deep Think', provider: 'Google', tier: 'reasoning', input: 2.50, cachedInput: 0.625, output: 15.00, batchDiscount: 0.5, context: 1048576, badge: '1M Reasoning' },
     { id: 'mistral-medium-3', name: 'Mistral Medium 3', provider: 'Mistral', tier: 'balanced', input: 0.40, cachedInput: 0.40, output: 2.00, batchDiscount: 0.5, context: 128000, badge: 'EU Enterprise' },
     { id: 'cohere-command-a', name: 'Cohere Command A', provider: 'Cohere', tier: 'balanced', input: 2.50, cachedInput: 1.25, output: 10.00, batchDiscount: 0.5, context: 256000, badge: 'Enterprise RAG' },
-    { id: 'amazon-nova-lite', name: 'Amazon Nova Lite (Bedrock)', provider: 'AWS', tier: 'mini', input: 0.06, cachedInput: 0.015, output: 0.24, batchDiscount: 0.5, context: 300000, badge: 'Ultra-Budget' }
+    { id: 'amazon-nova-lite', name: 'Amazon Nova Lite (Bedrock)', provider: 'AWS', tier: 'mini', input: 0.06, cachedInput: 0.015, output: 0.24, batchDiscount: 0.5, context: 300000, badge: 'Ultra-Budget' },
+    { id: 'claude-3.7-sonnet', name: 'Claude 3.7 Sonnet', provider: 'Anthropic', tier: 'balanced', input: 3.00, cachedInput: 0.30, output: 15.00, batchDiscount: 0.5, context: 200000, badge: 'Hybrid Thinking' },
+    { id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash', provider: 'Google', tier: 'mini', input: 0.10, cachedInput: 0.025, output: 0.40, batchDiscount: 0.5, context: 1048576, badge: '1M Workhorse' },
+    { id: 'llama-3.3-70b-hosted', name: 'Llama 3.3 70B (Hosted)', provider: 'Meta', tier: 'balanced', input: 0.59, cachedInput: 0.295, output: 0.79, batchDiscount: 0.0, context: 131072, badge: 'Open Workhorse' },
+    { id: 'deepseek-v3-0324', name: 'DeepSeek-V3-0324', provider: 'DeepSeek', tier: 'balanced', input: 0.27, cachedInput: 0.07, output: 1.10, batchDiscount: 0.5, context: 128000, badge: 'Coding MoE' }
   ];
 
   var EMBEDDINGS = [
@@ -1210,6 +1214,126 @@
     };
   }
 
+  // LLM Context Caching Write-Premium & TTL ROI Calculator
+  function calcCacheTtlRoi(opts) {
+    var m = getModel(opts.modelId || 'claude-sonnet-4.5');
+    var prefixTokens = clamp(opts.prefixTokens || 25000, 1024, 500000);
+    var dynamicInput = clamp(opts.dynamicInput != null ? opts.dynamicInput : 400, 0, 100000);
+    var outputTokens = clamp(opts.outputTokens != null ? opts.outputTokens : 500, 0, 50000);
+    var reqsPerHour = clamp(opts.reqsPerHour || 30, 0.5, 100000);
+    var activeHoursDay = clamp(opts.activeHoursDay || 16, 1, 24);
+
+    var monthlyHours = activeHoursDay * 30;
+    var monthlyReqs = reqsPerHour * monthlyHours;
+    var prefixM = prefixTokens / 1e6;
+    var readRate = m.cachedInput;
+    var dynOutPerReq = (dynamicInput / 1e6) * m.input + (outputTokens / 1e6) * m.output;
+    var dynOutMonthly = dynOutPerReq * monthlyReqs;
+
+    // 1. No Caching Baseline
+    var noCachePrefixMonthly = monthlyReqs * prefixM * m.input;
+    var noCacheMonthly = noCachePrefixMonthly + dynOutMonthly;
+
+    // 2. 5-Minute Ephemeral Cache (1.25x write premium, refreshes on hits)
+    var writesHr5m = Math.min(reqsPerHour, Math.max(1 / activeHoursDay, 1 + reqsPerHour * Math.exp(-reqsPerHour / 12)));
+    var hitsHr5m = Math.max(0, reqsPerHour - writesHr5m);
+    var writeCost5m = writesHr5m * monthlyHours * prefixM * (m.input * 1.25);
+    var readCost5m = hitsHr5m * monthlyHours * prefixM * readRate;
+    var total5m = writeCost5m + readCost5m + dynOutMonthly;
+
+    // 3. 1-Hour Extended Cache (2.0x write premium)
+    var writesHr1h = Math.min(reqsPerHour, Math.max(1 / activeHoursDay, 1 + reqsPerHour * Math.exp(-reqsPerHour)));
+    var hitsHr1h = Math.max(0, reqsPerHour - writesHr1h);
+    var writeCost1h = writesHr1h * monthlyHours * prefixM * (m.input * 2.0);
+    var readCost1h = hitsHr1h * monthlyHours * prefixM * readRate;
+    var total1h = writeCost1h + readCost1h + dynOutMonthly;
+
+    // 4. Explicit Context Storage Cache (1.0x write + $1.00/1M tok-hr storage)
+    var storageWritesMo = 30;
+    var storageHitsMo = Math.max(0, monthlyReqs - storageWritesMo);
+    var writeCostStore = storageWritesMo * prefixM * m.input + (prefixM * 1.00 * monthlyHours);
+    var readCostStore = storageHitsMo * prefixM * readRate;
+    var totalStore = writeCostStore + readCostStore + dynOutMonthly;
+
+    var denom = Math.max(0.0001, m.input - readRate);
+    var breakEvenHits5m = Math.ceil((1.25 * m.input) / denom);
+    var breakEvenHits1h = Math.ceil((2.00 * m.input) / denom);
+
+    var strategies = [
+      { id: 'no-cache', name: 'No Prompt Caching (Baseline)', writeOverhead: 0, readCost: noCachePrefixMonthly, totalMonthly: noCacheMonthly, savingsVsBase: 0, hitRatePct: 0 },
+      { id: 'ttl-5m', name: '5-Min Ephemeral Cache (1.25x Write)', writeOverhead: writeCost5m, readCost: readCost5m, totalMonthly: total5m, savingsVsBase: noCacheMonthly - total5m, hitRatePct: (hitsHr5m / reqsPerHour) * 100 },
+      { id: 'ttl-1h', name: '1-Hour Extended Cache (2.0x Write)', writeOverhead: writeCost1h, readCost: readCost1h, totalMonthly: total1h, savingsVsBase: noCacheMonthly - total1h, hitRatePct: (hitsHr1h / reqsPerHour) * 100 },
+      { id: 'ttl-storage', name: 'Explicit TTL Storage ($1/1M tok-hr)', writeOverhead: writeCostStore, readCost: readCostStore, totalMonthly: totalStore, savingsVsBase: noCacheMonthly - totalStore, hitRatePct: monthlyReqs > 0 ? (storageHitsMo / monthlyReqs) * 100 : 0 }
+    ];
+    var sorted = strategies.slice().sort(function (a, b) { return a.totalMonthly - b.totalMonthly; });
+    var best = sorted[0];
+    var maxSavingsMonthly = Math.max(0, noCacheMonthly - best.totalMonthly);
+    var maxSavingsPct = noCacheMonthly > 0 ? (maxSavingsMonthly / noCacheMonthly) * 100 : 0;
+
+    return {
+      model: m,
+      prefixTokens: prefixTokens,
+      monthlyReqs: Math.round(monthlyReqs),
+      breakEvenHits5m: breakEvenHits5m,
+      breakEvenHits1h: breakEvenHits1h,
+      noCacheMonthly: noCacheMonthly,
+      best: best,
+      maxSavingsMonthly: maxSavingsMonthly,
+      maxSavingsAnnual: maxSavingsMonthly * 12,
+      maxSavingsPct: maxSavingsPct,
+      strategies: strategies
+    };
+  }
+
+  // LLM-as-a-Judge & AI Evaluation Pipeline Budget Calculator
+  var EVAL_JUDGE_IDS = ['claude-opus-4.5', 'gpt-5', 'claude-sonnet-4.5', 'gemini-2.5-pro', 'gpt-5-mini', 'gemini-2.5-flash'];
+
+  function calcEvalJudgeBudget(opts) {
+    var selected = getModel(opts.judgeModelId || 'gpt-5-mini');
+    var evalCases = clamp(opts.evalCases || 500, 10, 500000);
+    var ciRunsPerMonth = clamp(opts.ciRunsPerMonth || 60, 0, 5000);
+    var prodTracesPerDay = clamp(opts.prodTracesPerDay || 10000, 0, 5000000);
+    var sampleRatePct = clamp(opts.sampleRatePct != null ? opts.sampleRatePct : 5, 0, 100) / 100;
+    var avgInputPerJudge = clamp(opts.avgInputPerJudge || 2200, 100, 100000);
+    var avgOutputPerJudge = clamp(opts.avgOutputPerJudge || 350, 20, 16000);
+    var rubricsPerCase = Math.round(clamp(opts.rubricsPerCase || 2, 1, 10));
+    var cacheHitRate = clamp(opts.cacheHitRate != null ? opts.cacheHitRate : 65, 0, 95);
+    var useBatch = opts.useBatch !== false;
+
+    var ciJudgeCallsMo = evalCases * ciRunsPerMonth * rubricsPerCase;
+    var prodJudgeCallsMo = Math.round(prodTracesPerDay * 30 * sampleRatePct * rubricsPerCase);
+    var totalJudgeCallsMo = ciJudgeCallsMo + prodJudgeCallsMo;
+
+    function priceJudge(m) {
+      var rt = calcModelWorkload(m, { inputTokens: avgInputPerJudge, outputTokens: avgOutputPerJudge, dailyRequests: totalJudgeCallsMo / 30, cacheHitRate: cacheHitRate, useBatch: false });
+      var bt = calcModelWorkload(m, { inputTokens: avgInputPerJudge, outputTokens: avgOutputPerJudge, dailyRequests: totalJudgeCallsMo / 30, cacheHitRate: cacheHitRate, useBatch: true });
+      var active = useBatch ? bt : rt;
+      return {
+        model: m,
+        realtimeMonthly: rt.monthly,
+        batchMonthly: bt.monthly,
+        activeMonthly: active.monthly,
+        activeAnnual: active.monthly * 12,
+        costPer1kEvals: active.perReq * 1000
+      };
+    }
+
+    var selectedRes = priceJudge(selected);
+    var ciSharePct = totalJudgeCallsMo > 0 ? (ciJudgeCallsMo / totalJudgeCallsMo) * 100 : 0;
+    var rows = EVAL_JUDGE_IDS.map(function (id) { return priceJudge(getModel(id)); });
+    rows.sort(function (a, b) { return a.activeMonthly - b.activeMonthly; });
+
+    return {
+      selected: selectedRes,
+      ciJudgeCallsMo: ciJudgeCallsMo,
+      prodJudgeCallsMo: prodJudgeCallsMo,
+      totalJudgeCallsMo: totalJudgeCallsMo,
+      ciSharePct: ciSharePct,
+      batchSavingsMonthly: Math.max(0, selectedRes.realtimeMonthly - selectedRes.batchMonthly),
+      rows: rows
+    };
+  }
+
   return {
     MODELS: MODELS,
     EMBEDDINGS: EMBEDDINGS,
@@ -1224,6 +1348,7 @@
     LATENCY_PROFILES: LATENCY_PROFILES,
     VECTOR_DB_PROVIDERS: VECTOR_DB_PROVIDERS,
     CODING_SEAT_PLANS: CODING_SEAT_PLANS,
+    EVAL_JUDGE_IDS: EVAL_JUDGE_IDS,
     CURRENCIES: CURRENCIES,
     getModel: getModel,
     getEmbedding: getEmbedding,
@@ -1251,6 +1376,8 @@
     calcPricingTiers: calcPricingTiers,
     calcVectorDbTco: calcVectorDbTco,
     calcCodingSeatVsApi: calcCodingSeatVsApi,
+    calcCacheTtlRoi: calcCacheTtlRoi,
+    calcEvalJudgeBudget: calcEvalJudgeBudget,
     formatUsd: formatUsd,
     formatInt: formatInt
   };

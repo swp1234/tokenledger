@@ -197,7 +197,13 @@ const COMPARISONS = [
   { slug: 'cohere-command-a-vs-claude-sonnet-4-5', a: 'cohere-command-a', b: 'claude-sonnet-4.5', title: 'Cohere Command A vs Claude 4.5 Sonnet Enterprise RAG API Cost Guide (2026)', summary: 'Compare Cohere Command A ($2.50/$10, 256K ctx) against Claude 4.5 Sonnet ($3/$15) for grounded enterprise retrieval and citation pipelines.' },
   { slug: 'amazon-nova-lite-vs-gpt-5-nano', a: 'amazon-nova-lite', b: 'gpt-5-nano', title: 'Amazon Nova Lite vs OpenAI GPT-5 nano Ultra-Budget API Pricing (2026)', summary: 'Benchmark ultra-cheap extraction and routing costs between AWS Amazon Nova Lite ($0.06/$0.24) and OpenAI GPT-5 nano ($0.05/$0.40).' },
   { slug: 'gemini-2-5-pro-think-vs-o3', a: 'gemini-2.5-pro-think', b: 'o3', title: 'Gemini 2.5 Pro Deep Think vs OpenAI o3 Reasoning API Cost Breakdown (2026)', summary: 'Calculate long-context reasoning budgets comparing Gemini 2.5 Pro Deep Think ($2.50/$15, 1M ctx) against OpenAI o3 ($2/$8).' },
-  { slug: 'claude-opus-4-5-vs-claude-sonnet-4-5', a: 'claude-opus-4.5', b: 'claude-sonnet-4.5', title: 'Claude 4.5 Opus vs Claude 4.5 Sonnet Cost & Agent Cascade Guide (2026)', summary: 'Quantify the 5x cost gap between Claude 4.5 Opus and Sonnet and size a hybrid architect-plus-implementer coding workflow.' }
+  { slug: 'claude-opus-4-5-vs-claude-sonnet-4-5', a: 'claude-opus-4.5', b: 'claude-sonnet-4.5', title: 'Claude 4.5 Opus vs Claude 4.5 Sonnet Cost & Agent Cascade Guide (2026)', summary: 'Quantify the 5x cost gap between Claude 4.5 Opus and Sonnet and size a hybrid architect-plus-implementer coding workflow.' },
+  { slug: 'claude-3-7-sonnet-vs-claude-sonnet-4-5', a: 'claude-3.7-sonnet', b: 'claude-sonnet-4.5', title: 'Claude 3.7 Sonnet vs Claude 4.5 Sonnet API Cost & Migration Guide (2026)', summary: 'Compare identical $3/$15 list rates, 90% prompt caching economics, and token efficiency when migrating production agents from Claude 3.7 Sonnet to 4.5 Sonnet.' },
+  { slug: 'gemini-2-0-flash-vs-gemini-2-5-flash', a: 'gemini-2.0-flash', b: 'gemini-2.5-flash', title: 'Gemini 2.0 Flash vs Gemini 2.5 Flash API Pricing & Throughput Comparison (2026)', summary: 'Compare Google Gemini 2.0 Flash ($0.10/$0.40) against Gemini 2.5 Flash ($0.30/$2.50) across 1M-context extraction, classification, and RAG pipelines.' },
+  { slug: 'llama-3-3-70b-vs-llama-4-maverick', a: 'llama-3.3-70b-hosted', b: 'llama-4-maverick', title: 'Llama 3.3 70B vs Llama 4 Maverick Hosted API Pricing Comparison (2026)', summary: 'Benchmark open-weight hosted pricing comparing Meta Llama 3.3 70B ($0.59/$0.79) against 1M-context Llama 4 Maverick ($0.27/$0.85).' },
+  { slug: 'deepseek-v3-0324-vs-gpt-4-1-mini', a: 'deepseek-v3-0324', b: 'gpt-4.1-mini', title: 'DeepSeek-V3-0324 vs OpenAI GPT-4.1 mini Coding & Production Cost Guide (2026)', summary: 'Side-by-side unit economics comparing DeepSeek-V3-0324 ($0.27/$1.10) against OpenAI GPT-4.1 mini ($0.40/$1.60, 1M context).' },
+  { slug: 'anthropic-5min-vs-1hour-prompt-cache', a: 'claude-sonnet-4.5', b: 'claude-opus-4.5', title: 'Anthropic 5-Min vs 1-Hour Extended Prompt Caching Write-Premium ROI (2026)', summary: 'Exact break-even hits per hour comparing 1.25x 5-minute ephemeral caching versus 2.0x 1-hour extended prompt caching across Claude 4.5 models.' },
+  { slug: 'llm-as-a-judge-gpt-5-mini-vs-claude-sonnet', a: 'gpt-5-mini', b: 'claude-sonnet-4.5', title: 'LLM-as-a-Judge Cost Comparison: GPT-5 mini vs Claude 4.5 Sonnet CI Evals (2026)', summary: 'Calculate monthly CI regression and production trace sampling evaluation spend comparing GPT-5 mini ($0.25/$2) against Claude 4.5 Sonnet ($3/$15) with 50% Batch.' }
 ];
 
 const GUIDES = [
@@ -508,6 +514,26 @@ const GUIDES = [
       { h2: '2. Find Your Exact Sessions-Per-Day Break-Even Threshold', p: 'With 85% prompt caching on Claude 4.5 Sonnet, light/medium developers often cost $14–$28/month on BYOK APIs, whereas heavy autonomous coders rapidly cross $120+/month where flat seats win.' }
     ],
     ctaHref: '/tools/ai-coding-seat-vs-api.html', ctaLabel: 'Run Seat vs. BYOK Break-Even →'
+  },
+  {
+    slug: 'llm-prompt-caching-ttl-write-premium-roi',
+    title: 'Prompt Caching Write-Premium & TTL Math: When 5-Min Beats 1-Hour Extended Caching',
+    desc: 'Exact break-even formulas for 1.25x 5-minute ephemeral writes, 2.0x 1-hour extended writes, and explicit storage TTL caches across real traffic cadences.',
+    sections: [
+      { h2: '1. Why Caching Can Increase Bills on Cold Low-Traffic Tenants', p: 'Anthropic charges a 1.25x write premium on 5-minute caches and 2.0x on 1-hour extended caches. If a tenant sends only one request every 20 minutes on a 5-minute TTL, every call pays a 25% surcharge with zero cache hits.' },
+      { h2: '2. The 2-Hit & 3-Hit Break-Even Rules', p: 'With 90% read discounts, a 5-minute cache breaks even after just 2 cache hits within its TTL window, while a 1-hour extended cache breaks even at 3 hits—making extended TTL ideal for periodic agent cron jobs and sparse enterprise workspaces.' }
+    ],
+    ctaHref: '/tools/llm-context-caching-roi.html', ctaLabel: 'Calculate Cache TTL ROI →'
+  },
+  {
+    slug: 'llm-as-a-judge-ci-eval-budget-architecture',
+    title: 'LLM-as-a-Judge Evaluation Budgets: Sizing CI Regression Suites & Prod Trace Sampling',
+    desc: 'How AI engineering teams run 500-case PR eval gates and continuous 5% production trace judging without letting evaluation API bills rival production spend.',
+    sections: [
+      { h2: '1. CI Eval Multiplier: Cases × Rubrics × PR Frequency', p: 'Running 500 golden test cases across 3 scoring rubrics on 80 pull requests per month executes 120,000 judge calls—costing $400+/mo on frontier judges unless batched and prompt-cached.' },
+      { h2: '2. Stacking 65% Rubric Caching + 50% Async Batch + Mini Judges', p: 'Because judge rubric prompts stay identical across every test case, prefix caching plus 50%-off async batch endpoints and calibrated GPT-5 mini / Gemini 2.5 Flash judges cut monthly eval spend by 80–90%.' }
+    ],
+    ctaHref: '/tools/ai-eval-judge-budget.html', ctaLabel: 'Budget Your AI Eval Pipeline →'
   }
 ];
 
@@ -555,8 +581,8 @@ registerPage('/', 'index.html', renderShell({
   path: '/',
   active: 'home',
   hreflangs: HOME_HREFLANGS,
-  title: 'AI & LLM API Cost Calculator (36 Models) — Prompt Caching, Batch & FinOps Studio',
-  description: 'Free, 100% browser-private AI & LLM API cost calculator comparing 36 flagship models (GPT-5 Pro, Claude 4.5 Opus/Sonnet, Gemini 2.5, DeepSeek-V3.1, Qwen 3, Mistral Medium 3, Cohere Command A, Nova Pro/Lite) with 20 FinOps workspaces.',
+  title: 'AI & LLM API Cost Calculator (40 Models) — Prompt Caching, Batch & FinOps Studio',
+  description: 'Free, 100% browser-private AI & LLM API cost calculator comparing 40 flagship models (GPT-5 Pro, Claude 4.5/3.7, Gemini 2.5/2.0, DeepSeek-V3.1/0324, Qwen 3, Llama 4/3.3, Mistral Medium 3, Cohere Command A, Nova Pro/Lite) with 22 FinOps workspaces.',
   scripts: ['/js/budget-card.js', '/js/studio-home.js'],
   schemaGraph: [
     { '@type': 'SoftwareApplication', name: 'TokenLedger AI & LLM Cost Studio', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}/`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, description: 'Browser-private LLM API cost estimator, agent burn simulator, SaaS gross margin calculator, and RAG TCO planner.' },
@@ -566,7 +592,7 @@ registerPage('/', 'index.html', renderShell({
     ] }
   ],
   body: `  <section class="tl-hero">
-    <div class="tl-kicker">36 MODELS &bull; 20 WORKSPACES &bull; 100% BROWSER-PRIVATE</div>
+    <div class="tl-kicker">40 MODELS &bull; 22 WORKSPACES &bull; 100% BROWSER-PRIVATE</div>
     <h1>AI &amp; LLM API Cost Calculator &amp; FinOps Studio</h1>
     <p>Model real production spend across OpenAI GPT-5, Anthropic Claude 4, Google Gemini 2.5, DeepSeek, Llama 4, Grok 3, and Mistral — including Prompt Caching, 50% Batch discounts, Model Cascade routing, and executive CSV/PDF exports.</p>
     <div class="tl-pills">
@@ -640,11 +666,11 @@ registerPage('/', 'index.html', renderShell({
 
   <section class="tl-panel" style="margin-bottom:24px">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
-      <h2 style="margin:0">3. 36-Model Side-by-Side Cost Matrix</h2>
+      <h2 style="margin:0">3. 40-Model Side-by-Side Cost Matrix</h2>
       <div id="spreadSummary" class="kpi-sub num" style="margin:0"></div>
     </div>
     <div class="tl-chips" aria-label="Filter by Provider">
-      <button type="button" class="tl-chip active" data-provider="all">All Providers (36)</button>
+      <button type="button" class="tl-chip active" data-provider="all">All Providers (40)</button>
       <button type="button" class="tl-chip" data-provider="OpenAI">OpenAI</button>
       <button type="button" class="tl-chip" data-provider="Anthropic">Anthropic</button>
       <button type="button" class="tl-chip" data-provider="Google">Google</button>
@@ -682,6 +708,8 @@ registerPage('/', 'index.html', renderShell({
       <a class="tl-link-card" href="/tools/ai-pricing-tier-designer.html"><strong>AI SaaS Pricing Tier &amp; Credit Architect</strong><span>Generate Free/Pro/Team/Enterprise credit caps &amp; Stripe JSON with hard gross-margin floors.</span><em>Design Tiers →</em></a>
       <a class="tl-link-card" href="/tools/vector-db-cost-calculator.html"><strong>Vector DB Cloud Cost Comparator</strong><span>Compare Pinecone, Qdrant, pgvector, Weaviate &amp; Turbopuffer across FP32/INT8/Binary quantization.</span><em>Compare Vector DBs →</em></a>
       <a class="tl-link-card" href="/tools/ai-coding-seat-vs-api.html"><strong>AI Coding Seat vs. BYOK API Calculator</strong><span>Benchmark Cursor, GitHub Copilot, Windsurf &amp; Claude Max seats vs cached BYOK token spend.</span><em>Compare Seats vs API →</em></a>
+      <a class="tl-link-card" href="/tools/llm-context-caching-roi.html"><strong>Prompt Caching TTL &amp; Write-Premium ROI</strong><span>Compare 5-min ephemeral (1.25x) vs 1-hour extended (2.0x) vs explicit storage cache break-even hits.</span><em>Model Cache TTL →</em></a>
+      <a class="tl-link-card" href="/tools/ai-eval-judge-budget.html"><strong>LLM-as-a-Judge &amp; CI Eval Budget</strong><span>Size monthly CI regression suites and prod trace sampling across 6 judge models with 50% Batch.</span><em>Budget AI Evals →</em></a>
       <a class="tl-link-card" href="/tools/token-inspector.html"><strong>Context &amp; JSON Minifier Inspector</strong><span>Inspect OpenAI/Claude/Gemini tokens and minify tool JSON schemas for instant savings.</span><em>Open Inspector →</em></a>
     </div>
     <div class="tl-pills" style="margin-top:14px">
@@ -1809,6 +1837,106 @@ registerPage('/tools/ai-coding-seat-vs-api.html', 'tools/ai-coding-seat-vs-api.h
   </section>`
 }), '0.9');
 
+// --- PAGE 21: LLM CONTEXT CACHING WRITE-PREMIUM & TTL ROI CALCULATOR ---
+registerPage('/tools/llm-context-caching-roi.html', 'tools/llm-context-caching-roi.html', renderShell({
+  path: '/tools/llm-context-caching-roi.html',
+  active: 'home',
+  title: 'LLM Prompt Caching TTL & Write-Premium ROI Calculator — 5-Min vs 1-Hour vs Storage Cache',
+  description: 'Calculate exact break-even hits per hour and monthly savings comparing No Caching, 5-minute ephemeral caching (1.25x write), 1-hour extended caching (2.0x write), and explicit storage TTL caches.',
+  scripts: ['/js/llm-context-caching-roi.js'],
+  schemaGraph: [
+    { '@type': 'SoftwareApplication', name: 'TokenLedger Prompt Caching TTL ROI Calculator', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}/tools/llm-context-caching-roi.html`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+    { '@type': 'FAQPage', mainEntity: [
+      { '@type': 'Question', name: 'How many cache hits are needed to break even on Anthropic 5-minute vs 1-hour prompt caching?', acceptedAnswer: { '@type': 'Answer', text: 'At a 90% cached-read discount, a 1.25x write premium (5-minute ephemeral cache) breaks even after 2 hits within the TTL window, while a 2.0x write premium (1-hour extended cache) breaks even after 3 hits.' } }
+    ] }
+  ],
+  body: `  <section class="tl-hero">
+    <div class="tl-kicker">PROMPT CACHING FINOPS &bull; WRITE PREMIUM + TTL BREAK-EVEN</div>
+    <h1>LLM Prompt Caching TTL &amp; Write-Premium ROI Calculator</h1>
+    <p>Stop overpaying on cold cache writes. Model 5-minute ephemeral (1.25x write), 1-hour extended (2.0x write), and explicit context storage TTL caching against your real hourly traffic cadence.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">Optimal Monthly Spend</div><div class="kpi-val accent" id="kpiCcBest">$0/mo</div><div class="kpi-sub" id="kpiCcBestSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Net Cache Savings</div><div class="kpi-val accent" id="kpiCcSaveMo">$0/mo</div><div class="kpi-sub" id="kpiCcSaveMoSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">5-Min TTL Break-Even</div><div class="kpi-val" id="kpiCcBe5m">2 hits</div><div class="kpi-sub" id="kpiCcBe5mSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">1-Hr TTL Break-Even</div><div class="kpi-val warn" id="kpiCcBe1h">3 hits</div><div class="kpi-sub" id="kpiCcBe1hSub">-</div></div>
+  </section>
+
+  <section class="tl-panel" style="margin-bottom:20px">
+    <h2>Shared Prefix Size &amp; Hourly Request Cadence</h2>
+    <div class="tl-row">
+      <div class="tl-field"><label for="ccModel">LLM Model</label><select id="ccModel" class="tl-select"></select></div>
+      <div class="tl-field"><label for="ccPrefix">Static Cached Prefix (tokens)</label><input id="ccPrefix" class="tl-input num" type="number" min="1024" step="1000" value="25000"></div>
+      <div class="tl-field"><label for="ccReqsHr">Requests / Active Hour</label><input id="ccReqsHr" class="tl-input num" type="number" min="1" step="5" value="30"></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-field"><label for="ccHoursDay">Active Traffic Hours / Day</label><input id="ccHoursDay" class="tl-input num" type="number" min="1" max="24" step="1" value="16"></div>
+      <div class="tl-field"><label for="ccDynIn">Dynamic User Input / Req (tok)</label><input id="ccDynIn" class="tl-input num" type="number" min="0" step="100" value="400"></div>
+      <div class="tl-field"><label for="ccOutTok">Avg Output / Req (tok)</label><input id="ccOutTok" class="tl-input num" type="number" min="0" step="100" value="500"></div>
+    </div>
+    <div class="tl-btn-bar"><button type="button" id="btnCcCopyMd" class="tl-btn tl-btn-primary">Copy Cache TTL ROI Report (Markdown)</button></div>
+  </section>
+
+  <section class="tl-panel">
+    <h2>4-Strategy Prompt Caching Monthly Cost Matrix</h2>
+    <div class="tl-table-wrap"><table class="tl-table" style="min-width:600px"><thead><tr><th>Caching Strategy</th><th>Est. Hit Rate</th><th>Write / Storage</th><th>Prefix Reads</th><th>Total/Mo</th><th>Savings</th></tr></thead><tbody id="ccTableBody"></tbody></table></div>
+  </section>`
+}), '0.9');
+
+// --- PAGE 22: LLM-AS-A-JUDGE & AI EVALUATION PIPELINE BUDGET CALCULATOR ---
+registerPage('/tools/ai-eval-judge-budget.html', 'tools/ai-eval-judge-budget.html', renderShell({
+  path: '/tools/ai-eval-judge-budget.html',
+  active: 'agent',
+  title: 'LLM-as-a-Judge & AI Evaluation Pipeline Budget Calculator — CI/CD + Prod Trace Sampling',
+  description: 'Calculate monthly LLM-as-a-Judge API spend across CI pull-request regression suites and production trace sampling with rubric prompt caching and 50% async Batch discounts.',
+  scripts: ['/js/ai-eval-judge-budget.js'],
+  schemaGraph: [
+    { '@type': 'SoftwareApplication', name: 'TokenLedger LLM-as-a-Judge Eval Budget Calculator', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}/tools/ai-eval-judge-budget.html`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+    { '@type': 'FAQPage', mainEntity: [
+      { '@type': 'Question', name: 'How do AI teams cut LLM-as-a-Judge evaluation costs without losing grading quality?', acceptedAnswer: { '@type': 'Answer', text: 'Keep grading rubrics identical at the top of the prompt for 65–85% prefix cache hits, route nightly regression and prod sampling through 50%-off async Batch APIs, and calibrate mini judge models (GPT-5 mini / Gemini 2.5 Flash) against frontier gold sets.' } }
+    ] }
+  ],
+  body: `  <section class="tl-hero">
+    <div class="tl-kicker">AI QUALITY &amp; EVALS FINOPS &bull; CI GATES + PROD TRACE SAMPLING</div>
+    <h1>LLM-as-a-Judge &amp; CI Evaluation Budget Calculator</h1>
+    <p>Size exact monthly API spend for PR regression eval suites and continuous production trace judging across 6 popular judge models — with shared rubric caching and 50% async Batch discounts.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">Active Eval Spend</div><div class="kpi-val accent" id="kpiEvMonthly">$0/mo</div><div class="kpi-sub" id="kpiEvMonthlySub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Total Judge Calls</div><div class="kpi-val" id="kpiEvCalls">0/mo</div><div class="kpi-sub" id="kpiEvCallsSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Cost per 1K Evals</div><div class="kpi-val" id="kpiEvPer1k">$0/1K</div><div class="kpi-sub" id="kpiEvPer1kSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Batch API Savings</div><div class="kpi-val accent" id="kpiEvBatchSave">$0/mo</div><div class="kpi-sub" id="kpiEvBatchSaveSub">-</div></div>
+  </section>
+
+  <section class="tl-panel" style="margin-bottom:20px">
+    <h2>CI Suite &amp; Production Trace Sampling Parameters</h2>
+    <div class="tl-row">
+      <div class="tl-field"><label for="evModel">Primary Judge Model</label><select id="evModel" class="tl-select"></select></div>
+      <div class="tl-field"><label for="evCases">Golden Eval Cases / Suite</label><input id="evCases" class="tl-input num" type="number" min="10" step="50" value="500"></div>
+      <div class="tl-field"><label for="evCiRuns">CI / PR Eval Runs / Month</label><input id="evCiRuns" class="tl-input num" type="number" min="0" step="10" value="60"></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-field"><label for="evProdTraces">Production Traces / Day</label><input id="evProdTraces" class="tl-input num" type="number" min="0" step="1000" value="10000"></div>
+      <div class="tl-field"><label for="evRubrics">Scoring Rubrics / Case</label><input id="evRubrics" class="tl-input num" type="number" min="1" max="10" step="1" value="2"></div>
+      <div class="tl-field"><label for="evInTok">Avg Judge Input (Rubric+Trace)</label><input id="evInTok" class="tl-input num" type="number" min="100" step="200" value="2200"></div>
+      <div class="tl-field"><label for="evOutTok">Avg Judge Output (Verdict)</label><input id="evOutTok" class="tl-input num" type="number" min="20" step="50" value="350"></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-field"><label for="evSamplePct">Prod Trace Sampling Rate <strong id="evSampleVal">5%</strong></label><input id="evSamplePct" class="tl-range" type="range" min="0" max="50" step="1" value="5"></div>
+      <div class="tl-field"><label for="evCache">Rubric Prefix Cache Hit Rate <strong id="evCacheVal">65%</strong></label><input id="evCache" class="tl-range" type="range" min="0" max="95" step="5" value="65"></div>
+    </div>
+    <label class="tl-check-row"><input id="evBatch" type="checkbox" checked><span>Apply 50% Async Batch API Discount for Nightly &amp; Sampled Evals</span></label>
+    <div class="tl-btn-bar"><button type="button" id="btnEvCopyMd" class="tl-btn tl-btn-primary">Copy AI Eval Budget Memo (Markdown)</button></div>
+  </section>
+
+  <section class="tl-panel">
+    <h2>6 Judge Models Cost Comparison Matrix</h2>
+    <div class="tl-table-wrap"><table class="tl-table" style="min-width:600px"><thead><tr><th>Judge LLM</th><th>Per 1K Evals</th><th>Real-Time/Mo</th><th>50% Batch/Mo</th><th>Active/Mo</th><th>Annual</th></tr></thead><tbody id="evTableBody"></tbody></table></div>
+  </section>`
+}), '0.9');
+
 // --- PAGES 6–13: 8 PROGRAMMATIC MODEL COMPARISON PAGES ---
 for (const c of COMPARISONS) {
   const mA = ENGINE.getModel(c.a);
@@ -2179,10 +2307,12 @@ writeFile('_headers', `/*
 
 const llmsTxt = `# TokenLedger — AI & LLM API FinOps Studio
 
-> Browser-private AI & LLM API cost calculator, multi-turn agent burn simulator, SaaS gross margin calculator, Vector DB comparator, AI coding seat vs BYOK planner, and public JSON pricing feed covering ${ENGINE.MODELS.length} flagship models across 20 interactive workspaces.
+> Browser-private AI & LLM API cost calculator, multi-turn agent burn simulator, SaaS gross margin calculator, Prompt Caching TTL ROI planner, LLM-as-a-Judge eval budgeter, Vector DB comparator, AI coding seat vs BYOK planner, and public JSON pricing feed covering ${ENGINE.MODELS.length} flagship models across 22 interactive workspaces.
 
 ## Core Interactive Tools
 - [${ENGINE.MODELS.length}-Model LLM API Cost Estimator](${ORIGIN}/): Live prompt token counter, prompt caching, 50% batch discounts, model cascade savings, CSV/JSON/PDF export.
+- [LLM Prompt Caching TTL & Write-Premium ROI Calculator](${ORIGIN}/tools/llm-context-caching-roi.html): Compare 5-min ephemeral (1.25x write) vs 1-hour extended (2.0x write) vs explicit storage TTL caching break-even hits.
+- [LLM-as-a-Judge & CI Evaluation Budget Calculator](${ORIGIN}/tools/ai-eval-judge-budget.html): Size monthly CI regression eval suites and prod trace sampling across 6 judge models with 50% Batch discounts.
 - [AI Agent Loop Burn Calculator](${ORIGIN}/tools/agent-budget.html): Quadratic O(N²) turn-by-turn token snowballing vs. caching and sliding-window summarization.
 - [MCP & Tool Schema Bloat Auditor](${ORIGIN}/tools/mcp-schema-auditor.html): Upfront MCP server schema token tax, lazy tool deferral savings, and raw JSON tool ranker.
 - [AI SaaS Gross Margin Simulator](${ORIGIN}/tools/saas-margin.html): Per-seat LLM COGS, payment fees, gross margin %, and power-user break-even caps.

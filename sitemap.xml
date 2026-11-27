@@ -20,6 +20,8 @@
   <url><loc>https://tokenledger-8x7.pages.dev/tools/ai-pricing-tier-designer.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/tools/vector-db-cost-calculator.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/tools/ai-coding-seat-vs-api.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/tools/llm-context-caching-roi.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/tools/ai-eval-judge-budget.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/compare/claude-sonnet-vs-gpt-4-1.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/compare/claude-opus-vs-gpt-5.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/compare/gemini-2-5-pro-vs-claude-sonnet.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
@@ -88,6 +90,12 @@
   <url><loc>https://tokenledger-8x7.pages.dev/compare/amazon-nova-lite-vs-gpt-5-nano.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/compare/gemini-2-5-pro-think-vs-o3.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/compare/claude-opus-4-5-vs-claude-sonnet-4-5.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/compare/claude-3-7-sonnet-vs-claude-sonnet-4-5.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/compare/gemini-2-0-flash-vs-gemini-2-5-flash.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/compare/llama-3-3-70b-vs-llama-4-maverick.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/compare/deepseek-v3-0324-vs-gpt-4-1-mini.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/compare/anthropic-5min-vs-1hour-prompt-cache.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/compare/llm-as-a-judge-gpt-5-mini-vs-claude-sonnet.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/guides/llm-cost-optimization-playbook.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/guides/ai-agent-token-snowball-fix.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/guides/saas-ai-gross-margin-benchmarks.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
@@ -118,6 +126,8 @@
   <url><loc>https://tokenledger-8x7.pages.dev/guides/qwen-3-open-weight-moe-finops-guide.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/guides/vector-quantization-int8-binary-rag-savings.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/guides/enterprise-ai-coding-budget-cursor-copilot-byok.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/guides/llm-prompt-caching-ttl-write-premium-roi.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/guides/llm-as-a-judge-ci-eval-budget-architecture.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/about.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/privacy.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.3</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/ko/</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>

@@ -1,7 +1,9 @@
 {
-  "version": "7.0.0",
+  "version": "8.0.0",
   "updated": "2026-11-28",
-  "source": "https://tokenledger-8x7.pages.dev",
+  "currency": "USD",
+  "unit": "per_1m_tokens",
+  "source": "https://tokenledger-8x7.pages.dev/api/pricing.json",
   "models": [
     {
       "id": "gpt-5",
@@ -434,6 +436,54 @@
       "batchDiscount": 0.5,
       "context": 300000,
       "badge": "Ultra-Budget"
+    },
+    {
+      "id": "claude-3.7-sonnet",
+      "name": "Claude 3.7 Sonnet",
+      "provider": "Anthropic",
+      "tier": "balanced",
+      "input": 3,
+      "cachedInput": 0.3,
+      "output": 15,
+      "batchDiscount": 0.5,
+      "context": 200000,
+      "badge": "Hybrid Thinking"
+    },
+    {
+      "id": "gemini-2.0-flash",
+      "name": "Gemini 2.0 Flash",
+      "provider": "Google",
+      "tier": "mini",
+      "input": 0.1,
+      "cachedInput": 0.025,
+      "output": 0.4,
+      "batchDiscount": 0.5,
+      "context": 1048576,
+      "badge": "1M Workhorse"
+    },
+    {
+      "id": "llama-3.3-70b-hosted",
+      "name": "Llama 3.3 70B (Hosted)",
+      "provider": "Meta",
+      "tier": "balanced",
+      "input": 0.59,
+      "cachedInput": 0.295,
+      "output": 0.79,
+      "batchDiscount": 0,
+      "context": 131072,
+      "badge": "Open Workhorse"
+    },
+    {
+      "id": "deepseek-v3-0324",
+      "name": "DeepSeek-V3-0324",
+      "provider": "DeepSeek",
+      "tier": "balanced",
+      "input": 0.27,
+      "cachedInput": 0.07,
+      "output": 1.1,
+      "batchDiscount": 0.5,
+      "context": 128000,
+      "badge": "Coding MoE"
     }
   ],
   "embeddings": [
