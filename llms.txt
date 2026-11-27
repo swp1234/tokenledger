@@ -1,13 +1,15 @@
 # TokenLedger — AI & LLM API FinOps Studio
 
-> Browser-private AI & LLM API cost calculator, multi-turn agent burn simulator, SaaS gross margin calculator, RAG TCO planner, and public JSON pricing feed covering 24 flagship models.
+> Browser-private AI & LLM API cost calculator, multi-turn agent burn simulator, SaaS gross margin calculator, Vector DB comparator, AI coding seat vs BYOK planner, and public JSON pricing feed covering 36 flagship models across 20 interactive workspaces.
 
 ## Core Interactive Tools
-- [24-Model LLM API Cost Estimator](https://tokenledger-8x7.pages.dev/): Live prompt token counter, prompt caching, 50% batch discounts, model cascade savings, CSV/JSON/PDF export.
+- [36-Model LLM API Cost Estimator](https://tokenledger-8x7.pages.dev/): Live prompt token counter, prompt caching, 50% batch discounts, model cascade savings, CSV/JSON/PDF export.
 - [AI Agent Loop Burn Calculator](https://tokenledger-8x7.pages.dev/tools/agent-budget.html): Quadratic O(N²) turn-by-turn token snowballing vs. caching and sliding-window summarization.
 - [MCP & Tool Schema Bloat Auditor](https://tokenledger-8x7.pages.dev/tools/mcp-schema-auditor.html): Upfront MCP server schema token tax, lazy tool deferral savings, and raw JSON tool ranker.
 - [AI SaaS Gross Margin Simulator](https://tokenledger-8x7.pages.dev/tools/saas-margin.html): Per-seat LLM COGS, payment fees, gross margin %, and power-user break-even caps.
 - [RAG & Vector DB TCO Planner](https://tokenledger-8x7.pages.dev/tools/rag-calculator.html): Embedding ingestion, HNSW RAM footprint, re-index churn, and Top-K synthesis spend.
+- [Vector Database Cloud Cost Comparator](https://tokenledger-8x7.pages.dev/tools/vector-db-cost-calculator.html): Pinecone Serverless vs Qdrant Cloud vs pgvector vs Weaviate vs Turbopuffer across FP32/INT8/Binary quantization.
+- [AI Coding Assistant Seat vs. BYOK API Calculator](https://tokenledger-8x7.pages.dev/tools/ai-coding-seat-vs-api.html): Cursor, Copilot, Windsurf & Claude Max developer seat break-even vs cached BYOK token spend.
 - [Self-Hosted GPU vs Cloud API Break-Even Calculator](https://tokenledger-8x7.pages.dev/tools/self-host-vs-api.html): H100/A100/L40S/4090 vLLM hourly + DevOps break-even vs cloud LLM APIs.
 - [Voice, Vision & Multimodal Cost Studio](https://tokenledger-8x7.pages.dev/tools/multimodal-budget.html): PDF/image vision tokens, OpenAI Realtime vs Gemini Live voice, and image generation.
 - [AI Startup Burn & Runway Planner](https://tokenledger-8x7.pages.dev/tools/ai-runway.html): 24-month cash trajectory, MRR-scaled LLM burn, and Default-Alive month calculator.
@@ -26,7 +28,7 @@
 - [Korean (한국어)](https://tokenledger-8x7.pages.dev/ko/) · [Japanese (日本語)](https://tokenledger-8x7.pages.dev/ja/) · [German (Deutsch)](https://tokenledger-8x7.pages.dev/de/) · [French (Français)](https://tokenledger-8x7.pages.dev/fr/) · [Spanish (Español)](https://tokenledger-8x7.pages.dev/es/) · [Portuguese (Português)](https://tokenledger-8x7.pages.dev/pt/)
 
 ## Public Pricing Data API
-- [Machine-Readable JSON Pricing Feed](https://tokenledger-8x7.pages.dev/api/pricing.json): 24 LLM models + 6 embedding models (2026-11-26).
+- [Machine-Readable JSON Pricing Feed](https://tokenledger-8x7.pages.dev/api/pricing.json): 36 LLM models + 6 embedding models (2026-11-28).
 
 ## Model Comparisons & Playbooks
 - [Claude Sonnet 4 vs GPT-4.1 API Cost & Context Comparison (2026)](https://tokenledger-8x7.pages.dev/compare/claude-sonnet-vs-gpt-4-1.html): Compare per-request, monthly, prompt-cached, and batch API pricing between Anthropic Claude Sonnet 4 and OpenAI GPT-4.1 across real production workloads.
@@ -91,6 +93,12 @@
 - [Qwen 3 235B MoE vs OpenAI GPT-5 mini Production API Cost Breakdown](https://tokenledger-8x7.pages.dev/compare/qwen-3-235b-vs-gpt-5-mini.html): Quantify exact monthly API savings between hosted Qwen 3 235B ($0.22/$0.88) and GPT-5 mini ($0.25/$2.00) on output-heavy generation.
 - [DeepSeek-V3.1 vs Claude 4.5 Sonnet Coding & Agent Cost Comparison (2026)](https://tokenledger-8x7.pages.dev/compare/deepseek-v3-1-vs-claude-sonnet-4-5.html): Measure the 10x token-cost spread between DeepSeek-V3.1 and Claude 4.5 Sonnet and model a hybrid 70/30 engineering router.
 - [OpenAI o3-pro vs Google Gemini 2.5 Pro Deep Reasoning Cost Guide (2026)](https://tokenledger-8x7.pages.dev/compare/o3-pro-vs-gemini-2-5-pro.html): Compare ultra-premium o3-pro ($20/$80) against Gemini 2.5 Pro ($1.25/$10, 1M context) for long-document synthesis and research pipelines.
+- [Claude 4.5 Opus vs OpenAI GPT-5 Pro Ultra-Frontier API Pricing Comparison (2026)](https://tokenledger-8x7.pages.dev/compare/claude-opus-4-5-vs-gpt-5-pro.html): Benchmark maximum-capability frontier coding & research spend comparing Claude 4.5 Opus ($15/$75) against OpenAI GPT-5 Pro ($15/$120).
+- [Mistral Medium 3 vs OpenAI GPT-4.1 mini EU Enterprise Cost Comparison (2026)](https://tokenledger-8x7.pages.dev/compare/mistral-medium-3-vs-gpt-4-1-mini.html): Compare Mistral Medium 3 ($0.40/$2.00) against GPT-4.1 mini ($0.40/$1.60) for GDPR-friendly European production workloads.
+- [Cohere Command A vs Claude 4.5 Sonnet Enterprise RAG API Cost Guide (2026)](https://tokenledger-8x7.pages.dev/compare/cohere-command-a-vs-claude-sonnet-4-5.html): Compare Cohere Command A ($2.50/$10, 256K ctx) against Claude 4.5 Sonnet ($3/$15) for grounded enterprise retrieval and citation pipelines.
+- [Amazon Nova Lite vs OpenAI GPT-5 nano Ultra-Budget API Pricing (2026)](https://tokenledger-8x7.pages.dev/compare/amazon-nova-lite-vs-gpt-5-nano.html): Benchmark ultra-cheap extraction and routing costs between AWS Amazon Nova Lite ($0.06/$0.24) and OpenAI GPT-5 nano ($0.05/$0.40).
+- [Gemini 2.5 Pro Deep Think vs OpenAI o3 Reasoning API Cost Breakdown (2026)](https://tokenledger-8x7.pages.dev/compare/gemini-2-5-pro-think-vs-o3.html): Calculate long-context reasoning budgets comparing Gemini 2.5 Pro Deep Think ($2.50/$15, 1M ctx) against OpenAI o3 ($2/$8).
+- [Claude 4.5 Opus vs Claude 4.5 Sonnet Cost & Agent Cascade Guide (2026)](https://tokenledger-8x7.pages.dev/compare/claude-opus-4-5-vs-claude-sonnet-4-5.html): Quantify the 5x cost gap between Claude 4.5 Opus and Sonnet and size a hybrid architect-plus-implementer coding workflow.
 - [LLM Cost Optimization Playbook: Cut API Spend 60–85% Without Losing Quality](https://tokenledger-8x7.pages.dev/guides/llm-cost-optimization-playbook.html): Field-tested AI FinOps playbook covering prompt caching, frontier-to-mini cascade routing, JSON schema minification, and async batch APIs.
 - [Fixing the AI Agent Token Snowball: Why a 15-Turn Agent Costs 12x More Than Expected](https://tokenledger-8x7.pages.dev/guides/ai-agent-token-snowball-fix.html): Mathematical breakdown of quadratic context accumulation in multi-turn tool-calling agents and how prefix caching + sliding windows cap burn.
 - [AI SaaS Gross Margin Benchmarks: Pricing Seats Without Getting Crushed by Power Users](https://tokenledger-8x7.pages.dev/guides/saas-ai-gross-margin-benchmarks.html): How to model AI COGS, Stripe fees, gross margin targets (>=75%), and break-even usage caps for flat-rate AI subscriptions.
@@ -119,3 +127,5 @@
 - [AWS Bedrock FinOps Playbook: Pairing Amazon Nova Pro With Claude Under Enterprise Commitments](https://tokenledger-8x7.pages.dev/guides/aws-bedrock-amazon-nova-finops-playbook.html): How AWS enterprise teams cut Bedrock monthly bills 50–70% using Nova Pro for routine extraction, prompt caching, and batch inference jobs.
 - [Controlling Hidden Reasoning Tokens on OpenAI o3-pro & DeepSeek-R1](https://tokenledger-8x7.pages.dev/guides/reasoning-model-token-budget-o3-deepseek-r1.html): Why invisible chain-of-thought output tokens inflate reasoning model bills 4x–10x and how reasoning_effort caps keep latency and spend predictable.
 - [Qwen 3 235B MoE & DeepSeek-V3.1: Open-Weight Economics for High-Volume Global Apps](https://tokenledger-8x7.pages.dev/guides/qwen-3-open-weight-moe-finops-guide.html): Why sparse Mixture-of-Experts open weights deliver near-frontier quality under $0.30/1M input tokens for multilingual SaaS products.
+- [Scalar (INT8) & Binary Quantization in Vector Databases: Cutting RAG RAM Bills 4x–32x](https://tokenledger-8x7.pages.dev/guides/vector-quantization-int8-binary-rag-savings.html): Engineering breakdown of how FP32 vs INT8 vs Binary vector compression lowers Pinecone, Qdrant, Weaviate, and pgvector hosting bills while keeping high recall.
+- [VP Engineering Guide: Budgeting AI Coding Seats (Cursor, Copilot, Windsurf) vs. BYOK API Keys](https://tokenledger-8x7.pages.dev/guides/enterprise-ai-coding-budget-cursor-copilot-byok.html): How engineering leaders model developer seat spend vs. cached BYOK Anthropic/OpenAI API keys across 10–500 engineers without surprise overages.

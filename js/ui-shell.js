@@ -115,7 +115,9 @@
   };
 
   var CMD_ITEMS = [
-    { t: '30-Model Live Cost Estimator', u: '/', k: 'home pricing gpt-5 claude 4.5 gemini deepseek qwen 3 nova' },
+    { t: '36-Model Live Cost Estimator', u: '/', k: 'home pricing gpt-5 claude 4.5 opus gemini deepseek qwen 3 nova mistral cohere' },
+    { t: 'Vector Database Cloud Cost Comparator', u: '/tools/vector-db-cost-calculator.html', k: 'vector db pinecone qdrant pgvector supabase weaviate turbopuffer embeddings rag hnsw' },
+    { t: 'AI Coding Seat vs. BYOK API Calculator', u: '/tools/ai-coding-seat-vs-api.html', k: 'cursor copilot windsurf claude code max seat byok developer coding budget' },
     { t: 'LLM Latency, TTFT & Streaming UX Calculator', u: '/tools/llm-latency-ttft-calculator.html', k: 'latency ttft speed tok/s cerebras groq fireworks sla streaming' },
     { t: 'AI SaaS Pricing Tier & Credit-Pack Architect', u: '/tools/ai-pricing-tier-designer.html', k: 'pricing tier credits overage stripe saas margin packaging' },
     { t: 'GPU VRAM & KV-Cache Quantization Calculator', u: '/tools/gpu-vram-calculator.html', k: 'vram llama 70b deepseek q4 fp8 h100 4090' },

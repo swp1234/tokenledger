@@ -38,7 +38,13 @@
     { id: 'o3-pro', name: 'OpenAI o3-pro', provider: 'OpenAI', tier: 'reasoning', input: 20.00, cachedInput: 5.00, output: 80.00, batchDiscount: 0.5, context: 200000, badge: 'Deep Research' },
     { id: 'deepseek-v3.1', name: 'DeepSeek-V3.1 (Hybrid)', provider: 'DeepSeek', tier: 'balanced', input: 0.28, cachedInput: 0.07, output: 1.10, batchDiscount: 0.5, context: 128000, badge: 'Hybrid MoE' },
     { id: 'qwen-3-235b', name: 'Qwen 3 235B-A22B (MoE)', provider: 'Alibaba', tier: 'balanced', input: 0.22, cachedInput: 0.11, output: 0.88, batchDiscount: 0.0, context: 131072, badge: 'Open MoE' },
-    { id: 'amazon-nova-pro', name: 'Amazon Nova Pro (Bedrock)', provider: 'AWS', tier: 'balanced', input: 0.80, cachedInput: 0.20, output: 3.20, batchDiscount: 0.5, context: 300000, badge: 'AWS Native' }
+    { id: 'amazon-nova-pro', name: 'Amazon Nova Pro (Bedrock)', provider: 'AWS', tier: 'balanced', input: 0.80, cachedInput: 0.20, output: 3.20, batchDiscount: 0.5, context: 300000, badge: 'AWS Native' },
+    { id: 'claude-opus-4.5', name: 'Claude 4.5 Opus', provider: 'Anthropic', tier: 'frontier', input: 15.00, cachedInput: 1.50, output: 75.00, batchDiscount: 0.5, context: 200000, badge: 'Flagship Agent' },
+    { id: 'gpt-5-pro', name: 'OpenAI GPT-5 Pro', provider: 'OpenAI', tier: 'reasoning', input: 15.00, cachedInput: 3.75, output: 120.00, batchDiscount: 0.5, context: 400000, badge: 'Max Reasoning' },
+    { id: 'gemini-2.5-pro-think', name: 'Gemini 2.5 Pro Deep Think', provider: 'Google', tier: 'reasoning', input: 2.50, cachedInput: 0.625, output: 15.00, batchDiscount: 0.5, context: 1048576, badge: '1M Reasoning' },
+    { id: 'mistral-medium-3', name: 'Mistral Medium 3', provider: 'Mistral', tier: 'balanced', input: 0.40, cachedInput: 0.40, output: 2.00, batchDiscount: 0.5, context: 128000, badge: 'EU Enterprise' },
+    { id: 'cohere-command-a', name: 'Cohere Command A', provider: 'Cohere', tier: 'balanced', input: 2.50, cachedInput: 1.25, output: 10.00, batchDiscount: 0.5, context: 256000, badge: 'Enterprise RAG' },
+    { id: 'amazon-nova-lite', name: 'Amazon Nova Lite (Bedrock)', provider: 'AWS', tier: 'mini', input: 0.06, cachedInput: 0.015, output: 0.24, batchDiscount: 0.5, context: 300000, badge: 'Ultra-Budget' }
   ];
 
   var EMBEDDINGS = [
@@ -1085,6 +1091,125 @@
     return Math.round(Number(n) || 0).toLocaleString('en-US');
   }
 
+  // Vector Database Cloud Cost Comparator (Pinecone, Qdrant, pgvector/Supabase, Weaviate, Turbopuffer)
+  var VECTOR_DB_PROVIDERS = [
+    { id: 'pinecone-serverless', name: 'Pinecone Serverless', storagePerGbMo: 0.33, readPer1M: 8.25, writePer1M: 2.00, baseMonthly: 0, ramMultiplier: 1.0, notes: 'Pay-per-RU/WU serverless; zero idle pod cost' },
+    { id: 'qdrant-cloud', name: 'Qdrant Cloud Managed', storagePerGbMo: 1.85, readPer1M: 0.35, writePer1M: 0.25, baseMonthly: 25, ramMultiplier: 1.35, notes: 'High-QPS Rust HNSW + native scalar/binary quant' },
+    { id: 'supabase-pgvector', name: 'PostgreSQL pgvector (Managed)', storagePerGbMo: 1.60, readPer1M: 0.15, writePer1M: 0.15, baseMonthly: 25, ramMultiplier: 1.50, notes: 'Co-located SQL + halfvec HNSW; best under 5M vectors' },
+    { id: 'weaviate-cloud', name: 'Weaviate Cloud Serverless', storagePerGbMo: 1.45, readPer1M: 1.20, writePer1M: 0.60, baseMonthly: 25, ramMultiplier: 1.30, notes: 'Hybrid BM25 + vector search with PQ compression' },
+    { id: 'turbopuffer', name: 'Turbopuffer (Object-Storage)', storagePerGbMo: 0.14, readPer1M: 1.90, writePer1M: 0.50, baseMonthly: 0, ramMultiplier: 0.85, notes: 'Cold-tier S3/NVMe hybrid; ultra-low idle storage cost' }
+  ];
+
+  function calcVectorDbTco(opts) {
+    var vectors = clamp(opts.vectors || 5000000, 10000, 500000000);
+    var dims = clamp(opts.dims || 1536, 128, 4096);
+    var quant = opts.quant || 'fp32';
+    var monthlyQueries = clamp(opts.monthlyQueries || 3000000, 1000, 1000000000);
+    var monthlyUpserts = clamp(opts.monthlyUpserts || 500000, 0, 500000000);
+    var emb = getEmbedding(opts.embeddingId || 'text-embedding-3-small');
+
+    var bytesPerDim = quant === 'binary' ? 0.125 : (quant === 'int8' ? 1 : (quant === 'fp16' ? 2 : 4));
+    var rawGb = (vectors * dims * bytesPerDim) / (1024 * 1024 * 1024);
+    var indexGb = rawGb * 1.45; // HNSW graph + metadata overhead
+    var ingestTokens = (vectors * 350);
+    var oneTimeEmbedUsd = (ingestTokens / 1e6) * emb.per1M;
+    var monthlyEmbedChurnUsd = ((monthlyUpserts * 350) / 1e6) * emb.per1M;
+
+    var rows = VECTOR_DB_PROVIDERS.map(function (p) {
+      var billedGb = Math.max(1, indexGb * p.ramMultiplier);
+      var storageCost = billedGb * p.storagePerGbMo;
+      var queryCost = (monthlyQueries / 1e6) * p.readPer1M;
+      var writeCost = (monthlyUpserts / 1e6) * p.writePer1M;
+      var dbMonthly = p.baseMonthly + storageCost + queryCost + writeCost;
+      var totalMonthly = dbMonthly + monthlyEmbedChurnUsd;
+      return {
+        id: p.id,
+        name: p.name,
+        notes: p.notes,
+        billedGb: billedGb,
+        storageCost: storageCost,
+        queryCost: queryCost,
+        writeCost: writeCost,
+        dbMonthly: dbMonthly,
+        totalMonthly: totalMonthly,
+        annualTco: totalMonthly * 12 + oneTimeEmbedUsd
+      };
+    });
+    rows.sort(function (a, b) { return a.totalMonthly - b.totalMonthly; });
+    return {
+      vectors: vectors,
+      dims: dims,
+      quant: quant,
+      rawGb: rawGb,
+      indexGb: indexGb,
+      embedding: emb,
+      oneTimeEmbedUsd: oneTimeEmbedUsd,
+      monthlyEmbedChurnUsd: monthlyEmbedChurnUsd,
+      cheapest: rows[0],
+      priciest: rows[rows.length - 1],
+      rows: rows
+    };
+  }
+
+  // AI Coding Assistant Seat vs. BYOK API Cost Calculator
+  var CODING_SEAT_PLANS = [
+    { id: 'windsurf-pro', name: 'Windsurf Pro', perSeatMo: 15, includedNote: 'Prompt credits tier' },
+    { id: 'copilot-business', name: 'GitHub Copilot Business', perSeatMo: 19, includedNote: 'Org-wide completions & chat' },
+    { id: 'cursor-pro', name: 'Cursor Pro', perSeatMo: 20, includedNote: 'Individual IDE seat' },
+    { id: 'cursor-business', name: 'Cursor Business / Teams', perSeatMo: 40, includedNote: 'SSO, privacy mode, org billing' },
+    { id: 'claude-code-max', name: 'Claude Max (Heavy Agent)', perSeatMo: 100, includedNote: 'High-usage autonomous coding' }
+  ];
+
+  function calcCodingSeatVsApi(opts) {
+    var m = getModel(opts.modelId || 'claude-sonnet-4.5');
+    var devs = Math.round(clamp(opts.devs || 25, 1, 2000));
+    var workdaysPerMonth = clamp(opts.workdaysPerMonth || 21, 5, 31);
+    var sessionsPerDevDay = clamp(opts.sessionsPerDevDay || 12, 1, 200);
+    var inputPerSession = clamp(opts.inputPerSession || 24000, 1000, 500000);
+    var outputPerSession = clamp(opts.outputPerSession || 1600, 100, 50000);
+    var cacheHitRate = clamp(opts.cacheHitRate != null ? opts.cacheHitRate : 85, 0, 95) / 100;
+
+    var perSessionInCost = ((inputPerSession * (1 - cacheHitRate)) / 1e6) * m.input + ((inputPerSession * cacheHitRate) / 1e6) * m.cachedInput;
+    var perSessionOutCost = (outputPerSession / 1e6) * m.output;
+    var perSessionCost = perSessionInCost + perSessionOutCost;
+    var apiPerDevMonthly = perSessionCost * sessionsPerDevDay * workdaysPerMonth;
+    var apiTeamMonthly = apiPerDevMonthly * devs;
+
+    var plans = CODING_SEAT_PLANS.map(function (pl) {
+      var teamMonthly = pl.perSeatMo * devs;
+      var deltaVsApi = teamMonthly - apiTeamMonthly;
+      var breakEvenSessionsDay = perSessionCost > 0 ? (pl.perSeatMo / (perSessionCost * workdaysPerMonth)) : 0;
+      return {
+        id: pl.id,
+        name: pl.name,
+        perSeatMo: pl.perSeatMo,
+        includedNote: pl.includedNote,
+        teamMonthly: teamMonthly,
+        teamAnnual: teamMonthly * 12,
+        deltaVsApi: deltaVsApi,
+        breakEvenSessionsDay: breakEvenSessionsDay,
+        winner: teamMonthly <= apiTeamMonthly ? 'seat' : 'byok-api'
+      };
+    });
+
+    var sortedAll = plans.slice().sort(function (a, b) { return a.teamMonthly - b.teamMonthly; });
+    var bestPlan = sortedAll[0];
+    var overallWinner = apiTeamMonthly < bestPlan.teamMonthly ? ('BYOK API (' + m.name + ')') : bestPlan.name;
+
+    return {
+      model: m,
+      devs: devs,
+      workdaysPerMonth: workdaysPerMonth,
+      sessionsPerDevDay: sessionsPerDevDay,
+      perSessionCost: perSessionCost,
+      apiPerDevMonthly: apiPerDevMonthly,
+      apiTeamMonthly: apiTeamMonthly,
+      apiTeamAnnual: apiTeamMonthly * 12,
+      overallWinner: overallWinner,
+      plans: plans
+    };
+  }
+
   return {
     MODELS: MODELS,
     EMBEDDINGS: EMBEDDINGS,
@@ -1097,6 +1222,8 @@
     IMAGE_GEN_MODELS: IMAGE_GEN_MODELS,
     VIDEO_GEN_MODELS: VIDEO_GEN_MODELS,
     LATENCY_PROFILES: LATENCY_PROFILES,
+    VECTOR_DB_PROVIDERS: VECTOR_DB_PROVIDERS,
+    CODING_SEAT_PLANS: CODING_SEAT_PLANS,
     CURRENCIES: CURRENCIES,
     getModel: getModel,
     getEmbedding: getEmbedding,
@@ -1122,6 +1249,8 @@
     calcMediaGenBudget: calcMediaGenBudget,
     calcLatencyBudget: calcLatencyBudget,
     calcPricingTiers: calcPricingTiers,
+    calcVectorDbTco: calcVectorDbTco,
+    calcCodingSeatVsApi: calcCodingSeatVsApi,
     formatUsd: formatUsd,
     formatInt: formatInt
   };

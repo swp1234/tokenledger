@@ -7,7 +7,7 @@ const ROOT = path.resolve(__dirname, '..');
 const ENGINE = require(path.join(ROOT, 'js', 'pricing-engine.js'));
 const ORIGIN = 'https://tokenledger-8x7.pages.dev';
 const REPO_URL = 'https://github.com/swp1234/tokenledger';
-const TODAY = '2026-11-26';
+const TODAY = '2026-11-28';
 
 function esc(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -191,7 +191,13 @@ const COMPARISONS = [
   { slug: 'cerebras-vs-groq-llm-inference-speed-cost', a: 'llama-4-maverick', b: 'llama-4-scout', title: 'Cerebras vs Groq Ultra-Fast LLM Inference Latency & Cost Comparison (2026)', summary: 'Compare wafer-scale Cerebras (2,100 tok/s) against Groq LPU (330 tok/s) for voice agents, real-time coding autocomplete, and SLA budgets.' },
   { slug: 'qwen-3-235b-vs-gpt-5-mini', a: 'qwen-3-235b', b: 'gpt-5-mini', title: 'Qwen 3 235B MoE vs OpenAI GPT-5 mini Production API Cost Breakdown', summary: 'Quantify exact monthly API savings between hosted Qwen 3 235B ($0.22/$0.88) and GPT-5 mini ($0.25/$2.00) on output-heavy generation.' },
   { slug: 'deepseek-v3-1-vs-claude-sonnet-4-5', a: 'deepseek-v3.1', b: 'claude-sonnet-4.5', title: 'DeepSeek-V3.1 vs Claude 4.5 Sonnet Coding & Agent Cost Comparison (2026)', summary: 'Measure the 10x token-cost spread between DeepSeek-V3.1 and Claude 4.5 Sonnet and model a hybrid 70/30 engineering router.' },
-  { slug: 'o3-pro-vs-gemini-2-5-pro', a: 'o3-pro', b: 'gemini-2.5-pro', title: 'OpenAI o3-pro vs Google Gemini 2.5 Pro Deep Reasoning Cost Guide (2026)', summary: 'Compare ultra-premium o3-pro ($20/$80) against Gemini 2.5 Pro ($1.25/$10, 1M context) for long-document synthesis and research pipelines.' }
+  { slug: 'o3-pro-vs-gemini-2-5-pro', a: 'o3-pro', b: 'gemini-2.5-pro', title: 'OpenAI o3-pro vs Google Gemini 2.5 Pro Deep Reasoning Cost Guide (2026)', summary: 'Compare ultra-premium o3-pro ($20/$80) against Gemini 2.5 Pro ($1.25/$10, 1M context) for long-document synthesis and research pipelines.' },
+  { slug: 'claude-opus-4-5-vs-gpt-5-pro', a: 'claude-opus-4.5', b: 'gpt-5-pro', title: 'Claude 4.5 Opus vs OpenAI GPT-5 Pro Ultra-Frontier API Pricing Comparison (2026)', summary: 'Benchmark maximum-capability frontier coding & research spend comparing Claude 4.5 Opus ($15/$75) against OpenAI GPT-5 Pro ($15/$120).' },
+  { slug: 'mistral-medium-3-vs-gpt-4-1-mini', a: 'mistral-medium-3', b: 'gpt-4.1-mini', title: 'Mistral Medium 3 vs OpenAI GPT-4.1 mini EU Enterprise Cost Comparison (2026)', summary: 'Compare Mistral Medium 3 ($0.40/$2.00) against GPT-4.1 mini ($0.40/$1.60) for GDPR-friendly European production workloads.' },
+  { slug: 'cohere-command-a-vs-claude-sonnet-4-5', a: 'cohere-command-a', b: 'claude-sonnet-4.5', title: 'Cohere Command A vs Claude 4.5 Sonnet Enterprise RAG API Cost Guide (2026)', summary: 'Compare Cohere Command A ($2.50/$10, 256K ctx) against Claude 4.5 Sonnet ($3/$15) for grounded enterprise retrieval and citation pipelines.' },
+  { slug: 'amazon-nova-lite-vs-gpt-5-nano', a: 'amazon-nova-lite', b: 'gpt-5-nano', title: 'Amazon Nova Lite vs OpenAI GPT-5 nano Ultra-Budget API Pricing (2026)', summary: 'Benchmark ultra-cheap extraction and routing costs between AWS Amazon Nova Lite ($0.06/$0.24) and OpenAI GPT-5 nano ($0.05/$0.40).' },
+  { slug: 'gemini-2-5-pro-think-vs-o3', a: 'gemini-2.5-pro-think', b: 'o3', title: 'Gemini 2.5 Pro Deep Think vs OpenAI o3 Reasoning API Cost Breakdown (2026)', summary: 'Calculate long-context reasoning budgets comparing Gemini 2.5 Pro Deep Think ($2.50/$15, 1M ctx) against OpenAI o3 ($2/$8).' },
+  { slug: 'claude-opus-4-5-vs-claude-sonnet-4-5', a: 'claude-opus-4.5', b: 'claude-sonnet-4.5', title: 'Claude 4.5 Opus vs Claude 4.5 Sonnet Cost & Agent Cascade Guide (2026)', summary: 'Quantify the 5x cost gap between Claude 4.5 Opus and Sonnet and size a hybrid architect-plus-implementer coding workflow.' }
 ];
 
 const GUIDES = [
@@ -482,6 +488,26 @@ const GUIDES = [
       { h2: '2. Serverless Hosted MoE vs. Dedicated Multi-GPU Nodes', p: 'Hosted endpoints let startups pay $0.22–$0.28/1M input with zero idle GPU burn, whereas self-hosting only makes financial sense above tens of millions of daily tokens.' }
     ],
     ctaHref: '/tools/self-host-vs-api.html', ctaLabel: 'Check GPU vs API Break-Even →'
+  },
+  {
+    slug: 'vector-quantization-int8-binary-rag-savings',
+    title: 'Scalar (INT8) & Binary Quantization in Vector Databases: Cutting RAG RAM Bills 4x–32x',
+    desc: 'Engineering breakdown of how FP32 vs INT8 vs Binary vector compression lowers Pinecone, Qdrant, Weaviate, and pgvector hosting bills while keeping high recall.',
+    sections: [
+      { h2: '1. Why Float32 HNSW Indexes Blow Up Cloud Bills Past 5M Vectors', p: 'Every 1536-dimensional float32 vector requires 6 KB of raw memory plus ~45% HNSW graph overhead. At 20M vectors that crosses 170+ GB of RAM—costing thousands monthly on managed pods.' },
+      { h2: '2. Two-Stage Binary/INT8 Search + Full-Precision Rescoring', p: 'Compressing in-memory HNSW vectors to INT8 (4x smaller) or 1-bit binary (32x smaller) and rescoring the top-100 candidates from NVMe disk preserves 97–99% recall at a fraction of the RAM bill.' }
+    ],
+    ctaHref: '/tools/vector-db-cost-calculator.html', ctaLabel: 'Compare Vector DB Cloud Costs →'
+  },
+  {
+    slug: 'enterprise-ai-coding-budget-cursor-copilot-byok',
+    title: 'VP Engineering Guide: Budgeting AI Coding Seats (Cursor, Copilot, Windsurf) vs. BYOK API Keys',
+    desc: 'How engineering leaders model developer seat spend vs. cached BYOK Anthropic/OpenAI API keys across 10–500 engineers without surprise overages.',
+    sections: [
+      { h2: '1. Usage Follows a Steep Power Law Across Engineering Teams', p: 'Typically 20% of staff engineers consume 65% of AI coding tokens in long agentic refactors, while light users average under 4 sessions/day—making one-size-fits-all $100/seat plans wasteful.' },
+      { h2: '2. Find Your Exact Sessions-Per-Day Break-Even Threshold', p: 'With 85% prompt caching on Claude 4.5 Sonnet, light/medium developers often cost $14–$28/month on BYOK APIs, whereas heavy autonomous coders rapidly cross $120+/month where flat seats win.' }
+    ],
+    ctaHref: '/tools/ai-coding-seat-vs-api.html', ctaLabel: 'Run Seat vs. BYOK Break-Even →'
   }
 ];
 
@@ -529,8 +555,8 @@ registerPage('/', 'index.html', renderShell({
   path: '/',
   active: 'home',
   hreflangs: HOME_HREFLANGS,
-  title: 'AI & LLM API Cost Calculator (30 Models) — Prompt Caching, Batch & FinOps Studio',
-  description: 'Free, 100% browser-private AI & LLM API cost calculator comparing 30 flagship models (GPT-5, Claude 4.5, Gemini 2.5, DeepSeek-V3.1, Qwen 3, Nova Pro, Llama 4) with prompt caching, cascade routing, and CSV/PDF export.',
+  title: 'AI & LLM API Cost Calculator (36 Models) — Prompt Caching, Batch & FinOps Studio',
+  description: 'Free, 100% browser-private AI & LLM API cost calculator comparing 36 flagship models (GPT-5 Pro, Claude 4.5 Opus/Sonnet, Gemini 2.5, DeepSeek-V3.1, Qwen 3, Mistral Medium 3, Cohere Command A, Nova Pro/Lite) with 20 FinOps workspaces.',
   scripts: ['/js/budget-card.js', '/js/studio-home.js'],
   schemaGraph: [
     { '@type': 'SoftwareApplication', name: 'TokenLedger AI & LLM Cost Studio', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}/`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, description: 'Browser-private LLM API cost estimator, agent burn simulator, SaaS gross margin calculator, and RAG TCO planner.' },
@@ -540,7 +566,7 @@ registerPage('/', 'index.html', renderShell({
     ] }
   ],
   body: `  <section class="tl-hero">
-    <div class="tl-kicker">24 MODELS &bull; 100% BROWSER-PRIVATE &bull; ZERO DATA UPLOAD</div>
+    <div class="tl-kicker">36 MODELS &bull; 20 WORKSPACES &bull; 100% BROWSER-PRIVATE</div>
     <h1>AI &amp; LLM API Cost Calculator &amp; FinOps Studio</h1>
     <p>Model real production spend across OpenAI GPT-5, Anthropic Claude 4, Google Gemini 2.5, DeepSeek, Llama 4, Grok 3, and Mistral — including Prompt Caching, 50% Batch discounts, Model Cascade routing, and executive CSV/PDF exports.</p>
     <div class="tl-pills">
@@ -614,11 +640,11 @@ registerPage('/', 'index.html', renderShell({
 
   <section class="tl-panel" style="margin-bottom:24px">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
-      <h2 style="margin:0">3. 24-Model Side-by-Side Cost Matrix</h2>
+      <h2 style="margin:0">3. 36-Model Side-by-Side Cost Matrix</h2>
       <div id="spreadSummary" class="kpi-sub num" style="margin:0"></div>
     </div>
     <div class="tl-chips" aria-label="Filter by Provider">
-      <button type="button" class="tl-chip active" data-provider="all">All Providers (24)</button>
+      <button type="button" class="tl-chip active" data-provider="all">All Providers (36)</button>
       <button type="button" class="tl-chip" data-provider="OpenAI">OpenAI</button>
       <button type="button" class="tl-chip" data-provider="Anthropic">Anthropic</button>
       <button type="button" class="tl-chip" data-provider="Google">Google</button>
@@ -654,6 +680,8 @@ registerPage('/', 'index.html', renderShell({
       <a class="tl-link-card" href="/tools/image-video-gen-budget.html"><strong>AI Image &amp; Video Gen Studio Budget</strong><span>Estimate FLUX, GPT-Image-1, Imagen 3, Veo, Runway &amp; Sora with retry &amp; draft-cascade math.</span><em>Size Creative Budget →</em></a>
       <a class="tl-link-card" href="/tools/llm-latency-ttft-calculator.html"><strong>LLM Latency, TTFT &amp; Speed Calculator</strong><span>Compare Cerebras, Groq, Fireworks, Gemini, GPT-5 &amp; Claude 4.5 streaming UX against your SLA.</span><em>Benchmark Speed →</em></a>
       <a class="tl-link-card" href="/tools/ai-pricing-tier-designer.html"><strong>AI SaaS Pricing Tier &amp; Credit Architect</strong><span>Generate Free/Pro/Team/Enterprise credit caps &amp; Stripe JSON with hard gross-margin floors.</span><em>Design Tiers →</em></a>
+      <a class="tl-link-card" href="/tools/vector-db-cost-calculator.html"><strong>Vector DB Cloud Cost Comparator</strong><span>Compare Pinecone, Qdrant, pgvector, Weaviate &amp; Turbopuffer across FP32/INT8/Binary quantization.</span><em>Compare Vector DBs →</em></a>
+      <a class="tl-link-card" href="/tools/ai-coding-seat-vs-api.html"><strong>AI Coding Seat vs. BYOK API Calculator</strong><span>Benchmark Cursor, GitHub Copilot, Windsurf &amp; Claude Max seats vs cached BYOK token spend.</span><em>Compare Seats vs API →</em></a>
       <a class="tl-link-card" href="/tools/token-inspector.html"><strong>Context &amp; JSON Minifier Inspector</strong><span>Inspect OpenAI/Claude/Gemini tokens and minify tool JSON schemas for instant savings.</span><em>Open Inspector →</em></a>
     </div>
     <div class="tl-pills" style="margin-top:14px">
@@ -1686,6 +1714,101 @@ registerPage('/tools/ai-pricing-tier-designer.html', 'tools/ai-pricing-tier-desi
   </section>`
 }), '0.9');
 
+// --- PAGE 19: VECTOR DATABASE CLOUD COST COMPARATOR ---
+registerPage('/tools/vector-db-cost-calculator.html', 'tools/vector-db-cost-calculator.html', renderShell({
+  path: '/tools/vector-db-cost-calculator.html',
+  active: 'rag',
+  title: 'Vector Database Cloud Cost Comparator — Pinecone vs Qdrant vs pgvector vs Weaviate vs Turbopuffer',
+  description: 'Compare monthly and 12-month TCO across Pinecone Serverless, Qdrant Cloud, PostgreSQL pgvector, Weaviate, and Turbopuffer with FP32, FP16, INT8, and Binary quantization.',
+  scripts: ['/js/vector-db-cost-calculator.js'],
+  schemaGraph: [
+    { '@type': 'SoftwareApplication', name: 'TokenLedger Vector DB Cost Comparator', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}/tools/vector-db-cost-calculator.html`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+    { '@type': 'FAQPage', mainEntity: [
+      { '@type': 'Question', name: 'How much RAM does INT8 or binary quantization save in a vector database?', acceptedAnswer: { '@type': 'Answer', text: 'Converting float32 embeddings to INT8 scalar quantization shrinks raw vector memory by 4x, while 1-bit binary quantization reduces raw memory by 32x—cutting managed HNSW hosting costs dramatically.' } }
+    ] }
+  ],
+  body: `  <section class="tl-hero">
+    <div class="tl-kicker">RAG INFRASTRUCTURE FINOPS &bull; 5 VECTOR CLOUDS + QUANTIZATION</div>
+    <h1>Vector Database Cloud Cost Comparator</h1>
+    <p>Benchmark Pinecone Serverless, Qdrant Cloud, PostgreSQL pgvector, Weaviate, and Turbopuffer side by side across vector scale, embedding dimensions, and FP32/INT8/Binary compression.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">Lowest Monthly TCO</div><div class="kpi-val accent" id="kpiVdbBest">$0/mo</div><div class="kpi-sub" id="kpiVdbBestSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">HNSW Index Footprint</div><div class="kpi-val" id="kpiVdbRam">0 GB</div><div class="kpi-sub" id="kpiVdbRamSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">1-Time Embed Ingest</div><div class="kpi-val" id="kpiVdbIngest">$0</div><div class="kpi-sub" id="kpiVdbIngestSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">12-Mo Cloud Spread</div><div class="kpi-val warn" id="kpiVdbSpread">$0/yr</div><div class="kpi-sub" id="kpiVdbSpreadSub">-</div></div>
+  </section>
+
+  <section class="tl-panel" style="margin-bottom:20px">
+    <h2>Vector Corpus, Quantization &amp; Query Load</h2>
+    <div class="tl-row">
+      <div class="tl-field"><label for="vdbVectors">Total Stored Vectors</label><input id="vdbVectors" class="tl-input num" type="number" min="10000" step="500000" value="5000000"></div>
+      <div class="tl-field"><label for="vdbDims">Embedding Dimensions</label><select id="vdbDims" class="tl-select"><option value="384">384d (MiniLM)</option><option value="1024">1024d (Cohere / Voyage / BGE)</option><option value="1536" selected>1536d (OpenAI small)</option><option value="3072">3072d (OpenAI large / Gemini)</option></select></div>
+      <div class="tl-field"><label for="vdbQuant">Vector Quantization</label><select id="vdbQuant" class="tl-select"><option value="fp32" selected>FP32 (Full 4 bytes/dim)</option><option value="fp16">FP16 / halfvec (2x smaller)</option><option value="int8">INT8 Scalar (4x smaller)</option><option value="binary">Binary 1-bit (32x smaller)</option></select></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-field"><label for="vdbQueries">Monthly Read Queries</label><input id="vdbQueries" class="tl-input num" type="number" min="1000" step="500000" value="3000000"></div>
+      <div class="tl-field"><label for="vdbUpserts">Monthly Upserts / Churn</label><input id="vdbUpserts" class="tl-input num" type="number" min="0" step="100000" value="500000"></div>
+      <div class="tl-field"><label for="vdbEmbed">Embedding Model</label><select id="vdbEmbed" class="tl-select"></select></div>
+    </div>
+    <div class="tl-btn-bar"><button type="button" id="btnVdbCopyMd" class="tl-btn tl-btn-primary">Copy Vector DB TCO Report (Markdown)</button></div>
+  </section>
+
+  <section class="tl-panel">
+    <h2>5-Provider Monthly &amp; 12-Month TCO Matrix</h2>
+    <div class="tl-table-wrap"><table class="tl-table" style="min-width:600px"><thead><tr><th>Vector Database</th><th>Billed Footprint</th><th>Storage/Mo</th><th>Query+Write</th><th>Total/Mo</th><th>12-Mo TCO</th></tr></thead><tbody id="vdbTableBody"></tbody></table></div>
+  </section>`
+}), '0.9');
+
+// --- PAGE 20: AI CODING ASSISTANT SEAT VS BYOK API CALCULATOR ---
+registerPage('/tools/ai-coding-seat-vs-api.html', 'tools/ai-coding-seat-vs-api.html', renderShell({
+  path: '/tools/ai-coding-seat-vs-api.html',
+  active: 'agent',
+  title: 'AI Coding Assistant Seat vs BYOK API Calculator — Cursor, Copilot, Windsurf, Claude Max',
+  description: 'Calculate exact monthly team costs and break-even sessions per day comparing Cursor Pro/Business, GitHub Copilot, Windsurf, and Claude Max flat seats against direct cached BYOK LLM API keys.',
+  scripts: ['/js/ai-coding-seat-vs-api.js'],
+  schemaGraph: [
+    { '@type': 'SoftwareApplication', name: 'TokenLedger AI Coding Seat vs BYOK API Calculator', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}/tools/ai-coding-seat-vs-api.html`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+    { '@type': 'FAQPage', mainEntity: [
+      { '@type': 'Question', name: 'When is a flat-rate AI coding seat cheaper than a BYOK API key?', acceptedAnswer: { '@type': 'Answer', text: 'Light or occasional users running a few sessions per day are often cheaper on cached BYOK API keys, whereas heavy autonomous coding-agent users rapidly surpass flat $20–$100/seat tiers.' } }
+    ] }
+  ],
+  body: `  <section class="tl-hero">
+    <div class="tl-kicker">ENGINEERING ORG FINOPS &bull; FLAT SEATS VS. CACHED BYOK API</div>
+    <h1>AI Coding Assistant Seat vs. BYOK API Calculator</h1>
+    <p>Compare org-wide monthly spend for Cursor, GitHub Copilot, Windsurf, and Claude Max flat developer seats against direct pay-as-you-go BYOK API keys with prompt caching.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">BYOK Cost / Dev</div><div class="kpi-val" id="kpiCsApiDev">$0/dev</div><div class="kpi-sub" id="kpiCsApiDevSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">BYOK Team Monthly</div><div class="kpi-val accent" id="kpiCsApiTeam">$0/mo</div><div class="kpi-sub" id="kpiCsApiTeamSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Lowest-Cost Option</div><div class="kpi-val accent" id="kpiCsWinner">-</div><div class="kpi-sub" id="kpiCsWinnerSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Seat Break-Even</div><div class="kpi-val warn" id="kpiCsBreakEven">0 sess/d</div><div class="kpi-sub" id="kpiCsBreakEvenSub">-</div></div>
+  </section>
+
+  <section class="tl-panel" style="margin-bottom:20px">
+    <h2>Team Size &amp; Daily Coding Agent Workload</h2>
+    <div class="tl-row">
+      <div class="tl-field"><label for="csModel">BYOK API Model</label><select id="csModel" class="tl-select"></select></div>
+      <div class="tl-field"><label for="csDevs">Developers on Team</label><input id="csDevs" class="tl-input num" type="number" min="1" step="5" value="25"></div>
+      <div class="tl-field"><label for="csDays">Active Coding Days / Mo</label><input id="csDays" class="tl-input num" type="number" min="5" max="31" step="1" value="21"></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-field"><label for="csSessions">Agent Sessions / Dev / Day</label><input id="csSessions" class="tl-input num" type="number" min="1" step="1" value="12"></div>
+      <div class="tl-field"><label for="csInTok">Avg Input Tokens / Session</label><input id="csInTok" class="tl-input num" type="number" min="1000" step="2000" value="24000"></div>
+      <div class="tl-field"><label for="csOutTok">Avg Output Tokens / Session</label><input id="csOutTok" class="tl-input num" type="number" min="100" step="200" value="1600"></div>
+    </div>
+    <div class="tl-field"><label for="csCache">Prompt Cache Hit Rate <strong id="csCacheVal">85%</strong></label><input id="csCache" class="tl-range" type="range" min="0" max="95" step="5" value="85"></div>
+    <div class="tl-btn-bar"><button type="button" id="btnCsCopyMd" class="tl-btn tl-btn-primary">Copy VP Engineering Budget Memo (Markdown)</button></div>
+  </section>
+
+  <section class="tl-panel">
+    <h2>Flat-Rate Seat Plans vs. Direct BYOK API Matrix</h2>
+    <div class="tl-table-wrap"><table class="tl-table" style="min-width:600px"><thead><tr><th>Seat Plan</th><th>Seat Price</th><th>Team Seat/Mo</th><th>BYOK API/Mo</th><th>Break-Even</th><th>Verdict</th></tr></thead><tbody id="csTableBody"></tbody></table></div>
+  </section>`
+}), '0.9');
+
 // --- PAGES 6–13: 8 PROGRAMMATIC MODEL COMPARISON PAGES ---
 for (const c of COMPARISONS) {
   const mA = ENGINE.getModel(c.a);
@@ -2016,7 +2139,7 @@ for (const lh of LOCALE_HUBS) {
       <div id="spreadSummary" class="kpi-sub num" style="margin:0"></div>
     </div>
     <div class="tl-chips">
-      <button type="button" class="tl-chip active" data-provider="all">All (30)</button>
+      <button type="button" class="tl-chip active" data-provider="all">All (${ENGINE.MODELS.length})</button>
       <button type="button" class="tl-chip" data-provider="OpenAI">OpenAI</button>
       <button type="button" class="tl-chip" data-provider="Anthropic">Anthropic</button>
       <button type="button" class="tl-chip" data-provider="Google">Google</button>
@@ -2056,14 +2179,16 @@ writeFile('_headers', `/*
 
 const llmsTxt = `# TokenLedger — AI & LLM API FinOps Studio
 
-> Browser-private AI & LLM API cost calculator, multi-turn agent burn simulator, SaaS gross margin calculator, RAG TCO planner, and public JSON pricing feed covering 24 flagship models.
+> Browser-private AI & LLM API cost calculator, multi-turn agent burn simulator, SaaS gross margin calculator, Vector DB comparator, AI coding seat vs BYOK planner, and public JSON pricing feed covering ${ENGINE.MODELS.length} flagship models across 20 interactive workspaces.
 
 ## Core Interactive Tools
-- [24-Model LLM API Cost Estimator](${ORIGIN}/): Live prompt token counter, prompt caching, 50% batch discounts, model cascade savings, CSV/JSON/PDF export.
+- [${ENGINE.MODELS.length}-Model LLM API Cost Estimator](${ORIGIN}/): Live prompt token counter, prompt caching, 50% batch discounts, model cascade savings, CSV/JSON/PDF export.
 - [AI Agent Loop Burn Calculator](${ORIGIN}/tools/agent-budget.html): Quadratic O(N²) turn-by-turn token snowballing vs. caching and sliding-window summarization.
 - [MCP & Tool Schema Bloat Auditor](${ORIGIN}/tools/mcp-schema-auditor.html): Upfront MCP server schema token tax, lazy tool deferral savings, and raw JSON tool ranker.
 - [AI SaaS Gross Margin Simulator](${ORIGIN}/tools/saas-margin.html): Per-seat LLM COGS, payment fees, gross margin %, and power-user break-even caps.
 - [RAG & Vector DB TCO Planner](${ORIGIN}/tools/rag-calculator.html): Embedding ingestion, HNSW RAM footprint, re-index churn, and Top-K synthesis spend.
+- [Vector Database Cloud Cost Comparator](${ORIGIN}/tools/vector-db-cost-calculator.html): Pinecone Serverless vs Qdrant Cloud vs pgvector vs Weaviate vs Turbopuffer across FP32/INT8/Binary quantization.
+- [AI Coding Assistant Seat vs. BYOK API Calculator](${ORIGIN}/tools/ai-coding-seat-vs-api.html): Cursor, Copilot, Windsurf & Claude Max developer seat break-even vs cached BYOK token spend.
 - [Self-Hosted GPU vs Cloud API Break-Even Calculator](${ORIGIN}/tools/self-host-vs-api.html): H100/A100/L40S/4090 vLLM hourly + DevOps break-even vs cloud LLM APIs.
 - [Voice, Vision & Multimodal Cost Studio](${ORIGIN}/tools/multimodal-budget.html): PDF/image vision tokens, OpenAI Realtime vs Gemini Live voice, and image generation.
 - [AI Startup Burn & Runway Planner](${ORIGIN}/tools/ai-runway.html): 24-month cash trajectory, MRR-scaled LLM burn, and Default-Alive month calculator.
@@ -2082,7 +2207,7 @@ const llmsTxt = `# TokenLedger — AI & LLM API FinOps Studio
 - [Korean (한국어)](${ORIGIN}/ko/) · [Japanese (日本語)](${ORIGIN}/ja/) · [German (Deutsch)](${ORIGIN}/de/) · [French (Français)](${ORIGIN}/fr/) · [Spanish (Español)](${ORIGIN}/es/) · [Portuguese (Português)](${ORIGIN}/pt/)
 
 ## Public Pricing Data API
-- [Machine-Readable JSON Pricing Feed](${ORIGIN}/api/pricing.json): 24 LLM models + 6 embedding models (${TODAY}).
+- [Machine-Readable JSON Pricing Feed](${ORIGIN}/api/pricing.json): ${ENGINE.MODELS.length} LLM models + ${ENGINE.EMBEDDINGS.length} embedding models (${TODAY}).
 
 ## Model Comparisons & Playbooks
 ${COMPARISONS.map(c => `- [${c.title}](${ORIGIN}/compare/${c.slug}.html): ${c.summary}`).join('\n')}

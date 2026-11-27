@@ -15,7 +15,7 @@ catch (_) { ({ chromium } = require('e:\\Fire Project\\node_modules\\playwright'
 
 function runUnitTests() {
   const apiJson = JSON.parse(fs.readFileSync(path.join(ROOT, 'api', 'pricing.json'), 'utf8'));
-  assert.strictEqual(apiJson.models.length, 30, 'Expected 30 models in api/pricing.json');
+  assert.strictEqual(apiJson.models.length, 36, 'Expected 36 models in api/pricing.json');
   assert.strictEqual(apiJson.models.length, ENGINE.MODELS.length, 'api/pricing.json and pricing-engine.js model count mismatch');
   assert.strictEqual(apiJson.embeddings.length, ENGINE.EMBEDDINGS.length, 'embedding count mismatch');
   for (let i = 0; i < apiJson.models.length; i++) {
@@ -98,12 +98,17 @@ function runUnitTests() {
   assert(lt.rows.length === 12 && lt.fastest.totalSec < lt.selected.totalSec && lt.passingCount >= 5);
   const pt = ENGINE.calcPricingTiers({ modelId: 'gemini-2.5-flash', inputTokens: 2800, outputTokens: 650, cacheHitRate: 55, targetMarginPct: 78, proPrice: 29, teamPrice: 79, entPrice: 299, fixedInfraPerUser: 0.65 });
   assert(pt.tiers.length === 4 && pt.tiers[1].grossMarginPct >= 77 && pt.tiers[1].maxCredits >= 100);
+  const vdbFp32 = ENGINE.calcVectorDbTco({ vectors: 5000000, dims: 1536, quant: 'fp32', monthlyQueries: 3000000, monthlyUpserts: 500000, embeddingId: 'text-embedding-3-small' });
+  const vdbInt8 = ENGINE.calcVectorDbTco({ vectors: 5000000, dims: 1536, quant: 'int8', monthlyQueries: 3000000, monthlyUpserts: 500000, embeddingId: 'text-embedding-3-small' });
+  assert(vdbFp32.rows.length === 5 && vdbInt8.rawGb < vdbFp32.rawGb * 0.3 && vdbFp32.cheapest.totalMonthly <= vdbFp32.priciest.totalMonthly);
+  const cs = ENGINE.calcCodingSeatVsApi({ modelId: 'claude-sonnet-4.5', devs: 25, workdaysPerMonth: 21, sessionsPerDevDay: 12, inputPerSession: 24000, outputPerSession: 1600, cacheHitRate: 85 });
+  assert(cs.plans.length === 5 && cs.apiTeamMonthly > 0 && cs.plans[0].breakEvenSessionsDay > 0);
 
   // OG PNG check
   const ogBuf = fs.readFileSync(path.join(ROOT, 'og-image.png'));
   assert(ogBuf.length > 10000 && ogBuf.slice(0, 8).toString('hex') === '89504e470d0a1a0a', 'og-image.png must be a valid PNG');
 
-  console.log('[PASS] Unit tests: pricing-engine, 24 models parity, token estimator, agent burn, SaaS margin, RAG TCO, OG PNG');
+  console.log('[PASS] Unit tests: pricing-engine, 36 models parity, Vector DB TCO, Coding Seat vs BYOK, token estimator, agent burn, SaaS margin, RAG TCO, OG PNG');
 }
 
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'application/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8', '.png': 'image/png', '.xml': 'application/xml', '.txt': 'text/plain; charset=utf-8' };
@@ -125,7 +130,7 @@ function startServer() {
 async function runBrowserTests() {
   const sm = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
   const paths = [...sm.matchAll(/<loc>https:\/\/tokenledger-8x7\.pages\.dev([^<]+)<\/loc>/g)].map(m => m[1]);
-  assert(paths.length === 120, `Expected 120 sitemap URLs, got ${paths.length}`);
+  assert(paths.length === 130, `Expected 130 sitemap URLs, got ${paths.length}`);
 
   const { srv, origin } = await startServer();
   const browser = await chromium.launch({ headless: true });
@@ -165,7 +170,7 @@ async function runBrowserTests() {
     assert(beforeSonnet !== afterSonnet, 'Coding preset did not update KPI');
     await page.click('[data-provider="Anthropic"]');
     const anthropicRows = await page.locator('#modelTableBody tr').count();
-    assert.strictEqual(anthropicRows, 5, `Expected 5 Anthropic rows, got ${anthropicRows}`);
+    assert.strictEqual(anthropicRows, 6, `Expected 6 Anthropic rows, got ${anthropicRows}`);
     await page.click('#tlThemeToggle');
     const theme = await page.evaluate(() => document.documentElement.getAttribute('data-theme'));
     assert.strictEqual(theme, 'light', 'Theme toggle failed');
@@ -199,7 +204,7 @@ async function runBrowserTests() {
     assert((await page.locator('#voiceCompareBody tr').count()) === 4);
     await page.goto(`${origin}/ko/`, { waitUntil: 'domcontentloaded' });
     assert.strictEqual(await page.evaluate(() => document.documentElement.lang), 'ko');
-    assert((await page.locator('#modelTableBody tr').count()) === 30);
+    assert((await page.locator('#modelTableBody tr').count()) === 36);
     await page.goto(`${origin}/es/`, { waitUntil: 'domcontentloaded' });
     assert.strictEqual(await page.evaluate(() => document.documentElement.lang), 'es');
     await page.goto(`${origin}/tools/ai-runway.html`, { waitUntil: 'domcontentloaded' });
@@ -234,15 +239,21 @@ async function runBrowserTests() {
     await page.goto(`${origin}/tools/ai-pricing-tier-designer.html`, { waitUntil: 'domcontentloaded' });
     assert((await page.locator('#ptTableBody tr').count()) === 4);
     assert((await page.textContent('#kpiPtProCap')).includes('cr/mo'));
+    await page.goto(`${origin}/tools/vector-db-cost-calculator.html`, { waitUntil: 'domcontentloaded' });
+    assert((await page.locator('#vdbTableBody tr').count()) === 5);
+    assert((await page.textContent('#kpiVdbRam')).includes('GB'));
+    await page.goto(`${origin}/tools/ai-coding-seat-vs-api.html`, { waitUntil: 'domcontentloaded' });
+    assert((await page.locator('#csTableBody tr').count()) === 5);
+    assert((await page.textContent('#kpiCsBreakEven')).includes('sess/d'));
     await page.click('#tlCmdOpen');
-    await page.fill('#tlCmdInput', 'cerebras');
+    await page.fill('#tlCmdInput', 'pinecone');
     assert((await page.locator('#tlCmdList .tl-cmd-item').count()) === 1, 'Command palette search failed');
     await page.keyboard.press('Escape');
     await page.goto(`${origin}/?embed=1`, { waitUntil: 'domcontentloaded' });
     assert(await page.evaluate(() => document.documentElement.classList.contains('tl-embed-mode')));
 
     assert.strictEqual(errors.length, 0, `Uncaught page errors: ${errors.join(' | ')}`);
-    console.log('[PASS] Interactive E2E tests passed across all 18 workspaces (30 models) + Ctrl+K Command Palette + 5-currency switcher');
+    console.log('[PASS] Interactive E2E tests passed across all 20 workspaces (36 models) + Ctrl+K Command Palette + 5-currency switcher');
   } finally {
     await browser.close();
     await new Promise(r => srv.close(r));
