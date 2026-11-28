@@ -52,7 +52,11 @@
     { id: 'gpt-4o-mini', name: 'OpenAI GPT-4o mini', provider: 'OpenAI', tier: 'mini', input: 0.15, cachedInput: 0.075, output: 0.60, batchDiscount: 0.5, context: 128000, badge: 'Legacy Mini' },
     { id: 'claude-3.5-sonnet', name: 'Claude 3.5 Sonnet', provider: 'Anthropic', tier: 'balanced', input: 3.00, cachedInput: 0.30, output: 15.00, batchDiscount: 0.5, context: 200000, badge: 'Legacy Coding' },
     { id: 'gemini-2.0-flash-lite', name: 'Gemini 2.0 Flash-Lite', provider: 'Google', tier: 'mini', input: 0.075, cachedInput: 0.01875, output: 0.30, batchDiscount: 0.5, context: 1048576, badge: 'Ultra-Budget' },
-    { id: 'mistral-codestral', name: 'Mistral Codestral 25.01', provider: 'Mistral', tier: 'mini', input: 0.30, cachedInput: 0.30, output: 0.90, batchDiscount: 0.5, context: 256000, badge: 'Code FIM' }
+    { id: 'mistral-codestral', name: 'Mistral Codestral 25.01', provider: 'Mistral', tier: 'mini', input: 0.30, cachedInput: 0.30, output: 0.90, batchDiscount: 0.5, context: 256000, badge: 'Code FIM' },
+    { id: 'gpt-4o', name: 'OpenAI GPT-4o', provider: 'OpenAI', tier: 'balanced', input: 2.50, cachedInput: 1.25, output: 10.00, batchDiscount: 0.5, context: 128000, badge: 'Legacy Omni' },
+    { id: 'grok-4', name: 'xAI Grok 4', provider: 'xAI', tier: 'frontier', input: 3.00, cachedInput: 0.75, output: 15.00, batchDiscount: 0.0, context: 256000, badge: 'Frontier Reasoning' },
+    { id: 'qwen-3-32b', name: 'Qwen 3 32B (Hosted)', provider: 'Alibaba', tier: 'mini', input: 0.10, cachedInput: 0.05, output: 0.30, batchDiscount: 0.0, context: 131072, badge: 'Fast Open' },
+    { id: 'amazon-nova-micro', name: 'Amazon Nova Micro (Bedrock)', provider: 'AWS', tier: 'mini', input: 0.035, cachedInput: 0.00875, output: 0.14, batchDiscount: 0.5, context: 128000, badge: 'Lowest Text' }
   ];
 
   var EMBEDDINGS = [
@@ -1465,6 +1469,135 @@
     };
   }
 
+  // Long-Session Context Compaction & Rolling Summary ROI Calculator
+  function calcContextCompactionRoi(opts) {
+    var model = getModel(opts.modelId || 'claude-sonnet-4.5');
+    var turns = Math.round(clamp(opts.turns || 30, 5, 100));
+    var systemTokens = clamp(opts.systemTokens || 4000, 200, 80000);
+    var growthPerTurn = clamp(opts.growthPerTurn || 2200, 100, 30000);
+    var outputPerTurn = clamp(opts.outputPerTurn || 550, 50, 15000);
+    var compactAtTokens = clamp(opts.compactAtTokens || 32000, 6000, 250000);
+    var summarySize = clamp(opts.summarySize || 2500, 300, 20000);
+    var sessionsPerDay = clamp(opts.sessionsPerDay || 300, 1, 500000);
+    var cacheHitRate = clamp(opts.cacheHitRate != null ? opts.cacheHitRate : 80, 0, 95);
+
+    var cacheRatio = cacheHitRate / 100;
+    var effIn = model.input * (1 - cacheRatio) + model.cachedInput * cacheRatio;
+
+    function simStrategy(mode) {
+      var history = 0;
+      var totalIn = 0;
+      var totalOut = 0;
+      var compactions = 0;
+      var peakCtx = 0;
+      for (var t = 1; t <= turns; t++) {
+        var ctx = systemTokens + history;
+        if (mode === 'truncate') {
+          ctx = systemTokens + Math.round(history * 0.55);
+        }
+        if ((mode === 'compact' || mode === 'hybrid') && ctx >= compactAtTokens) {
+          compactions++;
+          totalIn += ctx;
+          totalOut += summarySize;
+          history = summarySize;
+          ctx = systemTokens + history;
+        }
+        if (ctx > peakCtx) peakCtx = ctx;
+        totalIn += ctx;
+        totalOut += outputPerTurn;
+        var turnAdd = (mode === 'truncate' || mode === 'hybrid') ? Math.round(growthPerTurn * 0.55) : growthPerTurn;
+        history += turnAdd + outputPerTurn;
+      }
+      var perSession = (totalIn / 1e6) * effIn + (totalOut / 1e6) * model.output;
+      var monthly = perSession * sessionsPerDay * 30;
+      return {
+        peakCtx: peakCtx,
+        compactions: compactions,
+        totalIn: totalIn,
+        perSession: perSession,
+        monthly: monthly,
+        annual: monthly * 12
+      };
+    }
+
+    var naive = simStrategy('naive');
+    var truncate = simStrategy('truncate');
+    var compact = simStrategy('compact');
+    var hybrid = simStrategy('hybrid');
+    var savePct = naive.monthly > 0 ? ((naive.monthly - hybrid.monthly) / naive.monthly) * 100 : 0;
+
+    return {
+      model: model,
+      turns: turns,
+      naive: naive,
+      truncate: truncate,
+      compact: compact,
+      hybrid: hybrid,
+      savePct: savePct,
+      annualSaved: Math.max(0, naive.monthly - hybrid.monthly) * 12,
+      strategies: [
+        { name: 'Unbounded History (No Compaction)', peakCtx: naive.peakCtx, compactions: 0, perSession: naive.perSession, monthly: naive.monthly, annual: naive.annual, savePct: 0 },
+        { name: 'Tool-Output Truncation Only (-45% payload)', peakCtx: truncate.peakCtx, compactions: 0, perSession: truncate.perSession, monthly: truncate.monthly, annual: truncate.annual, savePct: naive.monthly > 0 ? ((naive.monthly - truncate.monthly) / naive.monthly) * 100 : 0 },
+        { name: 'Threshold Compaction (@ ' + Math.round(compactAtTokens / 1000) + 'K tok)', peakCtx: compact.peakCtx, compactions: compact.compactions, perSession: compact.perSession, monthly: compact.monthly, annual: compact.annual, savePct: naive.monthly > 0 ? ((naive.monthly - compact.monthly) / naive.monthly) * 100 : 0 },
+        { name: 'Hybrid: Tool Truncation + Rolling Compaction', peakCtx: hybrid.peakCtx, compactions: hybrid.compactions, perSession: hybrid.perSession, monthly: hybrid.monthly, annual: hybrid.annual, savePct: savePct }
+      ]
+    };
+  }
+
+  // Enterprise Provisioned Throughput (PTU / GSU) vs Pay-As-You-Go Break-Even Calculator
+  function calcPtuVsPaygo(opts) {
+    var model = getModel(opts.modelId || 'gpt-5');
+    var ptuCount = Math.round(clamp(opts.ptuCount || 100, 15, 5000));
+    var ptuUnitMonthly = clamp(opts.ptuUnitMonthly || 200, 20, 2000);
+    var tpmPerPtu = clamp(opts.tpmPerPtu || 2500, 500, 20000);
+    var avgUtilPct = clamp(opts.avgUtilPct != null ? opts.avgUtilPct : 48, 5, 98);
+    var peakToAvg = clamp(opts.peakToAvg || 2.2, 1.0, 5.0);
+    var outputRatioPct = clamp(opts.outputRatioPct != null ? opts.outputRatioPct : 22, 5, 70);
+    var cacheHitRate = clamp(opts.cacheHitRate != null ? opts.cacheHitRate : 50, 0, 95);
+
+    var reservedCapacityTpm = ptuCount * tpmPerPtu;
+    var activeAvgTpm = reservedCapacityTpm * (avgUtilPct / 100);
+    var monthlyTokensTotal = activeAvgTpm * 60 * 24 * 30;
+    var outShare = outputRatioPct / 100;
+    var inTokensMo = monthlyTokensTotal * (1 - outShare);
+    var outTokensMo = monthlyTokensTotal * outShare;
+
+    var cacheRatio = cacheHitRate / 100;
+    var effInRate = model.input * (1 - cacheRatio) + model.cachedInput * cacheRatio;
+    var paygoMonthly = (inTokensMo / 1e6) * effInRate + (outTokensMo / 1e6) * model.output;
+    var ptuFullMonthly = ptuCount * ptuUnitMonthly;
+
+    // Hybrid: Provision 60% base load on PTU, spill 40% bursts to PayGo
+    var hybridPtus = Math.max(15, Math.round(ptuCount * 0.6));
+    var hybridBaseShare = Math.min(0.82, 0.6 / Math.max(0.6, avgUtilPct / 100));
+    var hybridSpillMonthly = paygoMonthly * (1 - hybridBaseShare);
+    var hybridMonthly = hybridPtus * ptuUnitMonthly + hybridSpillMonthly;
+
+    var fullCapacityPaygoVal = ((reservedCapacityTpm * 60 * 24 * 30) / 1e6) * ((1 - outShare) * effInRate + outShare * model.output);
+    var breakEvenUtilPct = fullCapacityPaygoVal > 0 ? Math.min(100, (ptuFullMonthly / fullCapacityPaygoVal) * 100) : 100;
+
+    var options = [
+      { name: '100% Pay-As-You-Go (On-Demand)', ptus: 0, monthly: paygoMonthly, annual: paygoMonthly * 12, sla: 'Shared Pool (429 Burst Risk)' },
+      { name: '100% Reserved PTU / GSU (' + ptuCount + ' units)', ptus: ptuCount, monthly: ptuFullMonthly, annual: ptuFullMonthly * 12, sla: 'Dedicated Zero-429 SLA' },
+      { name: 'Hybrid Base PTU (' + hybridPtus + 'u) + PayGo Spill', ptus: hybridPtus, monthly: hybridMonthly, annual: hybridMonthly * 12, sla: 'Dedicated Base + Elastic Burst' }
+    ];
+    var cheapest = options.slice().sort(function (a, b) { return a.monthly - b.monthly; })[0];
+
+    return {
+      model: model,
+      reservedCapacityTpm: reservedCapacityTpm,
+      peakRequiredTpm: Math.round(activeAvgTpm * peakToAvg),
+      monthlyTokensB: monthlyTokensTotal / 1e9,
+      paygoMonthly: paygoMonthly,
+      ptuFullMonthly: ptuFullMonthly,
+      hybridMonthly: hybridMonthly,
+      breakEvenUtilPct: breakEvenUtilPct,
+      winner: cheapest,
+      annualBestSavings: Math.max(0, Math.max(paygoMonthly, ptuFullMonthly) - cheapest.monthly) * 12,
+      options: options
+    };
+  }
+
   return {
     MODELS: MODELS,
     EMBEDDINGS: EMBEDDINGS,
@@ -1512,6 +1645,8 @@
     calcEvalJudgeBudget: calcEvalJudgeBudget,
     calcGuardrailCost: calcGuardrailCost,
     calcMultiAgentSwarmCost: calcMultiAgentSwarmCost,
+    calcContextCompactionRoi: calcContextCompactionRoi,
+    calcPtuVsPaygo: calcPtuVsPaygo,
     formatUsd: formatUsd,
     formatInt: formatInt
   };

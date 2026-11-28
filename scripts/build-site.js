@@ -209,7 +209,13 @@ const COMPARISONS = [
   { slug: 'gemini-2-0-flash-lite-vs-gpt-5-nano', a: 'gemini-2.0-flash-lite', b: 'gpt-5-nano', title: 'Gemini 2.0 Flash-Lite vs OpenAI GPT-5 nano Ultra-Low-Cost API Benchmark (2026)', summary: 'Head-to-head ultra-budget extraction and routing comparison between Gemini 2.0 Flash-Lite ($0.075/$0.30, 1M ctx) and GPT-5 nano ($0.05/$0.40).' },
   { slug: 'mistral-codestral-vs-deepseek-v3-0324', a: 'mistral-codestral', b: 'deepseek-v3-0324', title: 'Mistral Codestral 25.01 vs DeepSeek-V3-0324 Code Completion API Cost (2026)', summary: 'Compare IDE fill-in-the-middle (FIM) coding completion costs between EU Mistral Codestral ($0.30/$0.90) and DeepSeek-V3-0324 ($0.27/$1.10).' },
   { slug: 'bedrock-guardrails-vs-llama-guard-3', a: 'claude-sonnet-4.5', b: 'llama-4-scout', title: 'AWS Bedrock Guardrails vs Llama Guard 3 8B & Azure Content Safety Cost (2026)', summary: 'Quantify safety moderation and PII redaction overhead % comparing AWS Bedrock Guardrails ($0.75/1K units) against hosted Llama Guard 3 ($0.05/1M).' },
-  { slug: 'langgraph-multi-agent-frontier-vs-tiered', a: 'claude-opus-4.5', b: 'gemini-2.5-flash', title: 'Multi-Agent Swarm Cost: All-Frontier vs Tiered Planner + Flash Workers (2026)', summary: 'See how routing worker and critic hops in LangGraph/CrewAI swarms to Gemini 2.5 Flash & GPT-5 mini cuts orchestration bills by 70–85%.' }
+  { slug: 'langgraph-multi-agent-frontier-vs-tiered', a: 'claude-opus-4.5', b: 'gemini-2.5-flash', title: 'Multi-Agent Swarm Cost: All-Frontier vs Tiered Planner + Flash Workers (2026)', summary: 'See how routing worker and critic hops in LangGraph/CrewAI swarms to Gemini 2.5 Flash & GPT-5 mini cuts orchestration bills by 70–85%.' },
+  { slug: 'gpt-4o-vs-gpt-5-migration', a: 'gpt-4o', b: 'gpt-5', title: 'OpenAI GPT-4o vs GPT-5 Migration Cost & Caching Economics (2026)', summary: 'Compare legacy GPT-4o ($2.50/$10, 50% cache) against GPT-5 ($1.25/$10, 90% cache, 400K ctx) to see immediate migration savings.' },
+  { slug: 'grok-4-vs-claude-sonnet-4-5', a: 'grok-4', b: 'claude-sonnet-4.5', title: 'xAI Grok 4 vs Claude 4.5 Sonnet Frontier Reasoning Cost Comparison (2026)', summary: 'Head-to-head monthly cost analysis comparing xAI Grok 4 ($3/$15, 256K ctx) against Anthropic Claude 4.5 Sonnet ($3/$15, 90% cache).' },
+  { slug: 'grok-4-vs-gpt-5', a: 'grok-4', b: 'gpt-5', title: 'xAI Grok 4 vs OpenAI GPT-5 API Cost & Context Window Breakdown (2026)', summary: 'Compare xAI Grok 4 ($3/$15) against OpenAI GPT-5 ($1.25/$10, 400K ctx) across high-volume reasoning and agent pipelines.' },
+  { slug: 'qwen-3-32b-vs-gemini-2-5-flash-lite', a: 'qwen-3-32b', b: 'gemini-2.5-flash-lite', title: 'Qwen 3 32B vs Gemini 2.5 Flash-Lite Budget Extraction Cost Benchmark (2026)', summary: 'Compare hosted open-weight Qwen 3 32B ($0.10/$0.30) against Google Gemini 2.5 Flash-Lite ($0.10/$0.40, 1M ctx) at scale.' },
+  { slug: 'amazon-nova-micro-vs-gpt-5-nano', a: 'amazon-nova-micro', b: 'gpt-5-nano', title: 'Amazon Nova Micro vs OpenAI GPT-5 nano Lowest-Cost Text API Comparison (2026)', summary: 'Benchmark the lowest-cost enterprise text APIs: AWS Bedrock Nova Micro ($0.035/$0.14) versus OpenAI GPT-5 nano ($0.05/$0.40).' },
+  { slug: 'azure-ptu-vs-paygo-gpt-5', a: 'gpt-5', b: 'gpt-5-mini', title: 'Azure OpenAI PTU vs Pay-As-You-Go Break-Even Math for GPT-5 (2026)', summary: 'Calculate the exact utilization threshold where Provisioned Throughput Units (PTUs) beat PayGo and how Hybrid Base+Burst routing optimizes TCO.' }
 ];
 
 const GUIDES = [
@@ -560,6 +566,26 @@ const GUIDES = [
       { h2: '2. Frontier Planner + Flash Workers + Compact State JSON', p: 'Reserving frontier reasoning strictly for initial planning and final synthesis while assigning parallel workers to Gemini 2.5 Flash / GPT-5 mini and passing compact JSON state cuts swarm bills 70–85%.' }
     ],
     ctaHref: '/tools/multi-agent-orchestration-cost.html', ctaLabel: 'Model Multi-Agent Swarm Cost →'
+  },
+  {
+    slug: 'long-session-context-compaction-finops',
+    title: 'Long-Session Agent Context Compaction: Tool Truncation + Rolling Summaries Guide',
+    desc: 'How 30–60 turn coding and deep-research agents quietly hit 80K+ context windows—and how hybrid truncation + threshold compaction saves 55–80% without breaking cache prefixes.',
+    sections: [
+      { h2: '1. Why Unbounded Tool Logs Blow Up Both Latency and Token Spend', p: 'Appending raw stack traces, HTML pages, and 300-line file reads on every turn balloons input context past 60K–100K tokens by turn 25, multiplying per-session cost even with 80% prompt caching.' },
+      { h2: '2. Combining Tool Truncation with 32K Threshold Rolling Summaries', p: 'Truncating verbose tool payloads before storage and compacting history into a clean 2.5K structured summary whenever context crosses 32K–48K tokens caps peak memory and cuts annual agent spend by over 60%.' }
+    ],
+    ctaHref: '/tools/llm-context-compaction-roi.html', ctaLabel: 'Simulate Context Compaction ROI →'
+  },
+  {
+    slug: 'enterprise-ptu-gsu-vs-paygo-capacity-guide',
+    title: 'Enterprise PTU / GSU vs. Pay-As-You-Go: Hybrid Base+Burst Capacity FinOps',
+    desc: 'Avoid over-buying idle Azure PTUs or AWS Bedrock Provisioned Throughput by calculating exact utilization break-even and spilling peak bursts to PayGo.',
+    sections: [
+      { h2: '1. The Idle-Night PTU Trap', p: 'Enterprise traffic peaks during business hours and drops 70% overnight. Provisioning 100% of peak TPM on fixed monthly PTUs leaves expensive GPU reservations sitting idle 14 hours a day.' },
+      { h2: '2. Hybrid 60% Base PTU + Elastic PayGo Spill Routing', p: 'Reserving dedicated PTUs strictly for steady baseline traffic while routing morning burst spikes to PayGo secures zero-429 SLAs at 25–45% lower monthly TCO.' }
+    ],
+    ctaHref: '/tools/enterprise-ptu-vs-paygo.html', ctaLabel: 'Model PTU vs PayGo Break-Even →'
   }
 ];
 
@@ -738,6 +764,8 @@ registerPage('/', 'index.html', renderShell({
       <a class="tl-link-card" href="/tools/ai-eval-judge-budget.html"><strong>LLM-as-a-Judge &amp; CI Eval Budget</strong><span>Size monthly CI regression suites and prod trace sampling across 6 judge models with 50% Batch.</span><em>Budget AI Evals →</em></a>
       <a class="tl-link-card" href="/tools/ai-guardrail-moderation-cost.html"><strong>AI Guardrail, PII &amp; Moderation Cost</strong><span>Compare AWS Bedrock Guardrails, Azure Content Safety, Llama Guard 3 &amp; OpenAI Moderation overhead %.</span><em>Price Guardrails →</em></a>
       <a class="tl-link-card" href="/tools/multi-agent-orchestration-cost.html"><strong>Multi-Agent Swarm Cost Calculator</strong><span>Model LangGraph/CrewAI Planner + Flash Workers + Critic handoffs vs. all-frontier orchestration.</span><em>Model Swarm Cost →</em></a>
+      <a class="tl-link-card" href="/tools/llm-context-compaction-roi.html"><strong>Context Compaction &amp; Summary ROI</strong><span>Model 30–60 turn agent tool truncation + threshold rolling compaction savings vs. unbounded history.</span><em>Simulate Compaction →</em></a>
+      <a class="tl-link-card" href="/tools/enterprise-ptu-vs-paygo.html"><strong>Enterprise PTU / GSU vs. PayGo</strong><span>Calculate Azure PTU / Bedrock Provisioned utilization break-even and Hybrid Base+Burst TCO.</span><em>Compare PTU vs PayGo →</em></a>
       <a class="tl-link-card" href="/tools/token-inspector.html"><strong>Context &amp; JSON Minifier Inspector</strong><span>Inspect OpenAI/Claude/Gemini tokens and minify tool JSON schemas for instant savings.</span><em>Open Inspector →</em></a>
     </div>
     <div class="tl-pills" style="margin-top:14px">
@@ -2065,6 +2093,109 @@ registerPage('/tools/multi-agent-orchestration-cost.html', 'tools/multi-agent-or
   </section>`
 }), '0.9');
 
+// --- PAGE 25: LONG-SESSION CONTEXT COMPACTION & ROLLING SUMMARY ROI ---
+registerPage('/tools/llm-context-compaction-roi.html', 'tools/llm-context-compaction-roi.html', renderShell({
+  path: '/tools/llm-context-compaction-roi.html',
+  active: 'agent',
+  title: 'LLM Context Compaction & Rolling Summary ROI Calculator — Long-Session Agent FinOps',
+  description: 'Model 30–100 turn AI agent context growth, tool-output truncation, and threshold rolling compaction savings across 48 LLM models with prompt caching.',
+  scripts: ['/js/llm-context-compaction-roi.js'],
+  schemaGraph: [
+    { '@type': 'SoftwareApplication', name: 'TokenLedger Context Compaction ROI Calculator', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}/tools/llm-context-compaction-roi.html`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+    { '@type': 'FAQPage', mainEntity: [
+      { '@type': 'Question', name: 'When should a long-running AI agent compact conversation context?', acceptedAnswer: { '@type': 'Answer', text: 'Triggering structured rolling compaction whenever active context crosses 28K–48K tokens alongside 45% tool-output truncation typically cuts 30-turn session costs by 55–75%.' } }
+    ] }
+  ],
+  body: `  <section class="tl-hero">
+    <div class="tl-kicker">AGENT MEMORY FINOPS &bull; TRUNCATION + ROLLING COMPACTION</div>
+    <h1>Long-Session Context Compaction &amp; Summary ROI Calculator</h1>
+    <p>Quantify exact token and dollar savings from tool-output truncation and threshold rolling context compaction across 10–100 turn coding and research agent sessions.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">Unbounded History</div><div class="kpi-val danger" id="kpiCpNaive">$0/mo</div><div class="kpi-sub" id="kpiCpNaiveSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Hybrid Compaction</div><div class="kpi-val accent" id="kpiCpHybrid">$0/mo</div><div class="kpi-sub" id="kpiCpHybridSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Capped Peak Context</div><div class="kpi-val" id="kpiCpPeak">0K tok</div><div class="kpi-sub" id="kpiCpPeakSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Annual Savings</div><div class="kpi-val accent" id="kpiCpSaveYr">$0/yr</div><div class="kpi-sub" id="kpiCpSaveYrSub">-</div></div>
+  </section>
+
+  <section class="tl-panel" style="margin-bottom:20px">
+    <h2>Session Trajectory &amp; Compaction Thresholds</h2>
+    <div class="tl-row">
+      <div class="tl-field"><label for="cpModel">Agent LLM Model</label><select id="cpModel" class="tl-select"></select></div>
+      <div class="tl-field"><label for="cpTurns">Turns / Session</label><input id="cpTurns" class="tl-input num" type="number" min="5" max="100" step="5" value="30"></div>
+      <div class="tl-field"><label for="cpSess">Sessions / Day</label><input id="cpSess" class="tl-input num" type="number" min="1" step="50" value="300"></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-field"><label for="cpSys">System + Schema Prefix (tok)</label><input id="cpSys" class="tl-input num" type="number" min="200" step="500" value="4000"></div>
+      <div class="tl-field"><label for="cpGrow">Avg Tool/User Growth / Turn</label><input id="cpGrow" class="tl-input num" type="number" min="100" step="200" value="2200"></div>
+      <div class="tl-field"><label for="cpOut">Avg Output / Turn</label><input id="cpOut" class="tl-input num" type="number" min="50" step="50" value="550"></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-field"><label for="cpThreshold">Compaction Trigger (tok)</label><input id="cpThreshold" class="tl-input num" type="number" min="6000" step="4000" value="32000"></div>
+      <div class="tl-field"><label for="cpSummary">Compacted Summary Size (tok)</label><input id="cpSummary" class="tl-input num" type="number" min="300" step="500" value="2500"></div>
+      <div class="tl-field"><label for="cpCache">Prefix Cache Hit Rate <strong id="cpCacheVal">80%</strong></label><input id="cpCache" class="tl-range" type="range" min="0" max="95" step="5" value="80"></div>
+    </div>
+    <div class="tl-btn-bar"><button type="button" id="btnCpCopyMd" class="tl-btn tl-btn-primary">Copy Compaction ROI Report (Markdown)</button></div>
+  </section>
+
+  <section class="tl-panel">
+    <h2>4-Strategy Long-Session Context Cost Matrix</h2>
+    <div class="tl-table-wrap"><table class="tl-table" style="min-width:600px"><thead><tr><th>Context Management Strategy</th><th>Peak Ctx</th><th>Compactions</th><th>Cost/Sess</th><th>Monthly</th><th>Savings</th></tr></thead><tbody id="cpTableBody"></tbody></table></div>
+  </section>`
+}), '0.9');
+
+// --- PAGE 26: ENTERPRISE PROVISIONED THROUGHPUT (PTU / GSU) VS PAY-AS-YOU-GO ---
+registerPage('/tools/enterprise-ptu-vs-paygo.html', 'tools/enterprise-ptu-vs-paygo.html', renderShell({
+  path: '/tools/enterprise-ptu-vs-paygo.html',
+  active: 'selfhost',
+  title: 'Enterprise PTU / GSU vs Pay-As-You-Go Break-Even Calculator — Azure, Bedrock, Vertex',
+  description: 'Calculate exact utilization break-even for Azure OpenAI PTU, AWS Bedrock Provisioned Throughput, and Google Vertex GSU versus Pay-As-You-Go and Hybrid Base+Burst routing.',
+  scripts: ['/js/enterprise-ptu-vs-paygo.js'],
+  schemaGraph: [
+    { '@type': 'SoftwareApplication', name: 'TokenLedger Enterprise PTU vs PayGo Calculator', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}/tools/enterprise-ptu-vs-paygo.html`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+    { '@type': 'FAQPage', mainEntity: [
+      { '@type': 'Question', name: 'When is Azure PTU or Bedrock Provisioned Throughput cheaper than PayGo?', acceptedAnswer: { '@type': 'Answer', text: 'Dedicated PTUs beat Pay-As-You-Go once sustained 24/7 average utilization crosses break-even (typically 45–65%); for spiky business-hours workloads, Hybrid Base PTU + PayGo Spill yields the lowest TCO.' } }
+    ] }
+  ],
+  body: `  <section class="tl-hero">
+    <div class="tl-kicker">ENTERPRISE CLOUD FINOPS &bull; AZURE PTU / BEDROCK / VERTEX GSU</div>
+    <h1>Enterprise PTU / GSU vs. Pay-As-You-Go Break-Even Planner</h1>
+    <p>Determine your exact 24/7 utilization break-even threshold before signing fixed monthly Provisioned Throughput commitments — and compare 100% PayGo, 100% PTU, and Hybrid Base+Burst routing.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">100% PayGo Monthly</div><div class="kpi-val" id="kpiPtuPaygo">$0/mo</div><div class="kpi-sub" id="kpiPtuPaygoSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">100% Reserved PTU</div><div class="kpi-val warn" id="kpiPtuFull">$0/mo</div><div class="kpi-sub" id="kpiPtuFullSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">PTU Break-Even Util</div><div class="kpi-val accent" id="kpiPtuBe">0%</div><div class="kpi-sub" id="kpiPtuBeSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Lowest TCO Option</div><div class="kpi-val accent" id="kpiPtuBest">$0/mo</div><div class="kpi-sub" id="kpiPtuBestSub">-</div></div>
+  </section>
+
+  <section class="tl-panel" style="margin-bottom:20px">
+    <h2>Reserved Capacity Units &amp; Utilization Profile</h2>
+    <div class="tl-row">
+      <div class="tl-field"><label for="ptuModel">Reference Cloud Model</label><select id="ptuModel" class="tl-select"></select></div>
+      <div class="tl-field"><label for="ptuUnits">Reserved PTU / GSU Units</label><input id="ptuUnits" class="tl-input num" type="number" min="15" step="25" value="100"></div>
+      <div class="tl-field"><label for="ptuUnitCost">Monthly Cost / PTU ($)</label><input id="ptuUnitCost" class="tl-input num" type="number" min="20" step="20" value="200"></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-field"><label for="ptuTpm">Throughput / PTU (TPM)</label><input id="ptuTpm" class="tl-input num" type="number" min="500" step="500" value="2500"></div>
+      <div class="tl-field"><label for="ptuPeak">Peak-to-Avg Burst Ratio</label><input id="ptuPeak" class="tl-input num" type="number" min="1" max="5" step="0.2" value="2.2"></div>
+      <div class="tl-field"><label for="ptuOutRatio">Output Token Share (%)</label><input id="ptuOutRatio" class="tl-input num" type="number" min="5" max="70" step="5" value="22"></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-field"><label for="ptuUtil">24/7 Avg Utilization <strong id="ptuUtilVal">48%</strong></label><input id="ptuUtil" class="tl-range" type="range" min="5" max="95" step="1" value="48"></div>
+      <div class="tl-field"><label for="ptuCache">PayGo Cache Hit Rate <strong id="ptuCacheVal">50%</strong></label><input id="ptuCache" class="tl-range" type="range" min="0" max="95" step="5" value="50"></div>
+    </div>
+    <div class="tl-btn-bar"><button type="button" id="btnPtuCopyMd" class="tl-btn tl-btn-primary">Copy PTU vs PayGo Board Memo (Markdown)</button></div>
+  </section>
+
+  <section class="tl-panel">
+    <h2>Enterprise Capacity &amp; SLA Comparison Matrix</h2>
+    <div class="tl-table-wrap"><table class="tl-table" style="min-width:600px"><thead><tr><th>Capacity Architecture</th><th>PTUs</th><th>Monthly</th><th>Annual</th><th>SLA Profile</th></tr></thead><tbody id="ptuTableBody"></tbody></table></div>
+  </section>`
+}), '0.9');
+
 // --- PAGES 6–13: 8 PROGRAMMATIC MODEL COMPARISON PAGES ---
 for (const c of COMPARISONS) {
   const mA = ENGINE.getModel(c.a);
@@ -2435,10 +2566,12 @@ writeFile('_headers', `/*
 
 const llmsTxt = `# TokenLedger — AI & LLM API FinOps Studio
 
-> Browser-private AI & LLM API cost calculator, multi-turn agent burn simulator, SaaS gross margin calculator, AI Guardrail/PII cost planner, Multi-Agent Swarm calculator, Prompt Caching TTL ROI planner, LLM-as-a-Judge eval budgeter, Vector DB comparator, AI coding seat vs BYOK planner, and public JSON pricing feed covering ${ENGINE.MODELS.length} flagship models across 24 interactive workspaces.
+> Browser-private AI & LLM API cost calculator, multi-turn agent burn simulator, SaaS gross margin calculator, Long-Session Context Compaction ROI planner, Enterprise PTU vs PayGo calculator, AI Guardrail/PII cost planner, Multi-Agent Swarm calculator, Prompt Caching TTL ROI planner, LLM-as-a-Judge eval budgeter, Vector DB comparator, AI coding seat vs BYOK planner, and public JSON pricing feed covering ${ENGINE.MODELS.length} flagship models across 26 interactive workspaces.
 
 ## Core Interactive Tools
 - [${ENGINE.MODELS.length}-Model LLM API Cost Estimator](${ORIGIN}/): Live prompt token counter, prompt caching, 50% batch discounts, model cascade savings, CSV/JSON/PDF export.
+- [Long-Session Context Compaction & Summary ROI Calculator](${ORIGIN}/tools/llm-context-compaction-roi.html): Model 10–100 turn agent tool-output truncation and threshold rolling compaction savings vs. unbounded history.
+- [Enterprise PTU / GSU vs. Pay-As-You-Go Break-Even Planner](${ORIGIN}/tools/enterprise-ptu-vs-paygo.html): Calculate Azure OpenAI PTU, AWS Bedrock Provisioned & Vertex GSU break-even utilization and Hybrid Base+Burst TCO.
 - [AI Guardrail, PII & Moderation Cost Calculator](${ORIGIN}/tools/ai-guardrail-moderation-cost.html): Quantify safety overhead % across AWS Bedrock Guardrails, Azure Content Safety, Llama Guard 3 & OpenAI Moderation.
 - [Multi-Agent Orchestration & Swarm Cost Calculator](${ORIGIN}/tools/multi-agent-orchestration-cost.html): Model LangGraph/CrewAI Planner + Flash Workers + Critic swarms vs all-frontier orchestration.
 - [LLM Prompt Caching TTL & Write-Premium ROI Calculator](${ORIGIN}/tools/llm-context-caching-roi.html): Compare 5-min ephemeral (1.25x write) vs 1-hour extended (2.0x write) vs explicit storage TTL caching break-even hits.

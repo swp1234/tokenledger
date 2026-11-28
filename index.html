@@ -227,6 +227,8 @@
       <a class="tl-link-card" href="/tools/ai-eval-judge-budget.html"><strong>LLM-as-a-Judge &amp; CI Eval Budget</strong><span>Size monthly CI regression suites and prod trace sampling across 6 judge models with 50% Batch.</span><em>Budget AI Evals →</em></a>
       <a class="tl-link-card" href="/tools/ai-guardrail-moderation-cost.html"><strong>AI Guardrail, PII &amp; Moderation Cost</strong><span>Compare AWS Bedrock Guardrails, Azure Content Safety, Llama Guard 3 &amp; OpenAI Moderation overhead %.</span><em>Price Guardrails →</em></a>
       <a class="tl-link-card" href="/tools/multi-agent-orchestration-cost.html"><strong>Multi-Agent Swarm Cost Calculator</strong><span>Model LangGraph/CrewAI Planner + Flash Workers + Critic handoffs vs. all-frontier orchestration.</span><em>Model Swarm Cost →</em></a>
+      <a class="tl-link-card" href="/tools/llm-context-compaction-roi.html"><strong>Context Compaction &amp; Summary ROI</strong><span>Model 30–60 turn agent tool truncation + threshold rolling compaction savings vs. unbounded history.</span><em>Simulate Compaction →</em></a>
+      <a class="tl-link-card" href="/tools/enterprise-ptu-vs-paygo.html"><strong>Enterprise PTU / GSU vs. PayGo</strong><span>Calculate Azure PTU / Bedrock Provisioned utilization break-even and Hybrid Base+Burst TCO.</span><em>Compare PTU vs PayGo →</em></a>
       <a class="tl-link-card" href="/tools/token-inspector.html"><strong>Context &amp; JSON Minifier Inspector</strong><span>Inspect OpenAI/Claude/Gemini tokens and minify tool JSON schemas for instant savings.</span><em>Open Inspector →</em></a>
     </div>
     <div class="tl-pills" style="margin-top:14px">
@@ -646,6 +648,36 @@
         <span>See how routing worker and critic hops in LangGraph/CrewAI swarms to Gemini 2.5 Flash &amp; GPT-5 mini cuts orchestration bills by 70–85%.</span>
         <em>Open Comparison →</em>
       </a>
+      <a class="tl-link-card" href="/compare/gpt-4o-vs-gpt-5-migration.html">
+        <strong>OpenAI GPT-4o vs GPT-5 Migration Cost &amp; Caching Economics</strong>
+        <span>Compare legacy GPT-4o ($2.50/$10, 50% cache) against GPT-5 ($1.25/$10, 90% cache, 400K ctx) to see immediate migration savings.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/grok-4-vs-claude-sonnet-4-5.html">
+        <strong>xAI Grok 4 vs Claude 4.5 Sonnet Frontier Reasoning Cost Comparison</strong>
+        <span>Head-to-head monthly cost analysis comparing xAI Grok 4 ($3/$15, 256K ctx) against Anthropic Claude 4.5 Sonnet ($3/$15, 90% cache).</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/grok-4-vs-gpt-5.html">
+        <strong>xAI Grok 4 vs OpenAI GPT-5 API Cost &amp; Context Window Breakdown</strong>
+        <span>Compare xAI Grok 4 ($3/$15) against OpenAI GPT-5 ($1.25/$10, 400K ctx) across high-volume reasoning and agent pipelines.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/qwen-3-32b-vs-gemini-2-5-flash-lite.html">
+        <strong>Qwen 3 32B vs Gemini 2.5 Flash-Lite Budget Extraction Cost Benchmark</strong>
+        <span>Compare hosted open-weight Qwen 3 32B ($0.10/$0.30) against Google Gemini 2.5 Flash-Lite ($0.10/$0.40, 1M ctx) at scale.</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/amazon-nova-micro-vs-gpt-5-nano.html">
+        <strong>Amazon Nova Micro vs OpenAI GPT-5 nano Lowest-Cost Text API Comparison</strong>
+        <span>Benchmark the lowest-cost enterprise text APIs: AWS Bedrock Nova Micro ($0.035/$0.14) versus OpenAI GPT-5 nano ($0.05/$0.40).</span>
+        <em>Open Comparison →</em>
+      </a>
+      <a class="tl-link-card" href="/compare/azure-ptu-vs-paygo-gpt-5.html">
+        <strong>Azure OpenAI PTU vs Pay-As-You-Go Break-Even Math for GPT-5</strong>
+        <span>Calculate the exact utilization threshold where Provisioned Throughput Units (PTUs) beat PayGo and how Hybrid Base+Burst routing optimizes TCO.</span>
+        <em>Open Comparison →</em>
+      </a>
     </div>
   </section>
 
@@ -820,6 +852,16 @@
       <a class="tl-link-card" href="/guides/multi-agent-swarm-orchestration-finops.html">
         <strong>Multi-Agent Swarm FinOps: Cutting LangGraph &amp; CrewAI Token Burn by 75%+</strong>
         <span>Why naive all-frontier multi-agent swarms burn 15x more tokens than single prompts, and how tiered Planner/Worker/Critic routing plus compact handoff state tames bills.</span>
+        <em>Read Playbook →</em>
+      </a>
+      <a class="tl-link-card" href="/guides/long-session-context-compaction-finops.html">
+        <strong>Long-Session Agent Context Compaction: Tool Truncation + Rolling Summaries Guide</strong>
+        <span>How 30–60 turn coding and deep-research agents quietly hit 80K+ context windows—and how hybrid truncation + threshold compaction saves 55–80% without breaking cache prefixes.</span>
+        <em>Read Playbook →</em>
+      </a>
+      <a class="tl-link-card" href="/guides/enterprise-ptu-gsu-vs-paygo-capacity-guide.html">
+        <strong>Enterprise PTU / GSU vs. Pay-As-You-Go: Hybrid Base+Burst Capacity FinOps</strong>
+        <span>Avoid over-buying idle Azure PTUs or AWS Bedrock Provisioned Throughput by calculating exact utilization break-even and spilling peak bursts to PayGo.</span>
         <em>Read Playbook →</em>
       </a>
     </div>

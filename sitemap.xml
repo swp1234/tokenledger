@@ -24,6 +24,8 @@
   <url><loc>https://tokenledger-8x7.pages.dev/tools/ai-eval-judge-budget.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/tools/ai-guardrail-moderation-cost.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/tools/multi-agent-orchestration-cost.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/tools/llm-context-compaction-roi.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/tools/enterprise-ptu-vs-paygo.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/compare/claude-sonnet-vs-gpt-4-1.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/compare/claude-opus-vs-gpt-5.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/compare/gemini-2-5-pro-vs-claude-sonnet.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
@@ -104,6 +106,12 @@
   <url><loc>https://tokenledger-8x7.pages.dev/compare/mistral-codestral-vs-deepseek-v3-0324.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/compare/bedrock-guardrails-vs-llama-guard-3.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/compare/langgraph-multi-agent-frontier-vs-tiered.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/compare/gpt-4o-vs-gpt-5-migration.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/compare/grok-4-vs-claude-sonnet-4-5.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/compare/grok-4-vs-gpt-5.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/compare/qwen-3-32b-vs-gemini-2-5-flash-lite.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/compare/amazon-nova-micro-vs-gpt-5-nano.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/compare/azure-ptu-vs-paygo-gpt-5.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/guides/llm-cost-optimization-playbook.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/guides/ai-agent-token-snowball-fix.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/guides/saas-ai-gross-margin-benchmarks.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
@@ -138,6 +146,8 @@
   <url><loc>https://tokenledger-8x7.pages.dev/guides/llm-as-a-judge-ci-eval-budget-architecture.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/guides/ai-guardrail-pii-moderation-cost-architecture.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/guides/multi-agent-swarm-orchestration-finops.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/guides/long-session-context-compaction-finops.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://tokenledger-8x7.pages.dev/guides/enterprise-ptu-gsu-vs-paygo-capacity-guide.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/about.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/privacy.html</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.3</priority></url>
   <url><loc>https://tokenledger-8x7.pages.dev/ko/</loc><lastmod>2026-11-28</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>

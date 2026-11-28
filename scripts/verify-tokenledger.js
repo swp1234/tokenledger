@@ -15,7 +15,7 @@ catch (_) { ({ chromium } = require('e:\\Fire Project\\node_modules\\playwright'
 
 function runUnitTests() {
   const apiJson = JSON.parse(fs.readFileSync(path.join(ROOT, 'api', 'pricing.json'), 'utf8'));
-  assert.strictEqual(apiJson.models.length, 44, 'Expected 44 models in api/pricing.json');
+  assert.strictEqual(apiJson.models.length, 48, 'Expected 48 models in api/pricing.json');
   assert.strictEqual(apiJson.models.length, ENGINE.MODELS.length, 'api/pricing.json and pricing-engine.js model count mismatch');
   assert.strictEqual(apiJson.embeddings.length, ENGINE.EMBEDDINGS.length, 'embedding count mismatch');
   for (let i = 0; i < apiJson.models.length; i++) {
@@ -111,12 +111,16 @@ function runUnitTests() {
   assert(gr.rows.length === 5 && gr.primaryMonthly > 0 && gr.rows[0].monthly === 0 && gr.priciest.monthly > gr.cheapestPaid.monthly);
   const sw = ENGINE.calcMultiAgentSwarmCost({ plannerModelId: 'claude-opus-4.5', workerModelId: 'gemini-2.5-flash', criticModelId: 'gpt-5-mini', workerCount: 4, handoffsPerRun: 3, avgContextPerHop: 6000, outputPerHop: 650, runsPerDay: 250, cacheHitRate: 75 });
   assert(sw.architectures.length === 3 && sw.totalCallsPerRun === 19 && sw.compactSavePct > 65 && sw.compactMonthly < sw.tieredMonthly);
+  const cp = ENGINE.calcContextCompactionRoi({ modelId: 'claude-sonnet-4.5', turns: 30, systemTokens: 4000, growthPerTurn: 2200, outputPerTurn: 550, compactAtTokens: 32000, summarySize: 2500, sessionsPerDay: 300, cacheHitRate: 80 });
+  assert(cp.strategies.length === 4 && cp.hybrid.monthly < cp.naive.monthly && cp.savePct > 40);
+  const ptu = ENGINE.calcPtuVsPaygo({ modelId: 'gpt-5', ptuCount: 100, ptuUnitMonthly: 200, tpmPerPtu: 2500, avgUtilPct: 48, peakToAvg: 2.2, outputRatioPct: 22, cacheHitRate: 50 });
+  assert(ptu.options.length === 3 && ptu.breakEvenUtilPct > 0 && ptu.breakEvenUtilPct <= 100 && ptu.winner.monthly > 0);
 
   // OG PNG check
   const ogBuf = fs.readFileSync(path.join(ROOT, 'og-image.png'));
   assert(ogBuf.length > 10000 && ogBuf.slice(0, 8).toString('hex') === '89504e470d0a1a0a', 'og-image.png must be a valid PNG');
 
-  console.log('[PASS] Unit tests: pricing-engine, 44 models parity, Guardrail Cost, Multi-Agent Swarm, Cache TTL ROI, Eval Judge Budget, OG PNG');
+  console.log('[PASS] Unit tests: pricing-engine, 48 models parity, Context Compaction ROI, Enterprise PTU vs PayGo, Guardrail Cost, Multi-Agent Swarm, OG PNG');
 }
 
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'application/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8', '.png': 'image/png', '.xml': 'application/xml', '.txt': 'text/plain; charset=utf-8' };
@@ -138,7 +142,7 @@ function startServer() {
 async function runBrowserTests() {
   const sm = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
   const paths = [...sm.matchAll(/<loc>https:\/\/tokenledger-8x7\.pages\.dev([^<]+)<\/loc>/g)].map(m => m[1]);
-  assert(paths.length === 150, `Expected 150 sitemap URLs, got ${paths.length}`);
+  assert(paths.length === 160, `Expected 160 sitemap URLs, got ${paths.length}`);
 
   const { srv, origin } = await startServer();
   const browser = await chromium.launch({ headless: true });
@@ -212,7 +216,7 @@ async function runBrowserTests() {
     assert((await page.locator('#voiceCompareBody tr').count()) === 4);
     await page.goto(`${origin}/ko/`, { waitUntil: 'domcontentloaded' });
     assert.strictEqual(await page.evaluate(() => document.documentElement.lang), 'ko');
-    assert((await page.locator('#modelTableBody tr').count()) === 44);
+    assert((await page.locator('#modelTableBody tr').count()) === 48);
     await page.goto(`${origin}/es/`, { waitUntil: 'domcontentloaded' });
     assert.strictEqual(await page.evaluate(() => document.documentElement.lang), 'es');
     await page.goto(`${origin}/tools/ai-runway.html`, { waitUntil: 'domcontentloaded' });
@@ -265,6 +269,12 @@ async function runBrowserTests() {
     await page.goto(`${origin}/tools/multi-agent-orchestration-cost.html`, { waitUntil: 'domcontentloaded' });
     assert((await page.locator('#swTableBody tr').count()) === 3);
     assert((await page.textContent('#kpiSwSaveYr')).includes('/yr'));
+    await page.goto(`${origin}/tools/llm-context-compaction-roi.html`, { waitUntil: 'domcontentloaded' });
+    assert((await page.locator('#cpTableBody tr').count()) === 4);
+    assert((await page.textContent('#kpiCpSaveYr')).includes('/yr'));
+    await page.goto(`${origin}/tools/enterprise-ptu-vs-paygo.html`, { waitUntil: 'domcontentloaded' });
+    assert((await page.locator('#ptuTableBody tr').count()) === 3);
+    assert((await page.textContent('#kpiPtuBe')).includes('%'));
     await page.click('#tlCmdOpen');
     await page.fill('#tlCmdInput', 'pinecone');
     assert((await page.locator('#tlCmdList .tl-cmd-item').count()) === 1, 'Command palette search failed');
@@ -273,7 +283,7 @@ async function runBrowserTests() {
     assert(await page.evaluate(() => document.documentElement.classList.contains('tl-embed-mode')));
 
     assert.strictEqual(errors.length, 0, `Uncaught page errors: ${errors.join(' | ')}`);
-    console.log('[PASS] Interactive E2E tests passed across all 24 workspaces (44 models) + Ctrl+K Command Palette + 5-currency switcher');
+    console.log('[PASS] Interactive E2E tests passed across all 26 workspaces (48 models) + Ctrl+K Command Palette + 5-currency switcher');
   } finally {
     await browser.close();
     await new Promise(r => srv.close(r));

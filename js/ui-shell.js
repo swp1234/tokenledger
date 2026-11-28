@@ -115,7 +115,9 @@
   };
 
   var CMD_ITEMS = [
-    { t: '44-Model Live Cost Estimator', u: '/', k: 'home pricing gpt-5 gpt-4o-mini claude 4.5 3.7 3.5 gemini 2.5 2.0 deepseek qwen 3 nova mistral codestral cohere llama 3.3' },
+    { t: '48-Model Live Cost Estimator', u: '/', k: 'home pricing gpt-5 gpt-4o grok 4 claude 4.5 3.7 3.5 gemini 2.5 2.0 deepseek qwen 3 32b nova micro mistral codestral cohere llama 3.3' },
+    { t: 'Long-Session Context Compaction & Summary ROI', u: '/tools/llm-context-compaction-roi.html', k: 'context compaction rolling summary truncation long session agent memory 30 turn 60 turn' },
+    { t: 'Enterprise PTU / GSU vs. Pay-As-You-Go Planner', u: '/tools/enterprise-ptu-vs-paygo.html', k: 'ptu gsu provisioned throughput azure openai bedrock vertex paygo enterprise reservation sla' },
     { t: 'AI Guardrail, PII & Safety Moderation Cost', u: '/tools/ai-guardrail-moderation-cost.html', k: 'guardrail moderation pii redaction bedrock guardrails azure content safety llama guard 3 compliance' },
     { t: 'Multi-Agent Orchestration & Swarm Cost', u: '/tools/multi-agent-orchestration-cost.html', k: 'multi agent swarm langgraph crewai autogen planner worker critic orchestration handoff' },
     { t: 'LLM Prompt Caching TTL & Write-Premium ROI', u: '/tools/llm-context-caching-roi.html', k: 'prompt caching ttl 5 min 1 hour write premium break-even anthropic gemini openai storage roi' },

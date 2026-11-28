@@ -532,6 +532,54 @@
       "batchDiscount": 0.5,
       "context": 256000,
       "badge": "Code FIM"
+    },
+    {
+      "id": "gpt-4o",
+      "name": "OpenAI GPT-4o",
+      "provider": "OpenAI",
+      "tier": "balanced",
+      "input": 2.5,
+      "cachedInput": 1.25,
+      "output": 10,
+      "batchDiscount": 0.5,
+      "context": 128000,
+      "badge": "Legacy Omni"
+    },
+    {
+      "id": "grok-4",
+      "name": "xAI Grok 4",
+      "provider": "xAI",
+      "tier": "frontier",
+      "input": 3,
+      "cachedInput": 0.75,
+      "output": 15,
+      "batchDiscount": 0,
+      "context": 256000,
+      "badge": "Frontier Reasoning"
+    },
+    {
+      "id": "qwen-3-32b",
+      "name": "Qwen 3 32B (Hosted)",
+      "provider": "Alibaba",
+      "tier": "mini",
+      "input": 0.1,
+      "cachedInput": 0.05,
+      "output": 0.3,
+      "batchDiscount": 0,
+      "context": 131072,
+      "badge": "Fast Open"
+    },
+    {
+      "id": "amazon-nova-micro",
+      "name": "Amazon Nova Micro (Bedrock)",
+      "provider": "AWS",
+      "tier": "mini",
+      "input": 0.035,
+      "cachedInput": 0.00875,
+      "output": 0.14,
+      "batchDiscount": 0.5,
+      "context": 128000,
+      "badge": "Lowest Text"
     }
   ],
   "embeddings": [
