@@ -1,9 +1,11 @@
 # TokenLedger — AI & LLM API FinOps Studio
 
-> Browser-private AI & LLM API cost calculator, multi-turn agent burn simulator, SaaS gross margin calculator, Prompt Caching TTL ROI planner, LLM-as-a-Judge eval budgeter, Vector DB comparator, AI coding seat vs BYOK planner, and public JSON pricing feed covering 40 flagship models across 22 interactive workspaces.
+> Browser-private AI & LLM API cost calculator, multi-turn agent burn simulator, SaaS gross margin calculator, AI Guardrail/PII cost planner, Multi-Agent Swarm calculator, Prompt Caching TTL ROI planner, LLM-as-a-Judge eval budgeter, Vector DB comparator, AI coding seat vs BYOK planner, and public JSON pricing feed covering 44 flagship models across 24 interactive workspaces.
 
 ## Core Interactive Tools
-- [40-Model LLM API Cost Estimator](https://tokenledger-8x7.pages.dev/): Live prompt token counter, prompt caching, 50% batch discounts, model cascade savings, CSV/JSON/PDF export.
+- [44-Model LLM API Cost Estimator](https://tokenledger-8x7.pages.dev/): Live prompt token counter, prompt caching, 50% batch discounts, model cascade savings, CSV/JSON/PDF export.
+- [AI Guardrail, PII & Moderation Cost Calculator](https://tokenledger-8x7.pages.dev/tools/ai-guardrail-moderation-cost.html): Quantify safety overhead % across AWS Bedrock Guardrails, Azure Content Safety, Llama Guard 3 & OpenAI Moderation.
+- [Multi-Agent Orchestration & Swarm Cost Calculator](https://tokenledger-8x7.pages.dev/tools/multi-agent-orchestration-cost.html): Model LangGraph/CrewAI Planner + Flash Workers + Critic swarms vs all-frontier orchestration.
 - [LLM Prompt Caching TTL & Write-Premium ROI Calculator](https://tokenledger-8x7.pages.dev/tools/llm-context-caching-roi.html): Compare 5-min ephemeral (1.25x write) vs 1-hour extended (2.0x write) vs explicit storage TTL caching break-even hits.
 - [LLM-as-a-Judge & CI Evaluation Budget Calculator](https://tokenledger-8x7.pages.dev/tools/ai-eval-judge-budget.html): Size monthly CI regression eval suites and prod trace sampling across 6 judge models with 50% Batch discounts.
 - [AI Agent Loop Burn Calculator](https://tokenledger-8x7.pages.dev/tools/agent-budget.html): Quadratic O(N²) turn-by-turn token snowballing vs. caching and sliding-window summarization.
@@ -30,7 +32,7 @@
 - [Korean (한국어)](https://tokenledger-8x7.pages.dev/ko/) · [Japanese (日本語)](https://tokenledger-8x7.pages.dev/ja/) · [German (Deutsch)](https://tokenledger-8x7.pages.dev/de/) · [French (Français)](https://tokenledger-8x7.pages.dev/fr/) · [Spanish (Español)](https://tokenledger-8x7.pages.dev/es/) · [Portuguese (Português)](https://tokenledger-8x7.pages.dev/pt/)
 
 ## Public Pricing Data API
-- [Machine-Readable JSON Pricing Feed](https://tokenledger-8x7.pages.dev/api/pricing.json): 40 LLM models + 6 embedding models (2026-11-28).
+- [Machine-Readable JSON Pricing Feed](https://tokenledger-8x7.pages.dev/api/pricing.json): 44 LLM models + 6 embedding models (2026-11-28).
 
 ## Model Comparisons & Playbooks
 - [Claude Sonnet 4 vs GPT-4.1 API Cost & Context Comparison (2026)](https://tokenledger-8x7.pages.dev/compare/claude-sonnet-vs-gpt-4-1.html): Compare per-request, monthly, prompt-cached, and batch API pricing between Anthropic Claude Sonnet 4 and OpenAI GPT-4.1 across real production workloads.
@@ -107,6 +109,12 @@
 - [DeepSeek-V3-0324 vs OpenAI GPT-4.1 mini Coding & Production Cost Guide (2026)](https://tokenledger-8x7.pages.dev/compare/deepseek-v3-0324-vs-gpt-4-1-mini.html): Side-by-side unit economics comparing DeepSeek-V3-0324 ($0.27/$1.10) against OpenAI GPT-4.1 mini ($0.40/$1.60, 1M context).
 - [Anthropic 5-Min vs 1-Hour Extended Prompt Caching Write-Premium ROI (2026)](https://tokenledger-8x7.pages.dev/compare/anthropic-5min-vs-1hour-prompt-cache.html): Exact break-even hits per hour comparing 1.25x 5-minute ephemeral caching versus 2.0x 1-hour extended prompt caching across Claude 4.5 models.
 - [LLM-as-a-Judge Cost Comparison: GPT-5 mini vs Claude 4.5 Sonnet CI Evals (2026)](https://tokenledger-8x7.pages.dev/compare/llm-as-a-judge-gpt-5-mini-vs-claude-sonnet.html): Calculate monthly CI regression and production trace sampling evaluation spend comparing GPT-5 mini ($0.25/$2) against Claude 4.5 Sonnet ($3/$15) with 50% Batch.
+- [OpenAI GPT-4o mini vs GPT-5 mini Migration Cost & Caching Comparison (2026)](https://tokenledger-8x7.pages.dev/compare/gpt-4o-mini-vs-gpt-5-mini.html): Compare legacy GPT-4o mini ($0.15/$0.60, 50% cache) against GPT-5 mini ($0.25/$2.00, 90% cache, 400K ctx) when upgrading high-volume apps.
+- [Claude 3.5 Sonnet vs Claude 4.5 Sonnet Upgrade Cost & Token Efficiency (2026)](https://tokenledger-8x7.pages.dev/compare/claude-3-5-sonnet-vs-claude-sonnet-4-5.html): Compare identical $3/$15 list rates, 90% caching, and multi-turn coding efficiency when migrating legacy Claude 3.5 Sonnet pipelines.
+- [Gemini 2.0 Flash-Lite vs OpenAI GPT-5 nano Ultra-Low-Cost API Benchmark (2026)](https://tokenledger-8x7.pages.dev/compare/gemini-2-0-flash-lite-vs-gpt-5-nano.html): Head-to-head ultra-budget extraction and routing comparison between Gemini 2.0 Flash-Lite ($0.075/$0.30, 1M ctx) and GPT-5 nano ($0.05/$0.40).
+- [Mistral Codestral 25.01 vs DeepSeek-V3-0324 Code Completion API Cost (2026)](https://tokenledger-8x7.pages.dev/compare/mistral-codestral-vs-deepseek-v3-0324.html): Compare IDE fill-in-the-middle (FIM) coding completion costs between EU Mistral Codestral ($0.30/$0.90) and DeepSeek-V3-0324 ($0.27/$1.10).
+- [AWS Bedrock Guardrails vs Llama Guard 3 8B & Azure Content Safety Cost (2026)](https://tokenledger-8x7.pages.dev/compare/bedrock-guardrails-vs-llama-guard-3.html): Quantify safety moderation and PII redaction overhead % comparing AWS Bedrock Guardrails ($0.75/1K units) against hosted Llama Guard 3 ($0.05/1M).
+- [Multi-Agent Swarm Cost: All-Frontier vs Tiered Planner + Flash Workers (2026)](https://tokenledger-8x7.pages.dev/compare/langgraph-multi-agent-frontier-vs-tiered.html): See how routing worker and critic hops in LangGraph/CrewAI swarms to Gemini 2.5 Flash & GPT-5 mini cuts orchestration bills by 70–85%.
 - [LLM Cost Optimization Playbook: Cut API Spend 60–85% Without Losing Quality](https://tokenledger-8x7.pages.dev/guides/llm-cost-optimization-playbook.html): Field-tested AI FinOps playbook covering prompt caching, frontier-to-mini cascade routing, JSON schema minification, and async batch APIs.
 - [Fixing the AI Agent Token Snowball: Why a 15-Turn Agent Costs 12x More Than Expected](https://tokenledger-8x7.pages.dev/guides/ai-agent-token-snowball-fix.html): Mathematical breakdown of quadratic context accumulation in multi-turn tool-calling agents and how prefix caching + sliding windows cap burn.
 - [AI SaaS Gross Margin Benchmarks: Pricing Seats Without Getting Crushed by Power Users](https://tokenledger-8x7.pages.dev/guides/saas-ai-gross-margin-benchmarks.html): How to model AI COGS, Stripe fees, gross margin targets (>=75%), and break-even usage caps for flat-rate AI subscriptions.
@@ -139,8 +147,10 @@
 - [VP Engineering Guide: Budgeting AI Coding Seats (Cursor, Copilot, Windsurf) vs. BYOK API Keys](https://tokenledger-8x7.pages.dev/guides/enterprise-ai-coding-budget-cursor-copilot-byok.html): How engineering leaders model developer seat spend vs. cached BYOK Anthropic/OpenAI API keys across 10–500 engineers without surprise overages.
 - [Prompt Caching Write-Premium & TTL Math: When 5-Min Beats 1-Hour Extended Caching](https://tokenledger-8x7.pages.dev/guides/llm-prompt-caching-ttl-write-premium-roi.html): Exact break-even formulas for 1.25x 5-minute ephemeral writes, 2.0x 1-hour extended writes, and explicit storage TTL caches across real traffic cadences.
 - [LLM-as-a-Judge Evaluation Budgets: Sizing CI Regression Suites & Prod Trace Sampling](https://tokenledger-8x7.pages.dev/guides/llm-as-a-judge-ci-eval-budget-architecture.html): How AI engineering teams run 500-case PR eval gates and continuous 5% production trace judging without letting evaluation API bills rival production spend.
+- [AI Guardrail & PII Redaction Cost Architecture: Avoiding the 40% Safety Tax](https://tokenledger-8x7.pages.dev/guides/ai-guardrail-pii-moderation-cost-architecture.html): How enterprise AI teams size input/output moderation, prompt-injection shields, and PII redaction across OpenAI Moderation, Llama Guard 3, Azure, and AWS Bedrock.
+- [Multi-Agent Swarm FinOps: Cutting LangGraph & CrewAI Token Burn by 75%+](https://tokenledger-8x7.pages.dev/guides/multi-agent-swarm-orchestration-finops.html): Why naive all-frontier multi-agent swarms burn 15x more tokens than single prompts, and how tiered Planner/Worker/Critic routing plus compact handoff state tames bills.
 
-## Supported Models (40)
+## Supported Models (44)
 - GPT-5 (OpenAI): $1.25/1M in, $0.125/1M cached, $10/1M out, 400000 ctx
 - GPT-5 mini (OpenAI): $0.25/1M in, $0.025/1M cached, $2/1M out, 400000 ctx
 - GPT-5 nano (OpenAI): $0.05/1M in, $0.005/1M cached, $0.4/1M out, 400000 ctx
@@ -181,3 +191,7 @@
 - Gemini 2.0 Flash (Google): $0.1/1M in, $0.025/1M cached, $0.4/1M out, 1048576 ctx
 - Llama 3.3 70B (Hosted) (Meta): $0.59/1M in, $0.295/1M cached, $0.79/1M out, 131072 ctx
 - DeepSeek-V3-0324 (DeepSeek): $0.27/1M in, $0.07/1M cached, $1.1/1M out, 128000 ctx
+- OpenAI GPT-4o mini (OpenAI): $0.15/1M in, $0.075/1M cached, $0.6/1M out, 128000 ctx
+- Claude 3.5 Sonnet (Anthropic): $3/1M in, $0.3/1M cached, $15/1M out, 200000 ctx
+- Gemini 2.0 Flash-Lite (Google): $0.075/1M in, $0.01875/1M cached, $0.3/1M out, 1048576 ctx
+- Mistral Codestral 25.01 (Mistral): $0.3/1M in, $0.3/1M cached, $0.9/1M out, 256000 ctx

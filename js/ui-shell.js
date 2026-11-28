@@ -115,7 +115,9 @@
   };
 
   var CMD_ITEMS = [
-    { t: '40-Model Live Cost Estimator', u: '/', k: 'home pricing gpt-5 claude 4.5 opus 3.7 sonnet gemini 2.5 2.0 deepseek qwen 3 nova mistral cohere llama 3.3' },
+    { t: '44-Model Live Cost Estimator', u: '/', k: 'home pricing gpt-5 gpt-4o-mini claude 4.5 3.7 3.5 gemini 2.5 2.0 deepseek qwen 3 nova mistral codestral cohere llama 3.3' },
+    { t: 'AI Guardrail, PII & Safety Moderation Cost', u: '/tools/ai-guardrail-moderation-cost.html', k: 'guardrail moderation pii redaction bedrock guardrails azure content safety llama guard 3 compliance' },
+    { t: 'Multi-Agent Orchestration & Swarm Cost', u: '/tools/multi-agent-orchestration-cost.html', k: 'multi agent swarm langgraph crewai autogen planner worker critic orchestration handoff' },
     { t: 'LLM Prompt Caching TTL & Write-Premium ROI', u: '/tools/llm-context-caching-roi.html', k: 'prompt caching ttl 5 min 1 hour write premium break-even anthropic gemini openai storage roi' },
     { t: 'LLM-as-a-Judge & CI Evaluation Budget', u: '/tools/ai-eval-judge-budget.html', k: 'evals llm as a judge ci cd regression rubric trace sampling promptfoo braintrust langsmith' },
     { t: 'Vector Database Cloud Cost Comparator', u: '/tools/vector-db-cost-calculator.html', k: 'vector db pinecone qdrant pgvector supabase weaviate turbopuffer embeddings rag hnsw' },

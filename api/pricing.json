@@ -1,5 +1,5 @@
 {
-  "version": "8.0.0",
+  "version": "9.0.0",
   "updated": "2026-11-28",
   "currency": "USD",
   "unit": "per_1m_tokens",
@@ -484,6 +484,54 @@
       "batchDiscount": 0.5,
       "context": 128000,
       "badge": "Coding MoE"
+    },
+    {
+      "id": "gpt-4o-mini",
+      "name": "OpenAI GPT-4o mini",
+      "provider": "OpenAI",
+      "tier": "mini",
+      "input": 0.15,
+      "cachedInput": 0.075,
+      "output": 0.6,
+      "batchDiscount": 0.5,
+      "context": 128000,
+      "badge": "Legacy Mini"
+    },
+    {
+      "id": "claude-3.5-sonnet",
+      "name": "Claude 3.5 Sonnet",
+      "provider": "Anthropic",
+      "tier": "balanced",
+      "input": 3,
+      "cachedInput": 0.3,
+      "output": 15,
+      "batchDiscount": 0.5,
+      "context": 200000,
+      "badge": "Legacy Coding"
+    },
+    {
+      "id": "gemini-2.0-flash-lite",
+      "name": "Gemini 2.0 Flash-Lite",
+      "provider": "Google",
+      "tier": "mini",
+      "input": 0.075,
+      "cachedInput": 0.01875,
+      "output": 0.3,
+      "batchDiscount": 0.5,
+      "context": 1048576,
+      "badge": "Ultra-Budget"
+    },
+    {
+      "id": "mistral-codestral",
+      "name": "Mistral Codestral 25.01",
+      "provider": "Mistral",
+      "tier": "mini",
+      "input": 0.3,
+      "cachedInput": 0.3,
+      "output": 0.9,
+      "batchDiscount": 0.5,
+      "context": 256000,
+      "badge": "Code FIM"
     }
   ],
   "embeddings": [

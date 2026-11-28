@@ -203,7 +203,13 @@ const COMPARISONS = [
   { slug: 'llama-3-3-70b-vs-llama-4-maverick', a: 'llama-3.3-70b-hosted', b: 'llama-4-maverick', title: 'Llama 3.3 70B vs Llama 4 Maverick Hosted API Pricing Comparison (2026)', summary: 'Benchmark open-weight hosted pricing comparing Meta Llama 3.3 70B ($0.59/$0.79) against 1M-context Llama 4 Maverick ($0.27/$0.85).' },
   { slug: 'deepseek-v3-0324-vs-gpt-4-1-mini', a: 'deepseek-v3-0324', b: 'gpt-4.1-mini', title: 'DeepSeek-V3-0324 vs OpenAI GPT-4.1 mini Coding & Production Cost Guide (2026)', summary: 'Side-by-side unit economics comparing DeepSeek-V3-0324 ($0.27/$1.10) against OpenAI GPT-4.1 mini ($0.40/$1.60, 1M context).' },
   { slug: 'anthropic-5min-vs-1hour-prompt-cache', a: 'claude-sonnet-4.5', b: 'claude-opus-4.5', title: 'Anthropic 5-Min vs 1-Hour Extended Prompt Caching Write-Premium ROI (2026)', summary: 'Exact break-even hits per hour comparing 1.25x 5-minute ephemeral caching versus 2.0x 1-hour extended prompt caching across Claude 4.5 models.' },
-  { slug: 'llm-as-a-judge-gpt-5-mini-vs-claude-sonnet', a: 'gpt-5-mini', b: 'claude-sonnet-4.5', title: 'LLM-as-a-Judge Cost Comparison: GPT-5 mini vs Claude 4.5 Sonnet CI Evals (2026)', summary: 'Calculate monthly CI regression and production trace sampling evaluation spend comparing GPT-5 mini ($0.25/$2) against Claude 4.5 Sonnet ($3/$15) with 50% Batch.' }
+  { slug: 'llm-as-a-judge-gpt-5-mini-vs-claude-sonnet', a: 'gpt-5-mini', b: 'claude-sonnet-4.5', title: 'LLM-as-a-Judge Cost Comparison: GPT-5 mini vs Claude 4.5 Sonnet CI Evals (2026)', summary: 'Calculate monthly CI regression and production trace sampling evaluation spend comparing GPT-5 mini ($0.25/$2) against Claude 4.5 Sonnet ($3/$15) with 50% Batch.' },
+  { slug: 'gpt-4o-mini-vs-gpt-5-mini', a: 'gpt-4o-mini', b: 'gpt-5-mini', title: 'OpenAI GPT-4o mini vs GPT-5 mini Migration Cost & Caching Comparison (2026)', summary: 'Compare legacy GPT-4o mini ($0.15/$0.60, 50% cache) against GPT-5 mini ($0.25/$2.00, 90% cache, 400K ctx) when upgrading high-volume apps.' },
+  { slug: 'claude-3-5-sonnet-vs-claude-sonnet-4-5', a: 'claude-3.5-sonnet', b: 'claude-sonnet-4.5', title: 'Claude 3.5 Sonnet vs Claude 4.5 Sonnet Upgrade Cost & Token Efficiency (2026)', summary: 'Compare identical $3/$15 list rates, 90% caching, and multi-turn coding efficiency when migrating legacy Claude 3.5 Sonnet pipelines.' },
+  { slug: 'gemini-2-0-flash-lite-vs-gpt-5-nano', a: 'gemini-2.0-flash-lite', b: 'gpt-5-nano', title: 'Gemini 2.0 Flash-Lite vs OpenAI GPT-5 nano Ultra-Low-Cost API Benchmark (2026)', summary: 'Head-to-head ultra-budget extraction and routing comparison between Gemini 2.0 Flash-Lite ($0.075/$0.30, 1M ctx) and GPT-5 nano ($0.05/$0.40).' },
+  { slug: 'mistral-codestral-vs-deepseek-v3-0324', a: 'mistral-codestral', b: 'deepseek-v3-0324', title: 'Mistral Codestral 25.01 vs DeepSeek-V3-0324 Code Completion API Cost (2026)', summary: 'Compare IDE fill-in-the-middle (FIM) coding completion costs between EU Mistral Codestral ($0.30/$0.90) and DeepSeek-V3-0324 ($0.27/$1.10).' },
+  { slug: 'bedrock-guardrails-vs-llama-guard-3', a: 'claude-sonnet-4.5', b: 'llama-4-scout', title: 'AWS Bedrock Guardrails vs Llama Guard 3 8B & Azure Content Safety Cost (2026)', summary: 'Quantify safety moderation and PII redaction overhead % comparing AWS Bedrock Guardrails ($0.75/1K units) against hosted Llama Guard 3 ($0.05/1M).' },
+  { slug: 'langgraph-multi-agent-frontier-vs-tiered', a: 'claude-opus-4.5', b: 'gemini-2.5-flash', title: 'Multi-Agent Swarm Cost: All-Frontier vs Tiered Planner + Flash Workers (2026)', summary: 'See how routing worker and critic hops in LangGraph/CrewAI swarms to Gemini 2.5 Flash & GPT-5 mini cuts orchestration bills by 70–85%.' }
 ];
 
 const GUIDES = [
@@ -534,6 +540,26 @@ const GUIDES = [
       { h2: '2. Stacking 65% Rubric Caching + 50% Async Batch + Mini Judges', p: 'Because judge rubric prompts stay identical across every test case, prefix caching plus 50%-off async batch endpoints and calibrated GPT-5 mini / Gemini 2.5 Flash judges cut monthly eval spend by 80–90%.' }
     ],
     ctaHref: '/tools/ai-eval-judge-budget.html', ctaLabel: 'Budget Your AI Eval Pipeline →'
+  },
+  {
+    slug: 'ai-guardrail-pii-moderation-cost-architecture',
+    title: 'AI Guardrail & PII Redaction Cost Architecture: Avoiding the 40% Safety Tax',
+    desc: 'How enterprise AI teams size input/output moderation, prompt-injection shields, and PII redaction across OpenAI Moderation, Llama Guard 3, Azure, and AWS Bedrock.',
+    sections: [
+      { h2: '1. Why Unit-Priced Cloud Guardrails Can Exceed Your Base Mini LLM Bill', p: 'Scanning both 1,800-token prompts and 450-token completions on a 1,000-character unit rate ($0.38–$0.75 per 1K units) adds 9–12 units per request—quietly adding $1,500–$3,000/month on 300K requests.' },
+      { h2: '2. Tiered Safety Pipelines: Regex PII + Fast Classifier + Frontier Escalation', p: 'Running local deterministic PII regex scrubbing plus a $0.05/1M open-weight safety classifier (Llama Guard 3) or free OpenAI Moderation cuts safety overhead below 2% of total AI spend.' }
+    ],
+    ctaHref: '/tools/ai-guardrail-moderation-cost.html', ctaLabel: 'Calculate Guardrail Overhead →'
+  },
+  {
+    slug: 'multi-agent-swarm-orchestration-finops',
+    title: 'Multi-Agent Swarm FinOps: Cutting LangGraph & CrewAI Token Burn by 75%+',
+    desc: 'Why naive all-frontier multi-agent swarms burn 15x more tokens than single prompts, and how tiered Planner/Worker/Critic routing plus compact handoff state tames bills.',
+    sections: [
+      { h2: '1. The Multi-Agent Handoff Multiplier', p: 'A 4-worker swarm with 3 orchestration handoffs executes 19+ LLM calls per user task. Running every worker and critic on Claude Opus 4.5 or GPT-5 Pro multiplies monthly spend exponentially.' },
+      { h2: '2. Frontier Planner + Flash Workers + Compact State JSON', p: 'Reserving frontier reasoning strictly for initial planning and final synthesis while assigning parallel workers to Gemini 2.5 Flash / GPT-5 mini and passing compact JSON state cuts swarm bills 70–85%.' }
+    ],
+    ctaHref: '/tools/multi-agent-orchestration-cost.html', ctaLabel: 'Model Multi-Agent Swarm Cost →'
   }
 ];
 
@@ -581,8 +607,8 @@ registerPage('/', 'index.html', renderShell({
   path: '/',
   active: 'home',
   hreflangs: HOME_HREFLANGS,
-  title: 'AI & LLM API Cost Calculator (40 Models) — Prompt Caching, Batch & FinOps Studio',
-  description: 'Free, 100% browser-private AI & LLM API cost calculator comparing 40 flagship models (GPT-5 Pro, Claude 4.5/3.7, Gemini 2.5/2.0, DeepSeek-V3.1/0324, Qwen 3, Llama 4/3.3, Mistral Medium 3, Cohere Command A, Nova Pro/Lite) with 22 FinOps workspaces.',
+  title: 'AI & LLM API Cost Calculator (44 Models) — Prompt Caching, Batch & FinOps Studio',
+  description: 'Free, 100% browser-private AI & LLM API cost calculator comparing 44 flagship models (GPT-5 Pro, GPT-4o mini, Claude 4.5/3.7/3.5, Gemini 2.5/2.0, DeepSeek-V3.1/0324, Qwen 3, Llama 4/3.3, Mistral Codestral/Medium 3, Cohere Command A, Nova Pro/Lite) with 24 FinOps workspaces.',
   scripts: ['/js/budget-card.js', '/js/studio-home.js'],
   schemaGraph: [
     { '@type': 'SoftwareApplication', name: 'TokenLedger AI & LLM Cost Studio', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}/`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, description: 'Browser-private LLM API cost estimator, agent burn simulator, SaaS gross margin calculator, and RAG TCO planner.' },
@@ -592,7 +618,7 @@ registerPage('/', 'index.html', renderShell({
     ] }
   ],
   body: `  <section class="tl-hero">
-    <div class="tl-kicker">40 MODELS &bull; 22 WORKSPACES &bull; 100% BROWSER-PRIVATE</div>
+    <div class="tl-kicker">44 MODELS &bull; 24 WORKSPACES &bull; 100% BROWSER-PRIVATE</div>
     <h1>AI &amp; LLM API Cost Calculator &amp; FinOps Studio</h1>
     <p>Model real production spend across OpenAI GPT-5, Anthropic Claude 4, Google Gemini 2.5, DeepSeek, Llama 4, Grok 3, and Mistral — including Prompt Caching, 50% Batch discounts, Model Cascade routing, and executive CSV/PDF exports.</p>
     <div class="tl-pills">
@@ -666,11 +692,11 @@ registerPage('/', 'index.html', renderShell({
 
   <section class="tl-panel" style="margin-bottom:24px">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
-      <h2 style="margin:0">3. 40-Model Side-by-Side Cost Matrix</h2>
+      <h2 style="margin:0">3. 44-Model Side-by-Side Cost Matrix</h2>
       <div id="spreadSummary" class="kpi-sub num" style="margin:0"></div>
     </div>
     <div class="tl-chips" aria-label="Filter by Provider">
-      <button type="button" class="tl-chip active" data-provider="all">All Providers (40)</button>
+      <button type="button" class="tl-chip active" data-provider="all">All Providers (44)</button>
       <button type="button" class="tl-chip" data-provider="OpenAI">OpenAI</button>
       <button type="button" class="tl-chip" data-provider="Anthropic">Anthropic</button>
       <button type="button" class="tl-chip" data-provider="Google">Google</button>
@@ -710,6 +736,8 @@ registerPage('/', 'index.html', renderShell({
       <a class="tl-link-card" href="/tools/ai-coding-seat-vs-api.html"><strong>AI Coding Seat vs. BYOK API Calculator</strong><span>Benchmark Cursor, GitHub Copilot, Windsurf &amp; Claude Max seats vs cached BYOK token spend.</span><em>Compare Seats vs API →</em></a>
       <a class="tl-link-card" href="/tools/llm-context-caching-roi.html"><strong>Prompt Caching TTL &amp; Write-Premium ROI</strong><span>Compare 5-min ephemeral (1.25x) vs 1-hour extended (2.0x) vs explicit storage cache break-even hits.</span><em>Model Cache TTL →</em></a>
       <a class="tl-link-card" href="/tools/ai-eval-judge-budget.html"><strong>LLM-as-a-Judge &amp; CI Eval Budget</strong><span>Size monthly CI regression suites and prod trace sampling across 6 judge models with 50% Batch.</span><em>Budget AI Evals →</em></a>
+      <a class="tl-link-card" href="/tools/ai-guardrail-moderation-cost.html"><strong>AI Guardrail, PII &amp; Moderation Cost</strong><span>Compare AWS Bedrock Guardrails, Azure Content Safety, Llama Guard 3 &amp; OpenAI Moderation overhead %.</span><em>Price Guardrails →</em></a>
+      <a class="tl-link-card" href="/tools/multi-agent-orchestration-cost.html"><strong>Multi-Agent Swarm Cost Calculator</strong><span>Model LangGraph/CrewAI Planner + Flash Workers + Critic handoffs vs. all-frontier orchestration.</span><em>Model Swarm Cost →</em></a>
       <a class="tl-link-card" href="/tools/token-inspector.html"><strong>Context &amp; JSON Minifier Inspector</strong><span>Inspect OpenAI/Claude/Gemini tokens and minify tool JSON schemas for instant savings.</span><em>Open Inspector →</em></a>
     </div>
     <div class="tl-pills" style="margin-top:14px">
@@ -1937,6 +1965,106 @@ registerPage('/tools/ai-eval-judge-budget.html', 'tools/ai-eval-judge-budget.htm
   </section>`
 }), '0.9');
 
+// --- PAGE 23: AI GUARDRAIL, PII REDACTION & SAFETY MODERATION COST CALCULATOR ---
+registerPage('/tools/ai-guardrail-moderation-cost.html', 'tools/ai-guardrail-moderation-cost.html', renderShell({
+  path: '/tools/ai-guardrail-moderation-cost.html',
+  active: 'saas',
+  title: 'AI Guardrail, PII Redaction & Safety Moderation API Cost Calculator — Bedrock, Azure, Llama Guard',
+  description: 'Calculate monthly AI safety guardrail overhead % across OpenAI Moderation, Llama Guard 3 8B, Azure Content Safety, AWS Bedrock Guardrails, and custom LLM policy checks.',
+  scripts: ['/js/ai-guardrail-moderation-cost.js'],
+  schemaGraph: [
+    { '@type': 'SoftwareApplication', name: 'TokenLedger AI Guardrail & Moderation Cost Calculator', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}/tools/ai-guardrail-moderation-cost.html`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+    { '@type': 'FAQPage', mainEntity: [
+      { '@type': 'Question', name: 'How much do AI guardrails and PII redaction add to an LLM API bill?', acceptedAnswer: { '@type': 'Answer', text: 'Hosted open-weight classifiers like Llama Guard 3 add under 1–3% overhead, whereas per-character cloud guardrails (AWS Bedrock Guardrails, Azure Content Safety) can add 15–50%+ on long-context inputs and outputs.' } }
+    ] }
+  ],
+  body: `  <section class="tl-hero">
+    <div class="tl-kicker">ENTERPRISE AI SECURITY FINOPS &bull; GUARDRAILS + PII REDACTION</div>
+    <h1>AI Guardrail, PII Redaction &amp; Moderation Cost Calculator</h1>
+    <p>Quantify the exact safety-layer tax on top of your primary LLM bill across OpenAI Moderation, Llama Guard 3 8B, Azure Content Safety, AWS Bedrock Guardrails, and custom LLM policy checks.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">Primary LLM Spend</div><div class="kpi-val" id="kpiGrPrimary">$0/mo</div><div class="kpi-sub" id="kpiGrPrimarySub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Lowest Paid Guardrail</div><div class="kpi-val accent" id="kpiGrCheapPaid">$0/mo</div><div class="kpi-sub" id="kpiGrCheapPaidSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Highest Guardrail Stack</div><div class="kpi-val warn" id="kpiGrPriciest">$0/mo</div><div class="kpi-sub" id="kpiGrPriciestSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Scanned Payload</div><div class="kpi-val" id="kpiGrScanned">0 tok</div><div class="kpi-sub" id="kpiGrScannedSub">-</div></div>
+  </section>
+
+  <section class="tl-panel" style="margin-bottom:20px">
+    <h2>Traffic Volume &amp; Safety Scanning Scope</h2>
+    <div class="tl-row">
+      <div class="tl-field"><label for="grModel">Primary Production LLM</label><select id="grModel" class="tl-select"></select></div>
+      <div class="tl-field"><label for="grReqs">Daily Production Requests</label><input id="grReqs" class="tl-input num" type="number" min="10" step="1000" value="10000"></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-field"><label for="grInTok">Avg Input Tokens / Req</label><input id="grInTok" class="tl-input num" type="number" min="50" step="100" value="1800"></div>
+      <div class="tl-field"><label for="grOutTok">Avg Output Tokens / Req</label><input id="grOutTok" class="tl-input num" type="number" min="20" step="50" value="450"></div>
+      <div class="tl-field"><label for="grCache">Primary Cache Hit Rate <strong id="grCacheVal">50%</strong></label><input id="grCache" class="tl-range" type="range" min="0" max="95" step="5" value="50"></div>
+    </div>
+    <label class="tl-check-row"><input id="grCheckOut" type="checkbox" checked><span>Scan Both User Input AND Model Output (Bidirectional Guardrail)</span></label>
+    <label class="tl-check-row"><input id="grPiiScan" type="checkbox" checked><span>Include PII Entity Detection &amp; Redaction Policy Layer (+35% unit scan)</span></label>
+    <div class="tl-btn-bar"><button type="button" id="btnGrCopyMd" class="tl-btn tl-btn-primary">Copy Guardrail Cost Report (Markdown)</button></div>
+  </section>
+
+  <section class="tl-panel">
+    <h2>5-Provider Guardrail Overhead Comparison Matrix</h2>
+    <div class="tl-table-wrap"><table class="tl-table" style="min-width:600px"><thead><tr><th>Guardrail Architecture</th><th>Guardrail/Mo</th><th>Overhead %</th><th>Combined/Mo</th><th>Annual</th></tr></thead><tbody id="grTableBody"></tbody></table></div>
+  </section>`
+}), '0.9');
+
+// --- PAGE 24: MULTI-AGENT ORCHESTRATION & SWARM COST CALCULATOR ---
+registerPage('/tools/multi-agent-orchestration-cost.html', 'tools/multi-agent-orchestration-cost.html', renderShell({
+  path: '/tools/multi-agent-orchestration-cost.html',
+  active: 'agent',
+  title: 'Multi-Agent Orchestration & Swarm Cost Calculator — LangGraph, CrewAI, Planner + Workers',
+  description: 'Model multi-agent Planner + Worker + Critic swarm token costs across LangGraph, CrewAI, and AutoGen — comparing All-Frontier swarms against Tiered Role Routing and Compact Handoff State.',
+  scripts: ['/js/multi-agent-orchestration-cost.js'],
+  schemaGraph: [
+    { '@type': 'SoftwareApplication', name: 'TokenLedger Multi-Agent Swarm Cost Calculator', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any', url: `${ORIGIN}/tools/multi-agent-orchestration-cost.html`, isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+    { '@type': 'FAQPage', mainEntity: [
+      { '@type': 'Question', name: 'How do you cut multi-agent LangGraph or CrewAI API costs?', acceptedAnswer: { '@type': 'Answer', text: 'Assign your frontier model strictly to the Planner/Orchestrator role, route parallel Worker agents to fast Flash/Mini models, and pass compact JSON state summaries instead of full raw transcripts between handoffs.' } }
+    ] }
+  ],
+  body: `  <section class="tl-hero">
+    <div class="tl-kicker">MULTI-AGENT FINOPS &bull; PLANNER + WORKERS + CRITIC SWARMS</div>
+    <h1>Multi-Agent Orchestration &amp; Swarm Cost Calculator</h1>
+    <p>Size exact per-run, monthly, and annual costs for LangGraph, CrewAI, and AutoGen multi-agent pipelines — and quantify savings from tiered role routing and compact handoff state.</p>
+  </section>
+
+  <section class="tl-grid-4">
+    <div class="kpi-card"><div class="kpi-label">All-Frontier Swarm</div><div class="kpi-val danger" id="kpiSwAllFront">$0/mo</div><div class="kpi-sub" id="kpiSwAllFrontSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Tiered Role Swarm</div><div class="kpi-val accent" id="kpiSwTiered">$0/mo</div><div class="kpi-sub" id="kpiSwTieredSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Tiered + Compact State</div><div class="kpi-val accent" id="kpiSwCompact">$0/mo</div><div class="kpi-sub" id="kpiSwCompactSub">-</div></div>
+    <div class="kpi-card"><div class="kpi-label">Annual Swarm Savings</div><div class="kpi-val accent" id="kpiSwSaveYr">$0/yr</div><div class="kpi-sub" id="kpiSwSaveYrSub">-</div></div>
+  </section>
+
+  <section class="tl-panel" style="margin-bottom:20px">
+    <h2>Swarm Topology &amp; Role Model Assignment</h2>
+    <div class="tl-row">
+      <div class="tl-field"><label for="swPlanner">Planner / Orchestrator LLM</label><select id="swPlanner" class="tl-select"></select></div>
+      <div class="tl-field"><label for="swWorker">Parallel Worker Agents LLM</label><select id="swWorker" class="tl-select"></select></div>
+      <div class="tl-field"><label for="swCritic">Critic / Verifier LLM</label><select id="swCritic" class="tl-select"></select></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-field"><label for="swWorkers">Parallel Workers / Run</label><input id="swWorkers" class="tl-input num" type="number" min="1" max="20" step="1" value="4"></div>
+      <div class="tl-field"><label for="swHandoffs">Orchestration Handoff Rounds</label><input id="swHandoffs" class="tl-input num" type="number" min="1" max="15" step="1" value="3"></div>
+      <div class="tl-field"><label for="swRuns">Swarm Runs / Day</label><input id="swRuns" class="tl-input num" type="number" min="1" step="50" value="250"></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-field"><label for="swCtx">Avg Context / Agent Hop (tok)</label><input id="swCtx" class="tl-input num" type="number" min="500" step="500" value="6000"></div>
+      <div class="tl-field"><label for="swOut">Avg Output / Agent Hop (tok)</label><input id="swOut" class="tl-input num" type="number" min="50" step="100" value="650"></div>
+      <div class="tl-field"><label for="swCache">Prefix Cache Hit Rate <strong id="swCacheVal">75%</strong></label><input id="swCache" class="tl-range" type="range" min="0" max="95" step="5" value="75"></div>
+    </div>
+    <div class="tl-btn-bar"><button type="button" id="btnSwCopyMd" class="tl-btn tl-btn-primary">Copy Swarm Architecture Memo (Markdown)</button></div>
+  </section>
+
+  <section class="tl-panel">
+    <h2>Multi-Agent Architecture Cost Comparison</h2>
+    <div class="tl-table-wrap"><table class="tl-table" style="min-width:600px"><thead><tr><th>Swarm Architecture</th><th>Calls/Run</th><th>Cost/Run</th><th>Monthly</th><th>Annual</th><th>Savings</th></tr></thead><tbody id="swTableBody"></tbody></table></div>
+  </section>`
+}), '0.9');
+
 // --- PAGES 6–13: 8 PROGRAMMATIC MODEL COMPARISON PAGES ---
 for (const c of COMPARISONS) {
   const mA = ENGINE.getModel(c.a);
@@ -2307,10 +2435,12 @@ writeFile('_headers', `/*
 
 const llmsTxt = `# TokenLedger — AI & LLM API FinOps Studio
 
-> Browser-private AI & LLM API cost calculator, multi-turn agent burn simulator, SaaS gross margin calculator, Prompt Caching TTL ROI planner, LLM-as-a-Judge eval budgeter, Vector DB comparator, AI coding seat vs BYOK planner, and public JSON pricing feed covering ${ENGINE.MODELS.length} flagship models across 22 interactive workspaces.
+> Browser-private AI & LLM API cost calculator, multi-turn agent burn simulator, SaaS gross margin calculator, AI Guardrail/PII cost planner, Multi-Agent Swarm calculator, Prompt Caching TTL ROI planner, LLM-as-a-Judge eval budgeter, Vector DB comparator, AI coding seat vs BYOK planner, and public JSON pricing feed covering ${ENGINE.MODELS.length} flagship models across 24 interactive workspaces.
 
 ## Core Interactive Tools
 - [${ENGINE.MODELS.length}-Model LLM API Cost Estimator](${ORIGIN}/): Live prompt token counter, prompt caching, 50% batch discounts, model cascade savings, CSV/JSON/PDF export.
+- [AI Guardrail, PII & Moderation Cost Calculator](${ORIGIN}/tools/ai-guardrail-moderation-cost.html): Quantify safety overhead % across AWS Bedrock Guardrails, Azure Content Safety, Llama Guard 3 & OpenAI Moderation.
+- [Multi-Agent Orchestration & Swarm Cost Calculator](${ORIGIN}/tools/multi-agent-orchestration-cost.html): Model LangGraph/CrewAI Planner + Flash Workers + Critic swarms vs all-frontier orchestration.
 - [LLM Prompt Caching TTL & Write-Premium ROI Calculator](${ORIGIN}/tools/llm-context-caching-roi.html): Compare 5-min ephemeral (1.25x write) vs 1-hour extended (2.0x write) vs explicit storage TTL caching break-even hits.
 - [LLM-as-a-Judge & CI Evaluation Budget Calculator](${ORIGIN}/tools/ai-eval-judge-budget.html): Size monthly CI regression eval suites and prod trace sampling across 6 judge models with 50% Batch discounts.
 - [AI Agent Loop Burn Calculator](${ORIGIN}/tools/agent-budget.html): Quadratic O(N²) turn-by-turn token snowballing vs. caching and sliding-window summarization.

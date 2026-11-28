@@ -1,6 +1,6 @@
-# TokenLedger v8.0 — Precision AI & LLM API FinOps Studio
+# TokenLedger v9.0 — Precision AI & LLM API FinOps Studio
 
-> **100% browser-private** AI & LLM FinOps suite with **22 interactive workspaces**, **140 static pages**, **11 international markets**, **5-currency live switcher** (USD/EUR/GBP/JPY/KRW), **Ctrl+K Command Palette**, zero-dep CLI, and an open CORS JSON pricing feed across **40 flagship LLMs**, **5 managed Vector DBs**, **15 STT/TTS audio engines**, and **16 image/video generation APIs**.
+> **100% browser-private** AI & LLM FinOps suite with **24 interactive workspaces**, **150 static pages**, **11 international markets**, **5-currency live switcher** (USD/EUR/GBP/JPY/KRW), **Ctrl+K Command Palette**, zero-dep CLI, and an open CORS JSON pricing feed across **44 flagship LLMs**, **5 managed Vector DBs**, **5 Guardrail stacks**, **15 STT/TTS audio engines**, and **16 image/video generation APIs**.
 
 - Live Studio: **[https://tokenledger-8x7.pages.dev](https://tokenledger-8x7.pages.dev)**
 - Public Pricing JSON API: **[https://tokenledger-8x7.pages.dev/api/pricing.json](https://tokenledger-8x7.pages.dev/api/pricing.json)**
@@ -10,8 +10,8 @@
 
 Most LLM calculators only price a single prompt or upload your prompts to a backend. TokenLedger runs **100% locally in your browser** (zero prompt uploads, zero login walls) and models the real architectural cost drivers that blow up production AI budgets:
 
-### 22 Interactive FinOps Workspaces
-1. **40-Model Live API Cost Estimator (`/`)** — Compare OpenAI (GPT-5, GPT-5 Pro, GPT-4.1, o3, o3-pro, o4-mini), Anthropic (Claude 4.5 Opus/Sonnet/Haiku, Opus 4, Sonnet 4, 3.7 Sonnet, Haiku 3.5), Google (Gemini 2.5 Pro Deep Think/Pro/Flash/Flash-Lite, Gemini 2.0 Flash), DeepSeek (V3.1, V3-0324, V3, R1), Alibaba (Qwen 3 235B MoE, Qwen 2.5), AWS Bedrock (Amazon Nova Pro/Lite), Mistral (Large 2, Medium 3, Small 3.1), Cohere (Command A), xAI (Grok 3), Meta (Llama 4, Llama 3.3 70B), and Perplexity with **Prompt Caching (0–95%)**, **50% Batch API**, **Model Cascade 70/30 routing**, shareable scenario URLs, **PNG Budget Cards**, and **CSV / JSON / Markdown / Print PDF** exports.
+### 24 Interactive FinOps Workspaces
+1. **44-Model Live API Cost Estimator (`/`)** — Compare OpenAI (GPT-5, GPT-5 Pro, GPT-4.1, GPT-4o mini, o3, o3-pro, o4-mini), Anthropic (Claude 4.5 Opus/Sonnet/Haiku, Opus 4, Sonnet 4, 3.7/3.5 Sonnet, Haiku 3.5), Google (Gemini 2.5 Pro Deep Think/Pro/Flash/Flash-Lite, Gemini 2.0 Flash/Lite), DeepSeek (V3.1, V3-0324, V3, R1), Alibaba (Qwen 3 235B MoE, Qwen 2.5), AWS Bedrock (Amazon Nova Pro/Lite), Mistral (Large 2, Medium 3, Small 3.1, Codestral 25.01), Cohere (Command A), xAI (Grok 3), Meta (Llama 4, Llama 3.3 70B), and Perplexity with **Prompt Caching (0–95%)**, **50% Batch API**, **Model Cascade 70/30 routing**, shareable scenario URLs, **PNG Budget Cards**, and **CSV / JSON / Markdown / Print PDF** exports.
 2. **AI Agent Loop Burn Calculator (`/tools/agent-budget.html`)** — Models quadratic $O(N^2)$ context accumulation in multi-turn ReAct/tool-calling agents and compares **Naive Full History vs. Prefix Caching vs. Sliding-Window Summarization** turn by turn.
 3. **GPU VRAM & KV-Cache Quantization Calculator (`/tools/gpu-vram-calculator.html`)** — Calculates Q4/FP8/FP16 model weights + KV-cache memory across Llama 70B, DeepSeek-R1, Qwen 32B, and Mistral with FP8 KV-cache savings and GPU sizing (4090 / L40S / A100 / H100).
 4. **CFO Hybrid Caching + Batch + Cascade Waterfall (`/tools/batch-vs-realtime-router.html`)** — Stacks prompt caching, frontier-to-mini cascade routing, and 50%-off async batch tiers into an executive annual savings waterfall.
@@ -33,6 +33,8 @@ Most LLM calculators only price a single prompt or upload your prompts to a back
 20. **AI Coding Assistant Seat vs. BYOK API Calculator (`/tools/ai-coding-seat-vs-api.html`)** — Calculates org-wide break-even sessions/day comparing Cursor Pro/Business, GitHub Copilot, Windsurf, and Claude Max flat seats against direct cached BYOK LLM API spend.
 21. **LLM Prompt Caching TTL & Write-Premium ROI Calculator (`/tools/llm-context-caching-roi.html`)** — Models exact break-even hits/hour comparing No Caching, 5-minute ephemeral caching (1.25x write), 1-hour extended caching (2.0x write), and explicit storage TTL caches.
 22. **LLM-as-a-Judge & CI Evaluation Budget Calculator (`/tools/ai-eval-judge-budget.html`)** — Sizes monthly CI PR regression suites and production trace sampling across 6 judge models with shared rubric prompt caching and 50% async Batch discounts.
+23. **AI Guardrail, PII Redaction & Moderation Cost Calculator (`/tools/ai-guardrail-moderation-cost.html`)** — Quantifies monthly safety overhead % comparing OpenAI Moderation, Llama Guard 3 8B, Azure Content Safety, AWS Bedrock Guardrails, and custom LLM policy checks.
+24. **Multi-Agent Orchestration & Swarm Cost Calculator (`/tools/multi-agent-orchestration-cost.html`)** — Models LangGraph/CrewAI Planner + Flash Workers + Critic swarm topologies vs. all-frontier orchestration with compact handoff state savings.
 
 ## Zero-Dependency CLI
 
@@ -45,15 +47,15 @@ Available formats: `table`, `md` (ready for GitHub PRs / Notion RFCs), and `json
 ## 11 International Markets
 English (`/`) · 한국어 (`/ko/`) · 日本語 (`/ja/`) · Deutsch (`/de/`) · Français (`/fr/`) · Español (`/es/`) · Português (`/pt/`) · 中文 (`/zh/`) · हिन्दी (`/hi/`) · Bahasa Indonesia (`/id/`) · Türkçe (`/tr/`)
 
-Plus **74 head-to-head model & cloud comparisons** (`/compare/`) and **32 engineering FinOps guides** (`/guides/`).
+Plus **80 head-to-head model & cloud comparisons** (`/compare/`) and **34 engineering FinOps guides** (`/guides/`).
 
 ## Local Development & Verification
 
 ```bash
-# Regenerate all 140 static pages, sitemap.xml, robots.txt, and llms*.txt
+# Regenerate all 150 static pages, sitemap.xml, robots.txt, and llms*.txt
 node scripts/build-site.js
 
-# Run pricing-engine unit tests + 140-page mobile/desktop Playwright E2E suite
+# Run pricing-engine unit tests + 150-page mobile/desktop Playwright E2E suite
 node scripts/verify-tokenledger.js
 ```
 

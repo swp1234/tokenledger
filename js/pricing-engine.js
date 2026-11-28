@@ -48,7 +48,11 @@
     { id: 'claude-3.7-sonnet', name: 'Claude 3.7 Sonnet', provider: 'Anthropic', tier: 'balanced', input: 3.00, cachedInput: 0.30, output: 15.00, batchDiscount: 0.5, context: 200000, badge: 'Hybrid Thinking' },
     { id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash', provider: 'Google', tier: 'mini', input: 0.10, cachedInput: 0.025, output: 0.40, batchDiscount: 0.5, context: 1048576, badge: '1M Workhorse' },
     { id: 'llama-3.3-70b-hosted', name: 'Llama 3.3 70B (Hosted)', provider: 'Meta', tier: 'balanced', input: 0.59, cachedInput: 0.295, output: 0.79, batchDiscount: 0.0, context: 131072, badge: 'Open Workhorse' },
-    { id: 'deepseek-v3-0324', name: 'DeepSeek-V3-0324', provider: 'DeepSeek', tier: 'balanced', input: 0.27, cachedInput: 0.07, output: 1.10, batchDiscount: 0.5, context: 128000, badge: 'Coding MoE' }
+    { id: 'deepseek-v3-0324', name: 'DeepSeek-V3-0324', provider: 'DeepSeek', tier: 'balanced', input: 0.27, cachedInput: 0.07, output: 1.10, batchDiscount: 0.5, context: 128000, badge: 'Coding MoE' },
+    { id: 'gpt-4o-mini', name: 'OpenAI GPT-4o mini', provider: 'OpenAI', tier: 'mini', input: 0.15, cachedInput: 0.075, output: 0.60, batchDiscount: 0.5, context: 128000, badge: 'Legacy Mini' },
+    { id: 'claude-3.5-sonnet', name: 'Claude 3.5 Sonnet', provider: 'Anthropic', tier: 'balanced', input: 3.00, cachedInput: 0.30, output: 15.00, batchDiscount: 0.5, context: 200000, badge: 'Legacy Coding' },
+    { id: 'gemini-2.0-flash-lite', name: 'Gemini 2.0 Flash-Lite', provider: 'Google', tier: 'mini', input: 0.075, cachedInput: 0.01875, output: 0.30, batchDiscount: 0.5, context: 1048576, badge: 'Ultra-Budget' },
+    { id: 'mistral-codestral', name: 'Mistral Codestral 25.01', provider: 'Mistral', tier: 'mini', input: 0.30, cachedInput: 0.30, output: 0.90, batchDiscount: 0.5, context: 256000, badge: 'Code FIM' }
   ];
 
   var EMBEDDINGS = [
@@ -1334,6 +1338,133 @@
     };
   }
 
+  // AI Guardrail, PII Redaction & Safety Moderation API Cost Calculator
+  var GUARDRAIL_PROVIDERS = [
+    { id: 'openai-moderation', name: 'OpenAI Moderation API (omni-moderation)', mode: 'unit', per1kUnits: 0.00, notes: 'Free toxicity/safety endpoint when paired with OpenAI API' },
+    { id: 'llama-guard-3-8b', name: 'Llama Guard 3 8B (Hosted Serverless)', mode: 'token', inPer1M: 0.05, outPer1M: 0.05, notes: 'Fast open-weight input/output policy classifier' },
+    { id: 'azure-content-safety', name: 'Azure AI Content Safety (Text + Prompt Shield)', mode: 'unit', per1kUnits: 0.38, notes: '1 text unit = 1,000 chars; enterprise SLA & jailbreak shield' },
+    { id: 'bedrock-guardrails', name: 'AWS Bedrock Guardrails (Filter + PII)', mode: 'unit', per1kUnits: 0.75, notes: 'Content filters + denied topics + PII redaction per 1K units' },
+    { id: 'gpt-5-mini-guard', name: 'Custom LLM Guardrail (GPT-5 mini Policy)', mode: 'token', inPer1M: 0.25, outPer1M: 2.00, notes: 'Custom business-rule JSON compliance & tone verification' }
+  ];
+
+  function calcGuardrailCost(opts) {
+    var primary = getModel(opts.primaryModelId || 'claude-sonnet-4.5');
+    var dailyRequests = clamp(opts.dailyRequests || 10000, 10, 50000000);
+    var avgInputTokens = clamp(opts.avgInputTokens || 1800, 50, 200000);
+    var avgOutputTokens = clamp(opts.avgOutputTokens || 450, 20, 50000);
+    var checkOutput = opts.checkOutput !== false;
+    var piiScan = opts.piiScan !== false;
+    var cacheHitRate = clamp(opts.cacheHitRate != null ? opts.cacheHitRate : 50, 0, 95);
+
+    var primaryWork = calcModelWorkload(primary, {
+      inputTokens: avgInputTokens,
+      outputTokens: avgOutputTokens,
+      dailyRequests: dailyRequests,
+      cacheHitRate: cacheHitRate,
+      useBatch: false
+    });
+
+    var monthlyReqs = dailyRequests * 30;
+    var scannedTokensPerReq = avgInputTokens + (checkOutput ? avgOutputTokens : 0);
+    // ~4 chars/token -> 1K char unit = ~250 tokens
+    var unitsPerReq = Math.max(1, Math.ceil(scannedTokensPerReq / 250)) * (piiScan ? 1.35 : 1.0);
+
+    var rows = GUARDRAIL_PROVIDERS.map(function (g) {
+      var monthly = 0;
+      if (g.mode === 'unit') {
+        monthly = ((monthlyReqs * unitsPerReq) / 1000) * g.per1kUnits;
+      } else {
+        var guardIn = scannedTokensPerReq + 280; // policy rubric prompt
+        var guardOut = 45; // JSON pass/fail verdict
+        monthly = monthlyReqs * ((guardIn / 1e6) * g.inPer1M + (guardOut / 1e6) * g.outPer1M);
+      }
+      var overheadPct = primaryWork.monthly > 0 ? (monthly / primaryWork.monthly) * 100 : 0;
+      return {
+        id: g.id,
+        name: g.name,
+        notes: g.notes,
+        monthly: monthly,
+        annual: monthly * 12,
+        overheadPct: overheadPct,
+        combinedMonthly: primaryWork.monthly + monthly
+      };
+    });
+    rows.sort(function (a, b) { return a.monthly - b.monthly; });
+
+    return {
+      primary: primary,
+      primaryMonthly: primaryWork.monthly,
+      monthlyReqs: monthlyReqs,
+      scannedTokensPerReq: scannedTokensPerReq,
+      cheapestPaid: rows[1] || rows[0],
+      priciest: rows[rows.length - 1],
+      rows: rows
+    };
+  }
+
+  // Multi-Agent Orchestration & Swarm Cost Calculator (Planner + Workers + Critic)
+  function calcMultiAgentSwarmCost(opts) {
+    var planner = getModel(opts.plannerModelId || 'claude-opus-4.5');
+    var worker = getModel(opts.workerModelId || 'gemini-2.5-flash');
+    var critic = getModel(opts.criticModelId || 'gpt-5-mini');
+    var workerCount = Math.round(clamp(opts.workerCount || 4, 1, 20));
+    var handoffsPerRun = Math.round(clamp(opts.handoffsPerRun || 3, 1, 15));
+    var avgContextPerHop = clamp(opts.avgContextPerHop || 6000, 500, 150000);
+    var outputPerHop = clamp(opts.outputPerHop || 650, 50, 20000);
+    var runsPerDay = clamp(opts.runsPerDay || 250, 1, 500000);
+    var cacheHitRate = clamp(opts.cacheHitRate != null ? opts.cacheHitRate : 75, 0, 95);
+
+    var plannerCallsPerRun = 1 + handoffsPerRun;
+    var workerCallsPerRun = workerCount * handoffsPerRun;
+    var criticCallsPerRun = Math.max(1, handoffsPerRun);
+    var totalCallsPerRun = plannerCallsPerRun + workerCallsPerRun + criticCallsPerRun;
+
+    // 1. All-Frontier Single-Model Swarm (planner model runs every agent)
+    var allFrontier = calcModelWorkload(planner, {
+      inputTokens: avgContextPerHop,
+      outputTokens: outputPerHop,
+      dailyRequests: runsPerDay * totalCallsPerRun,
+      cacheHitRate: cacheHitRate,
+      useBatch: false
+    });
+
+    // 2. Tiered Swarm (Frontier Planner + Fast Workers + Mini Critic)
+    var pWork = calcModelWorkload(planner, { inputTokens: avgContextPerHop, outputTokens: outputPerHop, dailyRequests: runsPerDay * plannerCallsPerRun, cacheHitRate: cacheHitRate, useBatch: false });
+    var wWork = calcModelWorkload(worker, { inputTokens: avgContextPerHop, outputTokens: outputPerHop, dailyRequests: runsPerDay * workerCallsPerRun, cacheHitRate: cacheHitRate, useBatch: false });
+    var cWork = calcModelWorkload(critic, { inputTokens: avgContextPerHop, outputTokens: Math.round(outputPerHop * 0.6), dailyRequests: runsPerDay * criticCallsPerRun, cacheHitRate: cacheHitRate, useBatch: false });
+    var tieredMonthly = pWork.monthly + wWork.monthly + cWork.monthly;
+
+    // 3. Tiered Swarm + Compact Handoff State (cuts worker/critic input context by 45%)
+    var wCompact = calcModelWorkload(worker, { inputTokens: Math.round(avgContextPerHop * 0.55), outputTokens: outputPerHop, dailyRequests: runsPerDay * workerCallsPerRun, cacheHitRate: cacheHitRate, useBatch: false });
+    var cCompact = calcModelWorkload(critic, { inputTokens: Math.round(avgContextPerHop * 0.55), outputTokens: Math.round(outputPerHop * 0.6), dailyRequests: runsPerDay * criticCallsPerRun, cacheHitRate: cacheHitRate, useBatch: false });
+    var compactMonthly = pWork.monthly + wCompact.monthly + cCompact.monthly;
+
+    var tieredSavePct = allFrontier.monthly > 0 ? ((allFrontier.monthly - tieredMonthly) / allFrontier.monthly) * 100 : 0;
+    var compactSavePct = allFrontier.monthly > 0 ? ((allFrontier.monthly - compactMonthly) / allFrontier.monthly) * 100 : 0;
+
+    return {
+      planner: planner,
+      worker: worker,
+      critic: critic,
+      totalCallsPerRun: totalCallsPerRun,
+      plannerMonthly: pWork.monthly,
+      workerMonthly: wWork.monthly,
+      criticMonthly: cWork.monthly,
+      allFrontierMonthly: allFrontier.monthly,
+      tieredMonthly: tieredMonthly,
+      compactMonthly: compactMonthly,
+      tieredPerRun: tieredMonthly / (runsPerDay * 30),
+      tieredSavePct: tieredSavePct,
+      compactSavePct: compactSavePct,
+      annualSavedCompact: Math.max(0, allFrontier.monthly - compactMonthly) * 12,
+      architectures: [
+        { name: 'All-Frontier Swarm (' + planner.name + ')', callsPerRun: totalCallsPerRun, perRun: allFrontier.monthly / (runsPerDay * 30), monthly: allFrontier.monthly, annual: allFrontier.monthly * 12, savePct: 0 },
+        { name: 'Tiered Role Swarm (Planner + Flash Workers + Mini Critic)', callsPerRun: totalCallsPerRun, perRun: tieredMonthly / (runsPerDay * 30), monthly: tieredMonthly, annual: tieredMonthly * 12, savePct: tieredSavePct },
+        { name: 'Tiered Swarm + Compact State Handoffs (-45% ctx)', callsPerRun: totalCallsPerRun, perRun: compactMonthly / (runsPerDay * 30), monthly: compactMonthly, annual: compactMonthly * 12, savePct: compactSavePct }
+      ]
+    };
+  }
+
   return {
     MODELS: MODELS,
     EMBEDDINGS: EMBEDDINGS,
@@ -1349,6 +1480,7 @@
     VECTOR_DB_PROVIDERS: VECTOR_DB_PROVIDERS,
     CODING_SEAT_PLANS: CODING_SEAT_PLANS,
     EVAL_JUDGE_IDS: EVAL_JUDGE_IDS,
+    GUARDRAIL_PROVIDERS: GUARDRAIL_PROVIDERS,
     CURRENCIES: CURRENCIES,
     getModel: getModel,
     getEmbedding: getEmbedding,
@@ -1378,6 +1510,8 @@
     calcCodingSeatVsApi: calcCodingSeatVsApi,
     calcCacheTtlRoi: calcCacheTtlRoi,
     calcEvalJudgeBudget: calcEvalJudgeBudget,
+    calcGuardrailCost: calcGuardrailCost,
+    calcMultiAgentSwarmCost: calcMultiAgentSwarmCost,
     formatUsd: formatUsd,
     formatInt: formatInt
   };
